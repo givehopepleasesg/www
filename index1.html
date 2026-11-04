@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GIVE HOPE PLEASE — compassionate healthcare, rehabilitation, disability and community support.">
+  <title>GIVE HOPE PLEASE — Giving Hope. Restoring Lives. Creating Possibilities.</title>
+  
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="images/branding/give-hope-please-logo.png">
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg-dark-green: #FFFFFF;
+      --card-bg-dark: #FFFFFF;
+      --card-bg-alt: #FFFFFF;
+      --accent-gold: #A96800;
+      --button-gold: #E3A010;
+      --gold-hover: #c98c0b;
+      --text-white: #1F2937;
+      --text-light: #374151;
+      --text-muted: #6B7280;
+      --border-color: #E5E7EB;
+      --font-main: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--text-light);
+      background-color: var(--bg-dark-green);
+      background-image: none;
+      background-size: cover;
+      background-position: center;
+      background-attachment: fixed;
+      line-height: 1.5;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    /* --- NAVIGATION HEADER --- */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #FFFFFF;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.5px;
+      color: #1F2937;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      object-fit: contain;
+    }
+
+    .nav-logo .highlight {
+      color: var(--accent-gold);
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-light);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: var(--accent-gold);
+    }
+
+    .nav-cta {
+      background-color: var(--button-gold);
+      color: #1F2937 !important;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-cta:hover {
+      background-color: var(--gold-hover);
+    }
+
+    /* Mobile Menu Toggle Button */
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #1F2937;
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    /* --- HERO SECTION --- */
+    .hero-section {
+      max-width: 850px;
+      margin: 20px auto 12px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: #1F2937;
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .hero-pills {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      padding: 4px 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      background-color: #F9FAFB;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background-color: #FFFFFF;
+    }
+
+    .hero-description {
+      font-size: 0.98rem;
+      color: var(--text-light);
+      max-width: 740px;
+      margin: 0 auto;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    /* --- HERO FEATURE IMAGE CONTAINER --- */
+    .hero-image-container {
+      max-width: 850px;
+      margin: 12px auto 28px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-image-wrapper {
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image {
+      max-width: 100%;
+      max-height: 260px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    /* --- MOTTO & PRIMARY ACTION BUTTONS --- */
+    .action-section {
+      max-width: 800px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .motto-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .action-body {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+    }
+
+    .btn-gold {
+      background-color: var(--button-gold);
+      color: #093820;
+      padding: 10px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-gold:hover {
+      background-color: var(--gold-hover);
+    }
+
+    .btn-outline {
+      border: 1.5px solid #9CA3AF;
+      color: #1F2937;
+      padding: 10px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      background-color: #FFFFFF;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+      background-color: #F9FAFB;
+    }
+
+    /* --- CONTENT SECTIONS --- */
+    .content-section {
+      padding: 48px 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .bg-alt {
+      background-color: #FFFFFF;
+    }
+
+    .section-container {
+      max-width: 1050px;
+      margin: 0 auto;
+    }
+
+    .section-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--accent-gold);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: #1F2937;
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    /* --- CARDS & GRID --- */
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background-color: #FFFFFF;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      backdrop-filter: none;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 10px 20px rgba(0, 0, 0, 0.25);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+    }
+
+    .card-text {
+      font-size: 0.88rem;
+      color: var(--text-light);
+    }
+
+    /* Input Fields for Dark Theme */
+    input, select, textarea {
+      background-color: #FFFFFF !important;
+      color: #1F2937 !important;
+      border: 1px solid #D1D5DB !important;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--accent-gold) !important;
+    }
+
+
+    /* --- TEAM SECTION --- */
+    .team-intro { max-width: 760px; margin-bottom: 22px; }
+    .team-group-title { margin: 28px 0 14px; color: var(--text-white); font-size: 1.12rem; font-weight: 750; }
+    .team-card { display: flex; flex-direction: column; gap: 12px; }
+    .team-avatar { width: 104px; height: 104px; border-radius: 50%; display: flex; align-items: center; justify-content: center; background: #F1F5F2; color: #0B684B; border: 2px solid #D4A017; font-size: 1.7rem; font-weight: 800; letter-spacing: 1px; }
+    .team-role { color: var(--accent-gold); font-size: .82rem; font-weight: 700; margin-bottom: 2px; }
+    .team-name { color: var(--text-white); font-size: 1.05rem; font-weight: 750; margin-bottom: 7px; }
+    .team-card .card-text a { color: var(--accent-gold); text-decoration: underline; text-underline-offset: 2px; }
+    section[id] { scroll-margin-top: 88px; }
+
+    /* --- FOOTER --- */
+    footer {
+      background-color: #FFFFFF;
+      color: var(--text-muted);
+      padding: 40px 24px 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-container {
+      max-width: 1050px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand {
+      max-width: 320px;
+    }
+
+    .footer-brand .nav-logo {
+      color: #1F2937;
+      margin-bottom: 12px;
+    }
+
+    .footer-links h4 {
+      color: #1F2937;
+      margin-bottom: 12px;
+      font-size: 0.95rem;
+    }
+
+    .footer-links ul {
+      list-style: none;
+    }
+
+    .footer-links li {
+      margin-bottom: 6px;
+    }
+
+    .footer-links a {
+      font-size: 0.85rem;
+    }
+
+    .footer-links a:hover {
+      color: var(--accent-gold);
+    }
+
+    .footer-bottom {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding-top: 16px;
+      border-top: 1px solid #D1D5DB;
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    /* --- MOBILE RESPONSIVE STYLES --- */
+    @media (max-width: 768px) {
+      .menu-toggle {
+        display: block;
+      }
+
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #FFFFFF;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 10px 20px rgba(0, 0, 0, 0.12);
+        gap: 12px;
+        align-items: flex-start;
+      }
+
+      .nav-links.active {
+        display: flex;
+      }
+
+      .nav-cta {
+        width: 100%;
+        text-align: center;
+      }
+
+      .hero-title {
+        font-size: 1.6rem;
+      }
+
+      .hero-image {
+        max-height: 200px;
+      }
+
+      .action-buttons {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION HEADER -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <img src="images/branding/give-hope-please-logo.png" alt="Emblem">
+        <span>GIVE <span class="highlight">HOPE</span> PLEASE</span>
+      </a>
+
+      <!-- Mobile Hamburger Toggle Button -->
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+
+      <!-- Navigation Links -->
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#about" class="nav-item">About</a></li>
+        <li><a href="#what-we-do" class="nav-item">What We Do</a></li>
+        <li><a href="#team" class="nav-item">Team</a></li>
+        <li><a href="#get-help" class="nav-item">Get Help</a></li>
+        <li><a href="#get-involved" class="nav-item">Get Involved</a></li>
+        <li><a href="#impact" class="nav-item">Our Impact</a></li>
+        <li><a href="#faq" class="nav-item">FAQ</a></li>
+        <li><a href="#get-help" class="nav-cta nav-item">GET HELP</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <h1 class="hero-title">Hope Begins With Action</h1>
+
+    <div class="hero-pills">
+      <a href="#about" class="pill-btn">About</a>
+      <a href="#get-help" class="pill-btn">Get Help</a>
+      <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20partnering%20with%20your%20organisation%20and%20would%20like%20to%20discuss%20possible%20collaboration." class="pill-btn" target="_blank" rel="noopener noreferrer">Partner with us</a>
+    </div>
+
+    <p class="hero-description">
+      For someone facing illness, disability, injury, financial hardship or limited access to healthcare, the right support can change the direction of a life. <strong>GIVE HOPE PLEASE</strong> exists to help turn compassion into practical action.
+    </p>
+  </section>
+
+  <!-- HERO FEATURE IMAGE -->
+  <div class="hero-image-container">
+    <div class="hero-image-wrapper">
+      <img src="images/branding/give-hope-please-hero-banner.png" alt="Give Hope Please Emblem Banner" class="hero-image" onerror="this.src='images/branding/give-hope-please-logo.png'">
+    </div>
+  </div>
+
+  <!-- MOTTO & PRIMARY CALL TO ACTIONS -->
+  <section class="action-section">
+    <h2 class="motto-text">
+      Everyone deserves the opportunity to receive care, recover with dignity and look forward to a better tomorrow.
+    </h2>
+    <p class="action-body">
+      <strong>GIVE HOPE PLEASE</strong> is a nonprofit organisation dedicated to supporting individuals and communities facing healthcare, rehabilitation, disability, financial and educational challenges. Through compassionate assistance, professional partnerships and community support, we aim to bring meaningful help to people when they need it most.
+    </p>
+    <div class="action-buttons">
+      <a href="#donate" class="btn-gold">DONATE</a>
+      <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." class="btn-outline" target="_blank" rel="noopener noreferrer">VOLUNTEER</a>
+    </div>
+  </section>
+
+  <!-- ABOUT US SECTION -->
+  <section id="about" class="content-section bg-alt">
+    <div class="section-container">
+      <span class="section-tag">Who We Are</span>
+      <h2 class="section-title">About Us</h2>
+      <p style="margin-bottom: 20px; font-size: 0.92rem; color: var(--text-light);">
+        GIVE HOPE PLEASE was founded on a simple belief: that no one should have to navigate life’s greatest challenges alone. Whether it is a family struggling to afford necessary medical treatments, a person living with a disability needing specialized care, or a student facing financial barriers, we step in to bridge the gap.
+      </p>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 class="card-title">Vision</h3>
+          <p class="card-text">A compassionate world where every individual facing adversity receives the care, support, and opportunities needed to live with dignity and hope.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Mission</h3>
+          <p class="card-text">To empower communities and individuals by providing accessible healthcare assistance, rehabilitation support, educational opportunities, and holistic care through collaborative partnerships.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Our Name</h3>
+          <p class="card-text"><strong style="color:var(--accent-gold);">GIVE:</strong> Active generosity.<br><strong style="color:var(--accent-gold);">HOPE:</strong> Restoring possibility.<br><strong style="color:var(--accent-gold);">PLEASE:</strong> Humility, respect, and heart behind our service.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE DO SECTION -->
+  <section id="what-we-do" class="content-section">
+    <div class="section-container">
+      <span class="section-tag">Pillars of Care</span>
+      <h2 class="section-title">What We Do</h2>
+
+      <div class="grid-3">
+        <div class="card">
+          <h3 class="card-title">Healthcare & Medical Assistance</h3>
+          <p class="card-text">Subsidies and support for essential medical treatments, therapy sessions, and medical equipment for vulnerable individuals.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Rehabilitation & Therapy</h3>
+          <p class="card-text">Long-term physical therapy and rehabilitation programs to help patients regain mobility and independence after severe injury or illness.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Disability Support & Inclusion</h3>
+          <p class="card-text">Promoting accessibility, community integration, and tailored physical support for persons with disabilities (PWDs).</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Elderly Care & Wellbeing</h3>
+          <p class="card-text">Focused healthcare and mobility support ensuring senior citizens age gracefully with comfort, dignity, and companionship.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Education & Scholarships</h3>
+          <p class="card-text">Empowering underprivileged youth through educational grants, sponsorships, and skill development programs.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Outreach & Research</h3>
+          <p class="card-text">Community health screenings, preventive education, and collaborative initiatives to strengthen health equity.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- TEAM SECTION -->
+  <section id="team" class="content-section">
+    <div class="section-container">
+      <span class="section-tag">Our People & Partners</span>
+      <h2 class="section-title">The People Behind GIVE HOPE PLEASE</h2>
+      <p class="team-intro card-text">Leadership. Expertise. Partnerships. A Shared Commitment to Giving Hope.</p>
+
+      <h3 class="team-group-title">Leadership &amp; Governance</h3>
+      <div class="grid-3">
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true">VS</div>
+          <div><div class="team-role">Member &amp; Director</div><h4 class="team-name">Vasudevan Subramanian</h4>
+          <p class="card-text">Chartered Accountant contributing financial, governance and organisational expertise to support the organisation’s mission and responsible operations.</p></div>
+        </article>
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true">KA</div>
+          <div><div class="team-role">Secretary &amp; Compliance Officer</div><h4 class="team-name">Kondalsamy Anantharamakrishnan</h4>
+          <p class="card-text">CA (Singapore), bringing experience in corporate governance, regulatory compliance and administration.</p></div>
+        </article>
+      </div>
+
+      <h3 class="team-group-title">Professional &amp; Strategic Partners</h3>
+      <div class="grid-3">
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true">VR</div>
+          <div><div class="team-role">Healthcare &amp; Physiotherapy Partner</div><h4 class="team-name">Visvanathan Ravichandran</h4>
+          <p class="card-text">Physiotherapist associated with Hallmark Physiotherapy Pte Ltd. This partnership supports access to physiotherapy and rehabilitation expertise. <a href="https://hallmarkphysio.com/" target="_blank" rel="noopener noreferrer">Hallmark Physiotherapy website</a>.</p></div>
+        </article>
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true">AR</div>
+          <div><div class="team-role">Technical Support</div><h4 class="team-name">A. Ramani</h4>
+          <p class="card-text">Educator, technology professional and author. Has worked with Singtel for more than a decade and is Director of RVSMANI HEALTH FOUNDATION, contributing technology expertise, digital support and strategic guidance.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET HELP SECTION -->
+  <section id="get-help" class="content-section bg-alt">
+    <div class="section-container">
+      <span class="section-tag">Support Application</span>
+      <h2 class="section-title">Get Help</h2>
+      <p style="margin-bottom: 20px; font-size: 0.92rem; color: var(--text-light);">
+        If you or someone you know requires assistance with healthcare, rehabilitation, or living support, please complete the application request form below.
+      </p>
+
+      <div class="card" style="max-width: 550px; margin: 0 auto;">
+        <h3 class="card-title" style="text-align: center; margin-bottom: 16px;">Assistance Request Form</h3>
+        <form style="display: flex; flex-direction: column; gap: 14px;" onsubmit="event.preventDefault(); alert('Thank you for submitting. Our team will review your application and contact you shortly.');">
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: #1F2937;">Full Name *</label>
+            <input type="text" required style="width: 100%; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem;">
+          </div>
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: #1F2937;">Contact Email / Phone *</label>
+            <input type="text" required style="width: 100%; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem;">
+          </div>
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: #1F2937;">Type of Assistance Needed *</label>
+            <select style="width: 100%; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem;">
+              <option style="background-color: #FFFFFF;">Medical Assistance / Subsidies</option>
+              <option style="background-color: #FFFFFF;">Rehabilitation & Physical Therapy</option>
+              <option style="background-color: #FFFFFF;">Disability Support</option>
+              <option style="background-color: #FFFFFF;">Elderly Care Support</option>
+              <option style="background-color: #FFFFFF;">Education / Scholarship</option>
+              <option style="background-color: #FFFFFF;">Other Support</option>
+            </select>
+          </div>
+          <div>
+            <label style="display: block; font-weight: 600; font-size: 0.85rem; margin-bottom: 4px; color: #1F2937;">Brief Description of Situation</label>
+            <textarea rows="3" style="width: 100%; padding: 8px 10px; border-radius: 6px; font-size: 0.88rem;"></textarea>
+          </div>
+          <button type="submit" class="btn-gold" style="border: none; cursor: pointer; width: 100%;">Submit Request</button>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET INVOLVED SECTION -->
+  <section id="get-involved" class="content-section">
+    <div class="section-container">
+      <span class="section-tag">Take Action</span>
+      <h2 class="section-title">Get Involved</h2>
+
+      <div class="grid-3">
+        <div id="donate" class="card">
+          <h3 class="card-title">Donate</h3>
+          <p class="card-text" style="margin-bottom: 14px;">Your financial contribution directly funds medical care, equipment, and educational scholarships for those in need.</p>
+          <a href="#donate" class="btn-gold" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Donate Now</a>
+        </div>
+
+        <div id="volunteer" class="card">
+          <h3 class="card-title">Volunteer</h3>
+          <p class="card-text" style="margin-bottom: 14px;">Offer your time, skills, or professional expertise to support our outreach programs and beneficiary care.</p>
+          <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." class="btn-outline" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Join as Volunteer</a>
+        </div>
+
+        <div id="partnerships" class="card">
+          <h3 class="card-title">Partnerships</h3>
+          <p class="card-text" style="margin-bottom: 14px;">We collaborate with healthcare providers, corporations, and community groups to multiply our impact.</p>
+          <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20partnering%20with%20your%20organisation%20and%20would%20like%20to%20discuss%20possible%20collaboration." class="btn-outline" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Partner With Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR IMPACT SECTION -->
+  <section id="impact" class="content-section bg-alt">
+    <div class="section-container" style="text-align: center;">
+      <span class="section-tag">Creating Possibilities</span>
+      <h2 class="section-title">Our Impact</h2>
+      <p style="max-width: 650px; margin: 0 auto 32px; font-size: 0.92rem;" class="card-text">
+        Through the collective generosity of our donors and corporate partners, we measure success in lives restored, independence regained, and dignity preserved.
+      </p>
+
+      <div class="grid-3">
+        <div class="card" style="text-align: center;">
+          <h3 style="font-size: 2.2rem; color: var(--accent-gold); font-weight: 800;">100%</h3>
+          <p class="card-text">Dedicated to direct beneficiary impact and care programs.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <h3 style="font-size: 2.2rem; color: #1F2937; font-weight: 800;">Holistic</h3>
+          <p class="card-text">Medical, social, physical, and financial support ecosystems.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+          <h3 style="font-size: 2.2rem; color: var(--accent-gold); font-weight: 800;">Community</h3>
+          <p class="card-text">Strong referral network with certified healthcare professionals.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section id="faq" class="content-section">
+    <div class="section-container" style="max-width: 750px;">
+      <span class="section-tag">Questions & Answers</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+
+      <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 24px;">
+        <div class="card">
+          <h3 class="card-title" style="font-size: 1.0rem;">Who is eligible to apply for assistance?</h3>
+          <p class="card-text">Individuals facing illness, disability, injury, or financial hardship who require healthcare, therapy, or living support can apply.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title" style="font-size: 1.0rem;">How are donation funds utilized?</h3>
+          <p class="card-text">Donations go directly toward funding medical equipment, rehabilitation subsidies, elderly care, and educational grants for beneficiaries.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title" style="font-size: 1.0rem;">Can healthcare institutions refer patients?</h3>
+          <p class="card-text">Yes, we welcome clinical referrals from hospitals, clinics, and social service agencies via our partner pathway.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <img src="images/branding/give-hope-please-logo.png" alt="Emblem">
+          <span>GIVE <span class="highlight">HOPE</span> PLEASE</span>
+        </a>
+        <p style="font-size: 0.85rem; margin-top: 10px; color: var(--text-muted);">
+          Giving Hope. Restoring Lives. Creating Possibilities. A registered non-profit organization supporting healthcare, rehabilitation, and living dignity.
+        </p>
+      </div>
+
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li>
+          <li><a href="#what-we-do">What We Do</a></li>
+          <li><a href="#team">Our Team</a></li>
+          <li><a href="#get-help">Get Help</a></li>
+          <li><a href="#donate">Donate</a></li>
+          <li><a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." target="_blank" rel="noopener noreferrer">Volunteer</a></li>
+        </ul>
+      </div>
+
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul>
+          <li>Email: <a href="mailto:givehopeplease.sg@gmail.com">givehopeplease.sg@gmail.com</a></li>
+          <li>Location: Singapore</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <p>&copy; 2026 GIVE HOPE PLEASE. All rights reserved.</p>
+    </div>
+  </footer>
+
+  <!-- MOBILE MENU JAVASCRIPT -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuToggle.textContent = '☰';
+      });
+    });
+  </script>
+
+</body>
+</html>
