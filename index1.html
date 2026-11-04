@@ -5,11 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="GIVE HOPE PLEASE — compassionate healthcare, rehabilitation, disability and community support.">
   <title>GIVE HOPE PLEASE — Giving Hope. Restoring Lives. Creating Possibilities.</title>
-  
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="images/branding/give-hope-please-logo.png">
-
-  <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
@@ -29,15 +25,9 @@
       --font-main: 'Inter', sans-serif;
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html {
-      scroll-behavior: smooth;
-    }
+    html { scroll-behavior: smooth; }
 
     body {
       font-family: var(--font-main);
@@ -50,12 +40,8 @@
       line-height: 1.5;
     }
 
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
+    a { color: inherit; text-decoration: none; }
 
-    /* --- NAVIGATION HEADER --- */
     header {
       position: sticky;
       top: 0;
@@ -85,15 +71,8 @@
       color: #1F2937;
     }
 
-    .nav-logo img {
-      height: 36px;
-      width: auto;
-      object-fit: contain;
-    }
-
-    .nav-logo .highlight {
-      color: var(--accent-gold);
-    }
+    .nav-logo img { height: 36px; width: auto; object-fit: contain; }
+    .nav-logo .highlight { color: var(--accent-gold); }
 
     .nav-links {
       display: flex;
@@ -109,9 +88,7 @@
       transition: color 0.2s ease;
     }
 
-    .nav-links a:hover {
-      color: var(--accent-gold);
-    }
+    .nav-links a:hover { color: var(--accent-gold); }
 
     .nav-cta {
       background-color: var(--button-gold);
@@ -123,11 +100,8 @@
       transition: background-color 0.2s ease;
     }
 
-    .nav-cta:hover {
-      background-color: var(--gold-hover);
-    }
+    .nav-cta:hover { background-color: var(--gold-hover); }
 
-    /* Mobile Menu Toggle Button */
     .menu-toggle {
       display: none;
       background: none;
@@ -138,7 +112,6 @@
       padding: 4px;
     }
 
-    /* --- HERO SECTION --- */
     .hero-section {
       max-width: 850px;
       margin: 20px auto 12px;
@@ -189,7 +162,6 @@
       line-height: 1.45;
     }
 
-    /* --- HERO FEATURE IMAGE CONTAINER --- */
     .hero-image-container {
       max-width: 850px;
       margin: 12px auto 28px;
@@ -215,7 +187,6 @@
       object-fit: contain;
     }
 
-    /* --- MOTTO & PRIMARY ACTION BUTTONS --- */
     .action-section {
       max-width: 800px;
       margin: 0 auto 48px;
@@ -241,6 +212,7 @@
       display: flex;
       justify-content: center;
       gap: 12px;
+      flex-wrap: wrap;
     }
 
     .btn-gold {
@@ -253,9 +225,7 @@
       transition: background-color 0.2s ease;
     }
 
-    .btn-gold:hover {
-      background-color: var(--gold-hover);
-    }
+    .btn-gold:hover { background-color: var(--gold-hover); }
 
     .btn-outline {
       border: 1.5px solid #9CA3AF;
@@ -274,20 +244,9 @@
       background-color: #F9FAFB;
     }
 
-    /* --- CONTENT SECTIONS --- */
-    .content-section {
-      padding: 48px 24px;
-      border-top: 1px solid var(--border-color);
-    }
-
-    .bg-alt {
-      background-color: #FFFFFF;
-    }
-
-    .section-container {
-      max-width: 1050px;
-      margin: 0 auto;
-    }
+    .content-section { padding: 48px 24px; border-top: 1px solid var(--border-color); }
+    .bg-alt { background-color: #FFFFFF; }
+    .section-container { max-width: 1050px; margin: 0 auto; }
 
     .section-tag {
       display: inline-block;
@@ -307,7 +266,6 @@
       letter-spacing: -0.5px;
     }
 
-    /* --- CARDS & GRID --- */
     .grid-3 {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
@@ -337,12 +295,8 @@
       margin-bottom: 8px;
     }
 
-    .card-text {
-      font-size: 0.88rem;
-      color: var(--text-light);
-    }
+    .card-text { font-size: 0.88rem; color: var(--text-light); }
 
-    /* Input Fields for Dark Theme */
     input, select, textarea {
       background-color: #FFFFFF !important;
       color: #1F2937 !important;
@@ -354,8 +308,6 @@
       border-color: var(--accent-gold) !important;
     }
 
-
-    /* --- TEAM SECTION --- */
     .team-intro { max-width: 760px; margin-bottom: 22px; }
     .team-group-title { margin: 28px 0 14px; color: var(--text-white); font-size: 1.12rem; font-weight: 750; }
     .team-card { display: flex; flex-direction: column; gap: 12px; }
@@ -366,7 +318,6 @@
     .team-card .card-text a { color: var(--accent-gold); text-decoration: underline; text-underline-offset: 2px; }
     section[id] { scroll-margin-top: 88px; }
 
-    /* --- FOOTER --- */
     footer {
       background-color: #FFFFFF;
       color: var(--text-muted);
@@ -384,36 +335,13 @@
       margin-bottom: 24px;
     }
 
-    .footer-brand {
-      max-width: 320px;
-    }
-
-    .footer-brand .nav-logo {
-      color: #1F2937;
-      margin-bottom: 12px;
-    }
-
-    .footer-links h4 {
-      color: #1F2937;
-      margin-bottom: 12px;
-      font-size: 0.95rem;
-    }
-
-    .footer-links ul {
-      list-style: none;
-    }
-
-    .footer-links li {
-      margin-bottom: 6px;
-    }
-
-    .footer-links a {
-      font-size: 0.85rem;
-    }
-
-    .footer-links a:hover {
-      color: var(--accent-gold);
-    }
+    .footer-brand { max-width: 320px; }
+    .footer-brand .nav-logo { color: #1F2937; margin-bottom: 12px; }
+    .footer-links h4 { color: #1F2937; margin-bottom: 12px; font-size: 0.95rem; }
+    .footer-links ul { list-style: none; }
+    .footer-links li { margin-bottom: 6px; }
+    .footer-links a { font-size: 0.85rem; }
+    .footer-links a:hover { color: var(--accent-gold); }
 
     .footer-bottom {
       max-width: 1050px;
@@ -424,11 +352,8 @@
       font-size: 0.8rem;
     }
 
-    /* --- MOBILE RESPONSIVE STYLES --- */
     @media (max-width: 768px) {
-      .menu-toggle {
-        display: block;
-      }
+      .menu-toggle { display: block; }
 
       .nav-links {
         display: none;
@@ -445,29 +370,14 @@
         align-items: flex-start;
       }
 
-      .nav-links.active {
-        display: flex;
-      }
-
-      .nav-cta {
-        width: 100%;
-        text-align: center;
-      }
-
-      .hero-title {
-        font-size: 1.6rem;
-      }
-
-      .hero-image {
-        max-height: 200px;
-      }
-
-      .action-buttons {
-        flex-direction: column;
-      }
+      .nav-links.active { display: flex; }
+      .nav-cta { width: 100%; text-align: center; }
+      .hero-title { font-size: 1.6rem; }
+      .hero-image { max-height: 200px; }
+      .action-buttons { flex-direction: column; }
+      .action-buttons a { text-align: center; }
     }
 
-    /* --- ONLINE DONATION & ENQUIRY FORMS --- */
     .online-form-section { padding: 54px 24px; }
     .online-form-wrap { max-width: 760px; margin: 0 auto; }
     .online-form-card {
@@ -524,13 +434,13 @@
     .online-form-intro { margin: 0 auto 22px; max-width: 680px; text-align: center; }
     .online-form-intro p { color: var(--text-light); font-size: .94rem; }
     .form-step-label { color: var(--accent-gold); font-size: .75rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+
     @media (max-width: 640px) {
       .online-form-card { padding: 20px 16px; }
       .online-form-grid { grid-template-columns: 1fr; gap: 13px; }
       .online-field.full { grid-column: auto; }
       .online-form-section { padding: 40px 16px; }
     }
-
   </style>
 </head>
 <body>
@@ -543,10 +453,8 @@
         <span>GIVE <span class="highlight">HOPE</span> PLEASE</span>
       </a>
 
-      <!-- Mobile Hamburger Toggle Button -->
       <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
 
-      <!-- Navigation Links -->
       <ul class="nav-links" id="navLinks">
         <li><a href="#about" class="nav-item">About</a></li>
         <li><a href="#what-we-do" class="nav-item">What We Do</a></li>
@@ -565,9 +473,9 @@
     <h1 class="hero-title">Hope Begins With Action</h1>
 
     <div class="hero-pills">
-      <a href="#about" class="pill-btn">About</a>
-      <a href="#get-help" class="pill-btn">Get Help</a>
-      <a href="#partnerships">Partner With Us</a>
+      <a href="#about" class="pill-btn">ABOUT US</a>
+      <a href="#get-help" class="pill-btn">GET HELP</a>
+      <a href="#events" class="pill-btn">EVENTS</a>
     </div>
 
     <p class="hero-description">
@@ -592,7 +500,9 @@
     </p>
     <div class="action-buttons">
       <a href="#donation-form" class="btn-gold">DONATE</a>
-      <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." class="btn-outline" target="_blank" rel="noopener noreferrer">VOLUNTEER</a>
+      <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help."
+         class="btn-outline" target="_blank" rel="noopener noreferrer">VOLUNTEER</a>
+      <a href="#partnerships" class="btn-outline">PARTNER WITH US</a>
     </div>
   </section>
 
@@ -630,38 +540,37 @@
 
       <div class="grid-3">
         <div class="card">
-          <h3 class="card-title">Healthcare & Medical Assistance</h3>
+          <h3 class="card-title">Healthcare &amp; Medical Assistance</h3>
           <p class="card-text">Subsidies and support for essential medical treatments, therapy sessions, and medical equipment for vulnerable individuals.</p>
         </div>
         <div class="card">
-          <h3 class="card-title">Rehabilitation & Therapy</h3>
+          <h3 class="card-title">Rehabilitation &amp; Therapy</h3>
           <p class="card-text">Long-term physical therapy and rehabilitation programs to help patients regain mobility and independence after severe injury or illness.</p>
         </div>
         <div class="card">
-          <h3 class="card-title">Disability Support & Inclusion</h3>
+          <h3 class="card-title">Disability Support &amp; Inclusion</h3>
           <p class="card-text">Promoting accessibility, community integration, and tailored physical support for persons with disabilities (PWDs).</p>
         </div>
         <div class="card">
-          <h3 class="card-title">Elderly Care & Wellbeing</h3>
+          <h3 class="card-title">Elderly Care &amp; Wellbeing</h3>
           <p class="card-text">Focused healthcare and mobility support ensuring senior citizens age gracefully with comfort, dignity, and companionship.</p>
         </div>
         <div class="card">
-          <h3 class="card-title">Education & Scholarships</h3>
+          <h3 class="card-title">Education &amp; Scholarships</h3>
           <p class="card-text">Empowering underprivileged youth through educational grants, sponsorships, and skill development programs.</p>
         </div>
         <div class="card">
-          <h3 class="card-title">Outreach & Research</h3>
+          <h3 class="card-title">Outreach &amp; Research</h3>
           <p class="card-text">Community health screenings, preventive education, and collaborative initiatives to strengthen health equity.</p>
         </div>
       </div>
     </div>
   </section>
 
-
   <!-- TEAM SECTION -->
   <section id="team" class="content-section">
     <div class="section-container">
-      <span class="section-tag">Our People & Partners</span>
+      <span class="section-tag">Our People &amp; Partners</span>
       <h2 class="section-title">The People Behind GIVE HOPE PLEASE</h2>
       <p class="team-intro card-text">Leadership. Expertise. Partnerships. A Shared Commitment to Giving Hope.</p>
 
@@ -878,10 +787,22 @@
     </div>
   </section>
 
+  <!-- EVENTS SECTION - TEMPORARY PLACEHOLDER -->
+  <section id="events" class="content-section bg-alt">
+    <div class="section-container" style="text-align:center;">
+      <span class="section-tag">Stay Connected</span>
+      <h2 class="section-title">Events</h2>
+      <p class="card-text">
+        Information about our upcoming events, community activities
+        and initiatives will be shared here.
+      </p>
+    </div>
+  </section>
+
   <!-- FAQ SECTION -->
   <section id="faq" class="content-section">
     <div class="section-container" style="max-width: 750px;">
-      <span class="section-tag">Questions & Answers</span>
+      <span class="section-tag">Questions &amp; Answers</span>
       <h2 class="section-title">Frequently Asked Questions</h2>
 
       <div style="display: flex; flex-direction: column; gap: 14px; margin-top: 24px;">
@@ -959,9 +880,7 @@
     });
   </script>
 
-
   <script>
-    // Add the two deployed Apps Script Web App URLs here after deployment.
     const GHP_DONATION_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby27LF6AFNt3FJOzRVXd1-NbCQx2oIhkFxt5Hm0zo542Z5kOM8T-FKtWdSIT6WcDnoj/exec";
     const GHP_ENQUIRY_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnogmYFy2oAqVD7h3jrXcjcxqj5aK265hEhVNE_RdG_9ZBvVO_uAFpRMKIH7RxhT0c/exec";
 
