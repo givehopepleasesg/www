@@ -465,6 +465,71 @@
         flex-direction: column;
       }
     }
+
+    /* --- ONLINE DONATION & ENQUIRY FORMS --- */
+    .online-form-section { padding: 54px 24px; }
+    .online-form-wrap { max-width: 760px; margin: 0 auto; }
+    .online-form-card {
+      background: #fff; border: 1px solid var(--border-color); border-radius: 18px;
+      padding: 28px; box-shadow: 0 12px 32px rgba(17,24,39,.06);
+    }
+    .online-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+    .online-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .online-field.full { grid-column: 1 / -1; }
+    .online-field label { font-size: .86rem; font-weight: 650; color: #1F2937; }
+    .online-field input, .online-field select, .online-field textarea {
+      width: 100%; min-height: 46px; border: 1px solid #D1D5DB; border-radius: 9px;
+      padding: 11px 12px; color: #1F2937; background: #fff; font: inherit; font-size: .92rem;
+      outline: none; transition: border-color .2s, box-shadow .2s;
+    }
+    .online-field textarea { min-height: 130px; resize: vertical; }
+    .online-field input:focus, .online-field select:focus, .online-field textarea:focus {
+      border-color: var(--accent-gold); box-shadow: 0 0 0 3px rgba(169,104,0,.12);
+    }
+    .online-help { color: var(--text-muted); font-size: .78rem; line-height: 1.5; }
+    .online-fixed-choice {
+      display: flex; align-items: center; min-height: 46px; padding: 10px 12px;
+      border: 1px solid #E5E7EB; border-radius: 9px; background: #F9FAFB; color: #374151;
+      font-size: .92rem; font-weight: 600;
+    }
+    .online-check { display: flex; align-items: flex-start; gap: 10px; color: #374151; font-size: .88rem; }
+    .online-check input { width: 17px; height: 17px; margin-top: 3px; accent-color: var(--accent-gold); }
+    .online-submit {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      width: 100%; border: 0; border-radius: 999px; padding: 13px 22px;
+      background: var(--button-gold); color: #1F2937; font: inherit; font-weight: 750;
+      cursor: pointer; transition: background .2s, transform .2s;
+    }
+    .online-submit:hover { background: var(--gold-hover); transform: translateY(-1px); }
+    .online-submit:disabled { opacity: .6; cursor: wait; transform: none; }
+    .online-secondary {
+      display: inline-flex; align-items: center; justify-content: center; border: 1px solid #D1D5DB;
+      border-radius: 999px; padding: 11px 18px; background: #fff; color: #374151;
+      font: inherit; font-weight: 650; cursor: pointer;
+    }
+    .paynow-panel {
+      margin-top: 22px; padding: 22px; border: 1px solid #E8D7B4; border-radius: 14px;
+      background: #FFFCF5; text-align: center;
+    }
+    .paynow-panel img { display: block; width: min(100%, 340px); height: auto; margin: 14px auto;
+      border-radius: 8px; border: 1px solid #E5E7EB; background: white; }
+    .paynow-uen { display: inline-block; padding: 7px 12px; border-radius: 7px; background: #fff;
+      border: 1px solid #E5E7EB; font-weight: 750; letter-spacing: .4px; }
+    .online-status { display: none; margin-top: 16px; padding: 13px 15px; border-radius: 10px;
+      font-size: .88rem; line-height: 1.5; }
+    .online-status.success { display: block; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+    .online-status.error { display: block; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+    .online-status.info { display: block; background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+    .online-form-intro { margin: 0 auto 22px; max-width: 680px; text-align: center; }
+    .online-form-intro p { color: var(--text-light); font-size: .94rem; }
+    .form-step-label { color: var(--accent-gold); font-size: .75rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+    @media (max-width: 640px) {
+      .online-form-card { padding: 20px 16px; }
+      .online-form-grid { grid-template-columns: 1fr; gap: 13px; }
+      .online-field.full { grid-column: auto; }
+      .online-form-section { padding: 40px 16px; }
+    }
+
   </style>
 </head>
 <body>
@@ -501,7 +566,7 @@
     <div class="hero-pills">
       <a href="#about" class="pill-btn">About</a>
       <a href="#get-help" class="pill-btn">Get Help</a>
-      <a href="#partnerships" class="pill-btn">Partner with us</a>
+      <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20partnering%20with%20your%20organisation%20and%20would%20like%20to%20discuss%20possible%20collaboration." class="pill-btn" target="_blank" rel="noopener noreferrer">Partner with us</a>
     </div>
 
     <p class="hero-description">
@@ -525,7 +590,7 @@
       <strong>GIVE HOPE PLEASE</strong> is a nonprofit organisation dedicated to supporting individuals and communities facing healthcare, rehabilitation, disability, financial and educational challenges. Through compassionate assistance, professional partnerships and community support, we aim to bring meaningful help to people when they need it most.
     </p>
     <div class="action-buttons">
-      <a href="#donate" class="btn-gold">DONATE</a>
+      <a href="#donation-form" class="btn-gold">DONATE</a>
       <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." class="btn-outline" target="_blank" rel="noopener noreferrer">VOLUNTEER</a>
     </div>
   </section>
@@ -629,25 +694,60 @@
     </div>
   </section>
 
-  <!-- ENQUIRIES & SUPPORT REQUESTS SECTION -->
-  <section id="get-help" class="content-section bg-alt">
-    <div class="section-container">
-      <span class="section-tag">Contact & Support</span>
-      <h2 class="section-title">Enquiries &amp; Support Requests</h2>
-      <p style="margin-bottom: 20px; font-size: 0.92rem; color: var(--text-light);">
-        Contact GIVE HOPE PLEASE for general enquiries, donation questions, partnership opportunities, volunteering, or to request assistance. Select the relevant enquiry type in our online form.
-      </p>
-
-      <div class="card" style="max-width: 650px; margin: 0 auto; text-align: center;">
-        <h3 class="card-title" style="margin-bottom: 10px;">How can we help you?</h3>
-        <p class="card-text" style="margin-bottom: 18px;">
-          Please use our secure online form. Choose “Request for Assistance” if you are seeking support for yourself or someone else.
-        </p>
-        <a href="https://docs.google.com/forms/d/e/1FAIpQLSe8WjJPqveVqC--lVSkgH9BwxD9eQYc5wI8rxMBRvNQBV1xlw/viewform"
-           class="btn-gold" target="_blank" rel="noopener noreferrer"
-           style="display: inline-block; border: none; cursor: pointer;">
-          Submit an Enquiry or Support Request
-        </a>
+  <!-- ENQUIRIES & SUPPORT REQUESTS -->
+  <section id="get-help" class="content-section bg-alt online-form-section">
+    <div class="section-container online-form-wrap">
+      <div class="online-form-intro">
+        <span class="section-tag">We Are Here to Help</span>
+        <h2 class="section-title">Enquiries &amp; Support Requests</h2>
+        <p>Contact GIVE HOPE PLEASE for general enquiries, donation questions, partnerships, volunteering, or to request assistance. Choose the enquiry type that best describes your request.</p>
+      </div>
+      <div class="online-form-card">
+        <form id="enquiryForm">
+          <div class="online-form-grid">
+            <div class="online-field">
+              <label for="enqName">Full Name *</label>
+              <input id="enqName" name="fullName" type="text" autocomplete="name" maxlength="120" required>
+            </div>
+            <div class="online-field">
+              <label for="enqEmail">Email Address *</label>
+              <input id="enqEmail" name="email" type="email" autocomplete="email" maxlength="160" required>
+            </div>
+            <div class="online-field">
+              <label for="enqPhone">Contact Number *</label>
+              <input id="enqPhone" name="contactNumber" type="tel" autocomplete="tel" maxlength="40" required>
+            </div>
+            <div class="online-field">
+              <label for="enqCountry">Country *</label>
+              <input id="enqCountry" name="country" type="text" autocomplete="country-name" maxlength="80" required>
+            </div>
+            <div class="online-field full">
+              <label for="enqType">Enquiry Type *</label>
+              <select id="enqType" name="enquiryType" required>
+                <option value="">Select an enquiry type</option>
+                <option>Medical Assistance / Subsidies</option>
+                <option>Rehabilitation &amp; Physical Therapy</option>
+                <option>Disability Support</option>
+                <option>Elderly Care Support</option>
+                <option>Education / Scholarship</option>
+                <option>Other Support</option>
+              </select>
+            </div>
+            <div class="online-field full">
+              <label for="enqSubject">Subject *</label>
+              <input id="enqSubject" name="subject" type="text" maxlength="180" required>
+            </div>
+            <div class="online-field full">
+              <label for="enqMessage">Message / Enquiry Details *</label>
+              <textarea id="enqMessage" name="message" maxlength="5000" required placeholder="Please tell us how we can help."></textarea>
+              <span class="online-help">Please avoid including highly sensitive medical or financial information in this initial enquiry.</span>
+            </div>
+          </div>
+          <div style="margin-top:20px;">
+            <button class="online-submit" id="enquirySubmit" type="submit">Submit Enquiry</button>
+          </div>
+          <div id="enquiryStatus" class="online-status" role="status" aria-live="polite"></div>
+        </form>
       </div>
     </div>
   </section>
@@ -662,7 +762,7 @@
         <div id="donate" class="card">
           <h3 class="card-title">Donate</h3>
           <p class="card-text" style="margin-bottom: 14px;">Your financial contribution directly funds medical care, equipment, and educational scholarships for those in need.</p>
-          <a href="https://docs.google.com/forms/d/e/1FAIpQLScr2uoWYLx6PESyAkWv8DTX04S-PjCqmbNdn2eTgSIclH3evg/viewform" class="btn-gold" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Donate Now</a>
+          <a href="#donation-form" class="btn-gold" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Donate Now</a>
         </div>
 
         <div id="volunteer" class="card">
@@ -676,6 +776,77 @@
           <p class="card-text" style="margin-bottom: 14px;">We collaborate with healthcare providers, corporations, and community groups to multiply our impact.</p>
           <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20partnering%20with%20your%20organisation%20and%20would%20like%20to%20discuss%20possible%20collaboration." class="btn-outline" target="_blank" rel="noopener noreferrer" style="display: inline-block; font-size: 0.82rem; padding: 8px 18px;">Partner With Us</a>
         </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONLINE DONATION FORM -->
+  <section id="donation-form" class="content-section online-form-section">
+    <div class="section-container online-form-wrap">
+      <div class="online-form-intro">
+        <span class="section-tag">Support Our Mission</span>
+        <h2 class="section-title">Make a Donation</h2>
+        <p>Your generosity helps provide healthcare, rehabilitation, disability support, elderly care and educational opportunities. Donations are made in Singapore dollars through PayNow.</p>
+      </div>
+      <div class="online-form-card">
+        <form id="donationForm">
+          <div class="form-step-label">Step 1 · Your details</div>
+          <div class="online-form-grid" style="margin-top:12px;">
+            <div class="online-field">
+              <label for="donName">Full Name *</label>
+              <input id="donName" name="fullName" type="text" autocomplete="name" maxlength="120" required>
+            </div>
+            <div class="online-field">
+              <label for="donEmail">Email Address *</label>
+              <input id="donEmail" name="email" type="email" autocomplete="email" maxlength="160" required>
+            </div>
+            <div class="online-field">
+              <label for="donMobile">Mobile Number</label>
+              <input id="donMobile" name="mobile" type="tel" autocomplete="tel" maxlength="40">
+            </div>
+            <div class="online-field">
+              <label for="donCountry">Country of Residence *</label>
+              <input id="donCountry" name="country" type="text" autocomplete="country-name" maxlength="80" required>
+            </div>
+            <div class="online-field">
+              <label>Donation Frequency</label>
+              <div class="online-fixed-choice">One-time donation</div>
+              <input type="hidden" name="frequency" value="One-time">
+            </div>
+            <div class="online-field">
+              <label for="donAmount">Donation Amount (SGD) *</label>
+              <input id="donAmount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="e.g. 50.00" required>
+              <span class="online-help">Enter an amount greater than SGD 0.</span>
+            </div>
+            <div class="online-field full">
+              <label class="online-check" for="donAnonymous">
+                <input id="donAnonymous" name="anonymous" type="checkbox" value="Yes">
+                <span>I wish to make this donation anonymously.</span>
+              </label>
+            </div>
+          </div>
+
+          <div style="margin-top:20px;">
+            <button class="online-submit" type="button" id="showPayNow">Continue to PayNow</button>
+          </div>
+
+          <div id="paynowPanel" class="paynow-panel" hidden>
+            <div class="form-step-label">Step 2 · Make your payment</div>
+            <h3 style="margin-top:6px;color:#1F2937;">PayNow Donation</h3>
+            <p class="online-help" style="margin-top:5px;">Open your bank's mobile app, scan this QR code and enter the donation amount you specified above.</p>
+            <img src="images/paynow-qr.jpeg" alt="GIVE HOPE PLEASE PayNow QR code">
+            <p style="margin-bottom:8px;">PayNow UEN</p>
+            <span class="paynow-uen">202623318ZGHP</span>
+            <p class="online-help" style="margin-top:12px;">Please check the recipient name and amount in your banking app before confirming payment.</p>
+            <div class="online-field" style="text-align:left;margin-top:18px;">
+              <label for="donReference">PayNow Transaction Reference (optional)</label>
+              <input id="donReference" name="transactionReference" type="text" maxlength="100" placeholder="Enter the transaction reference, if available">
+            </div>
+            <p class="online-help" style="text-align:left;margin-top:8px;">Your submission will be recorded as Pending Verification. The donation is confirmed only after our team verifies the payment received.</p>
+            <button class="online-submit" type="submit" id="donationSubmit" style="margin-top:18px;">Submit Donation Details</button>
+          </div>
+          <div id="donationStatus" class="online-status" role="status" aria-live="polite"></div>
+        </form>
       </div>
     </div>
   </section>
@@ -749,7 +920,7 @@
           <li><a href="#what-we-do">What We Do</a></li>
           <li><a href="#team">Our Team</a></li>
           <li><a href="#get-help">Get Help</a></li>
-          <li><a href="#donate">Donate</a></li>
+          <li><a href="#donation-form">Donate</a></li>
           <li><a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." target="_blank" rel="noopener noreferrer">Volunteer</a></li>
         </ul>
       </div>
@@ -784,6 +955,169 @@
         navLinks.classList.remove('active');
         menuToggle.textContent = '☰';
       });
+    });
+  </script>
+
+
+  <script>
+    // Add the two deployed Apps Script Web App URLs here after deployment.
+    const GHP_DONATION_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby27LF6AFNt3FJOzRVXd1-NbCQx2oIhkFxt5Hm0zo542Z5kOM8T-FKtWdSIT6WcDnoj/exec";
+    const GHP_ENQUIRY_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnogmYFy2oAqVD7h3jrXcjcxqj5aK265hEhVNE_RdG_9ZBvVO_uAFpRMKIH7RxhT0c/exec";
+
+    function ghpSetStatus(element, message, type) {
+      element.textContent = message;
+      element.className = "online-status " + type;
+    }
+
+    function ghpSubmitToAppsScript(endpoint, payload, statusElement, button) {
+      if (!endpoint || endpoint.indexOf("PASTE_") === 0) {
+        ghpSetStatus(statusElement, "The online form is not connected yet. Please try again later.", "error");
+        return;
+      }
+
+      const nonce = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : String(Date.now()) + Math.random().toString(36).slice(2);
+
+      const iframeName = "ghp_submit_" + nonce.replace(/[^a-zA-Z0-9]/g, "");
+      const iframe = document.createElement("iframe");
+      iframe.name = iframeName;
+      iframe.style.display = "none";
+      iframe.setAttribute("title", "Form submission response");
+      document.body.appendChild(iframe);
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = endpoint;
+      form.target = iframeName;
+      form.style.display = "none";
+
+      Object.keys(payload).forEach(function(key) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = payload[key] == null ? "" : String(payload[key]);
+        form.appendChild(input);
+      });
+
+      const nonceInput = document.createElement("input");
+      nonceInput.type = "hidden";
+      nonceInput.name = "requestNonce";
+      nonceInput.value = nonce;
+      form.appendChild(nonceInput);
+
+      let finished = false;
+      const cleanup = function() {
+        window.removeEventListener("message", onMessage);
+        form.remove();
+        iframe.remove();
+      };
+
+      const onMessage = function(event) {
+        const result = event.data;
+        if (!result || result.type !== "GHP_FORM_RESULT" || result.nonce !== nonce || finished) return;
+        finished = true;
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || "Submit";
+        if (result.success) {
+          ghpSetStatus(statusElement,
+            "Thank you. Your submission has been received. Reference: " + result.reference +
+            ". Acknowledgement emails have been sent. Please keep this reference for future communication.",
+            "success");
+          const parentForm = button.closest("form");
+          if (parentForm) parentForm.reset();
+          const payPanel = document.getElementById("paynowPanel");
+          if (payPanel) payPanel.hidden = true;
+        } else {
+          ghpSetStatus(statusElement, result.message || "We could not process your submission. Please try again.", "error");
+        }
+        cleanup();
+      };
+
+      window.addEventListener("message", onMessage);
+      document.body.appendChild(form);
+      button.disabled = true;
+      button.dataset.originalText = button.textContent;
+      button.textContent = "Submitting…";
+      ghpSetStatus(statusElement, "Submitting securely. Please keep this page open.", "info");
+      form.submit();
+
+      window.setTimeout(function() {
+        if (!finished) {
+          button.disabled = false;
+          button.textContent = button.dataset.originalText || "Submit";
+          ghpSetStatus(statusElement,
+            "We have not received a confirmation yet. Please check your email and avoid submitting again immediately. If no acknowledgement arrives, contact us with your details.",
+            "error");
+          cleanup();
+        }
+      }, 45000);
+    }
+
+    const donationForm = document.getElementById("donationForm");
+    const payNowPanel = document.getElementById("paynowPanel");
+    const showPayNow = document.getElementById("showPayNow");
+
+    showPayNow.addEventListener("click", function() {
+      const requiredFields = [
+        document.getElementById("donName"),
+        document.getElementById("donEmail"),
+        document.getElementById("donCountry"),
+        document.getElementById("donAmount")
+      ];
+      let valid = true;
+      requiredFields.forEach(function(field) {
+        if (!field.checkValidity()) {
+          field.reportValidity();
+          valid = false;
+        }
+      });
+      if (!valid) return;
+      const amount = Number(document.getElementById("donAmount").value);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        document.getElementById("donAmount").setCustomValidity("Please enter an amount greater than zero.");
+        document.getElementById("donAmount").reportValidity();
+        document.getElementById("donAmount").setCustomValidity("");
+        return;
+      }
+      payNowPanel.hidden = false;
+      payNowPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    donationForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      if (!donationForm.reportValidity()) return;
+      const payload = {
+        formType: "donation",
+        fullName: document.getElementById("donName").value.trim(),
+        email: document.getElementById("donEmail").value.trim(),
+        mobile: document.getElementById("donMobile").value.trim(),
+        country: document.getElementById("donCountry").value.trim(),
+        frequency: "One-time",
+        amount: document.getElementById("donAmount").value,
+        transactionReference: document.getElementById("donReference").value.trim(),
+        anonymous: document.getElementById("donAnonymous").checked ? "Yes" : "No"
+      };
+      ghpSubmitToAppsScript(GHP_DONATION_WEB_APP_URL, payload,
+        document.getElementById("donationStatus"), document.getElementById("donationSubmit"));
+    });
+
+    document.getElementById("enquiryForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      if (!form.reportValidity()) return;
+      const payload = {
+        formType: "enquiry",
+        fullName: document.getElementById("enqName").value.trim(),
+        email: document.getElementById("enqEmail").value.trim(),
+        contactNumber: document.getElementById("enqPhone").value.trim(),
+        country: document.getElementById("enqCountry").value.trim(),
+        enquiryType: document.getElementById("enqType").value,
+        subject: document.getElementById("enqSubject").value.trim(),
+        message: document.getElementById("enqMessage").value.trim()
+      };
+      ghpSubmitToAppsScript(GHP_ENQUIRY_WEB_APP_URL, payload,
+        document.getElementById("enquiryStatus"), document.getElementById("enquirySubmit"));
     });
   </script>
 
