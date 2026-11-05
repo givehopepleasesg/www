@@ -4,40 +4,168 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>GIVE HOPE PLEASE | Portal Test</title>
+  <title>GIVE HOPE PLEASE | Accounts Portal</title>
 
   <script src="https://accounts.google.com/gsi/client" async defer></script>
 
   <style>
+    * { box-sizing: border-box; }
+
     body {
       font-family: Arial, sans-serif;
       background: #fff;
       color: #333;
       margin: 0;
-      padding: 50px 20px;
-      text-align: center;
+      padding: 25px 16px;
     }
+
+    .container {
+      max-width: 1200px;
+      margin: auto;
+    }
+
+    h1, h2 { color: #d97732; }
 
     .panel {
       max-width: 440px;
-      margin: 40px auto;
+      margin: 45px auto;
       padding: 30px;
       border: 1px solid #ddd;
       border-radius: 10px;
+      text-align: center;
     }
 
-    h2 { color: #d97732; }
-
     #status {
-      margin-top: 25px;
+      margin-top: 20px;
       line-height: 1.6;
+      overflow-wrap: anywhere;
+    }
+
+    #dashboard {
+      display: none;
+    }
+
+    .topbar {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 15px;
+      margin-bottom: 25px;
+    }
+
+    .topbar h1 {
+      margin: 0;
+      font-size: 25px;
+    }
+
+    .user-info {
+      color: #666;
+      font-size: 14px;
+    }
+
+    .summary {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 15px;
+      margin: 25px 0;
+    }
+
+    .card {
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      padding: 20px;
+      background: #fff;
+    }
+
+    .card-label {
+      color: #666;
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .card-value {
+      font-size: 23px;
+      font-weight: bold;
+      color: #d97732;
+      overflow-wrap: anywhere;
+    }
+
+    .section {
+      margin-top: 30px;
+    }
+
+    .section h2 {
+      font-size: 20px;
+    }
+
+    .table-wrap {
+      overflow-x: auto;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+    }
+
+    table {
+      border-collapse: collapse;
+      width: 100%;
+      min-width: 1050px;
+      font-size: 13px;
+    }
+
+    th, td {
+      padding: 12px;
+      border-bottom: 1px solid #eee;
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      background: #f8f3ef;
+      color: #444;
+    }
+
+    button {
+      background: #d97732;
+      color: white;
+      border: none;
+      border-radius: 5px;
+      padding: 10px 18px;
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    button:hover { background: #bd6428; }
+
+    button:disabled {
+      background: #aaa;
+      cursor: wait;
+    }
+
+    .message {
+      margin: 15px 0;
+      color: #555;
+      line-height: 1.5;
+    }
+
+    .empty {
+      padding: 20px;
+      text-align: center;
+      color: #777;
+    }
+
+    @media (max-width: 600px) {
+      body { padding: 15px 10px; }
+      .topbar h1 { font-size: 21px; }
     }
   </style>
 </head>
 
 <body>
 
-  <div class="panel">
+<div class="container">
+
+  <!-- SIGN-IN -->
+  <div class="panel" id="loginPanel">
     <h2>GIVE HOPE PLEASE</h2>
     <h3>Private Accounts Portal</h3>
 
@@ -48,89 +176,358 @@
     <div id="status">Please sign in to continue.</div>
   </div>
 
-  <iframe
-    name="backendFrame"
-    id="backendFrame"
-    style="display:none">
-  </iframe>
+  <!-- DASHBOARD -->
+  <div id="dashboard">
 
-  <form
-    id="backendForm"
-    method="POST"
-    target="backendFrame"
-    action="https://script.google.com/macros/s/AKfycbz7_hTiOzMQ6bVr-1KNIYW_ncr_AeFvhbaKgGhue1zLlG8aFN-eC5TbqT0pWUuSQnhI/exec">
+    <div class="topbar">
+      <div>
+        <h1>GIVE HOPE PLEASE</h1>
+        <div class="user-info" id="userInfo"></div>
+      </div>
 
-    <input type="hidden" name="action" value="authTest">
-    <input type="hidden" name="idToken" id="idToken">
-  </form>
+      <button id="refreshButton" type="button" onclick="loadDashboard()">
+        Refresh Dashboard
+      </button>
+    </div>
 
-  <script>
-    const GOOGLE_CLIENT_ID =
-      "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
+    <div id="dashboardStatus" class="message">
+      Loading donation records...
+    </div>
 
-    const statusBox = document.getElementById("status");
-    const backendFrame = document.getElementById("backendFrame");
+    <div class="summary">
 
-    window.addEventListener("message", function(event) {
-      if (!event.origin.endsWith(".googleusercontent.com")) return;
-      if (!event.data || event.data.type !== "GHP_AUTH_TEST_RESULT") return;
+      <div class="card">
+        <div class="card-label">Total Donations</div>
+        <div class="card-value" id="donationCount">0</div>
+      </div>
 
-      const result = event.data.result;
+      <div class="card">
+        <div class="card-label">Declared Amount</div>
+        <div class="card-value" id="declaredAmount">S$0.00</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Verified Amount</div>
+        <div class="card-value" id="verifiedAmount">S$0.00</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Pending Verification</div>
+        <div class="card-value" id="pendingVerification">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Receipts Sent</div>
+        <div class="card-value" id="receiptsSent">0</div>
+      </div>
+
+      <div class="card">
+        <div class="card-label">Receipts Pending</div>
+        <div class="card-value" id="receiptsPending">0</div>
+      </div>
+
+    </div>
+
+    <div class="section">
+      <h2>Donation Records</h2>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Donation ID</th>
+              <th>Donor Name</th>
+              <th>Email</th>
+              <th>Mobile</th>
+              <th>Amount (SGD)</th>
+              <th>Payment Status</th>
+              <th>Verified Amount</th>
+              <th>Receipt Status</th>
+              <th>Receipt Number</th>
+            </tr>
+          </thead>
+
+          <tbody id="donationTable">
+            <tr>
+              <td colspan="10" class="empty">
+                Loading records...
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+
+<!-- HIDDEN BACKEND FRAME -->
+<iframe
+  name="backendFrame"
+  id="backendFrame"
+  style="display:none">
+</iframe>
+
+<!-- BACKEND REQUEST FORM -->
+<form
+  id="backendForm"
+  method="POST"
+  target="backendFrame"
+  action="https://script.google.com/macros/s/AKfycbz7_hTiOzMQ6bVr-1KNIYW_ncr_AeFvhbaKgGhue1zLlG8aFN-eC5TbqT0pWUuSQnhI/exec">
+
+  <input type="hidden" name="action" id="requestAction">
+  <input type="hidden" name="idToken" id="idToken">
+  <input type="hidden" name="filters" id="filters">
+
+</form>
+
+<script>
+
+  const GOOGLE_CLIENT_ID =
+    "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
+
+  let currentIdToken = null;
+  let currentUser = null;
+
+  const statusBox = document.getElementById("status");
+  const dashboardStatus =
+    document.getElementById("dashboardStatus");
+
+  const backendForm =
+    document.getElementById("backendForm");
+
+  const requestAction =
+    document.getElementById("requestAction");
+
+  const idTokenInput =
+    document.getElementById("idToken");
+
+  const filtersInput =
+    document.getElementById("filters");
+
+
+  // Receive responses from Apps Script.
+  window.addEventListener("message", function(event) {
+
+    if (!event.origin.endsWith(".googleusercontent.com")) return;
+
+    if (!event.data || !event.data.type) return;
+
+    const result = event.data.result;
+
+    if (event.data.type === "GHP_AUTH_TEST_RESULT") {
 
       if (result && result.success) {
-        statusBox.innerHTML =
-          "<strong>Authentication successful!</strong><br>" +
-          "Email: " + escapeHtml(result.email) + "<br>" +
-          "Role: " + escapeHtml(result.role);
+
+        currentUser = result;
+
+        document.getElementById("loginPanel").style.display = "none";
+        document.getElementById("dashboard").style.display = "block";
+
+        document.getElementById("userInfo").textContent =
+          "Signed in: " + result.email +
+          " | Role: " + result.role;
+
+        loadDashboard();
+
       } else {
+
         statusBox.textContent =
           result && result.message
             ? result.message
             : "Authentication failed.";
+
       }
+    }
+
+    if (event.data.type === "GHP_DASHBOARD_RESULT") {
+
+      document.getElementById("refreshButton").disabled = false;
+
+      if (result && result.success) {
+        displayDashboard(result.dashboard);
+      } else {
+        dashboardStatus.textContent =
+          result && result.message
+            ? result.message
+            : "Unable to load donation records.";
+      }
+    }
+
+  });
+
+
+  // Google Sign-In callback.
+  function handleGoogleSignIn(response) {
+
+    if (!response || !response.credential) {
+      statusBox.textContent =
+        "Google sign-in did not return a token.";
+      return;
+    }
+
+    currentIdToken = response.credential;
+
+    statusBox.textContent = "Checking your authorisation...";
+
+    submitBackendRequest("authTest", {});
+  }
+
+
+  // Submit a request to Apps Script.
+  function submitBackendRequest(action, filters) {
+
+    if (!currentIdToken) {
+      statusBox.textContent = "Please sign in again.";
+      return;
+    }
+
+    requestAction.value = action;
+    idTokenInput.value = currentIdToken;
+    filtersInput.value = JSON.stringify(filters || {});
+
+    backendForm.submit();
+  }
+
+
+  // Load donation dashboard.
+  function loadDashboard() {
+
+    if (!currentIdToken) return;
+
+    document.getElementById("refreshButton").disabled = true;
+
+    dashboardStatus.textContent =
+      "Loading donation records...";
+
+    submitBackendRequest("dashboard", {});
+  }
+
+
+  // Format currency.
+  function formatCurrency(value) {
+
+    return "S$" + Number(value || 0).toLocaleString(
+      "en-SG",
+      {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      }
+    );
+  }
+
+
+  // Add table cell safely using textContent.
+  function addCell(row, value) {
+
+    const cell = document.createElement("td");
+
+    cell.textContent =
+      value === null || value === undefined
+        ? ""
+        : String(value);
+
+    row.appendChild(cell);
+  }
+
+
+  // Display dashboard data.
+  function displayDashboard(data) {
+
+    if (!data || !data.summary || !Array.isArray(data.rows)) {
+      dashboardStatus.textContent =
+        "The dashboard returned an unexpected response.";
+      return;
+    }
+
+    const summary = data.summary;
+
+    document.getElementById("donationCount").textContent =
+      summary.donationCount || 0;
+
+    document.getElementById("declaredAmount").textContent =
+      formatCurrency(summary.declaredAmount);
+
+    document.getElementById("verifiedAmount").textContent =
+      formatCurrency(summary.verifiedAmount);
+
+    document.getElementById("pendingVerification").textContent =
+      summary.pendingVerification || 0;
+
+    document.getElementById("receiptsSent").textContent =
+      summary.receiptsSent || 0;
+
+    document.getElementById("receiptsPending").textContent =
+      summary.receiptsPending || 0;
+
+
+    const table = document.getElementById("donationTable");
+
+    table.replaceChildren();
+
+    if (data.rows.length === 0) {
+
+      const tr = document.createElement("tr");
+      const td = document.createElement("td");
+
+      td.colSpan = 10;
+      td.className = "empty";
+      td.textContent = "No donation records found.";
+
+      tr.appendChild(td);
+      table.appendChild(tr);
+
+    } else {
+
+      data.rows.forEach(function(donation) {
+
+        const tr = document.createElement("tr");
+
+        addCell(tr, donation.timestamp);
+        addCell(tr, donation.donationId);
+        addCell(tr, donation.fullName);
+        addCell(tr, donation.email);
+        addCell(tr, donation.mobile);
+        addCell(tr, formatCurrency(donation.amount));
+        addCell(tr, donation.paymentStatus);
+        addCell(tr, formatCurrency(donation.verifiedAmount));
+        addCell(tr, donation.receiptStatus);
+        addCell(tr, donation.receiptNumber);
+
+        table.appendChild(tr);
+
+      });
+
+    }
+
+    dashboardStatus.textContent =
+      "Dashboard loaded successfully. " +
+      data.rows.length + " donation record(s) displayed.";
+  }
+
+
+  // Initialise Google Sign-In.
+  window.onload = function() {
+
+    google.accounts.id.initialize({
+      client_id: GOOGLE_CLIENT_ID,
+      callback: handleGoogleSignIn
     });
 
-    function escapeHtml(value) {
-      return String(value).replace(/[&<>"']/g, function(c) {
-        return {
-          "&": "&amp;",
-          "<": "&lt;",
-          ">": "&gt;",
-          '"': "&quot;",
-          "'": "&#39;"
-        }[c];
-      });
-    }
-
-    function handleGoogleSignIn(response) {
-      if (!response || !response.credential) {
-        statusBox.textContent = "Google sign-in did not return a token.";
-        return;
+    google.accounts.id.renderButton(
+      document.getElementById("googleButton"),
+      {
+        theme: "outline",
+        size: "large",
+        text: "signin_with"
       }
+    );
 
-      statusBox.textContent = "Checking your authorisation...";
+  };
 
-      document.getElementById("idToken").value = response.credential;
-      document.getElementById("backendForm").submit();
-    }
-
-    window.onload = function() {
-      google.accounts.id.initialize({
-        client_id: GOOGLE_CLIENT_ID,
-        callback: handleGoogleSignIn
-      });
-
-      google.accounts.id.renderButton(
-        document.getElementById("googleButton"),
-        {
-          theme: "outline",
-          size: "large",
-          text: "signin_with"
-        }
-      );
-    };
-  </script>
+</script>
 
 </body>
 </html>
-
