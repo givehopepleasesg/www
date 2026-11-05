@@ -72,7 +72,6 @@
     const backendFrame = document.getElementById("backendFrame");
 
     window.addEventListener("message", function(event) {
-      if (event.source !== backendFrame.contentWindow) return;
       if (!event.origin.endsWith(".googleusercontent.com")) return;
       if (!event.data || event.data.type !== "GHP_AUTH_TEST_RESULT") return;
 
