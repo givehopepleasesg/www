@@ -1,1 +1,137 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GIVE HOPE PLEASE | Portal Test</title>
+
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #fff;
+      color: #333;
+      margin: 0;
+      padding: 50px 20px;
+      text-align: center;
+    }
+
+    .panel {
+      max-width: 440px;
+      margin: 40px auto;
+      padding: 30px;
+      border: 1px solid #ddd;
+      border-radius: 10px;
+    }
+
+    h2 { color: #d97732; }
+
+    #status {
+      margin-top: 25px;
+      line-height: 1.6;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="panel">
+    <h2>GIVE HOPE PLEASE</h2>
+    <h3>Private Accounts Portal</h3>
+
+    <p>Sign in with your authorised Google account.</p>
+
+    <div id="googleButton"></div>
+
+    <div id="status">Please sign in to continue.</div>
+  </div>
+
+  <iframe
+    name="backendFrame"
+    id="backendFrame"
+    style="display:none">
+  </iframe>
+
+  <form
+    id="backendForm"
+    method="POST"
+    target="backendFrame"
+    action="https://script.google.com/macros/s/AKfycbz7_hTiOzMQ6bVr-1KNIYW_ncr_AeFvhbaKgGhue1zLlG8aFN-eC5TbqT0pWUuSQnhI/exec">
+
+    <input type="hidden" name="action" value="authTest">
+    <input type="hidden" name="idToken" id="idToken">
+  </form>
+
+  <script>
+    const GOOGLE_CLIENT_ID =
+      "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
+
+    const statusBox = document.getElementById("status");
+    const backendFrame = document.getElementById("backendFrame");
+
+    window.addEventListener("message", function(event) {
+      if (event.source !== backendFrame.contentWindow) return;
+      if (!event.origin.endsWith(".googleusercontent.com")) return;
+      if (!event.data || event.data.type !== "GHP_AUTH_TEST_RESULT") return;
+
+      const result = event.data.result;
+
+      if (result && result.success) {
+        statusBox.innerHTML =
+          "<strong>Authentication successful!</strong><br>" +
+          "Email: " + escapeHtml(result.email) + "<br>" +
+          "Role: " + escapeHtml(result.role);
+      } else {
+        statusBox.textContent =
+          result && result.message
+            ? result.message
+            : "Authentication failed.";
+      }
+    });
+
+    function escapeHtml(value) {
+      return String(value).replace(/[&<>"']/g, function(c) {
+        return {
+          "&": "&amp;",
+          "<": "&lt;",
+          ">": "&gt;",
+          '"': "&quot;",
+          "'": "&#39;"
+        }[c];
+      });
+    }
+
+    function handleGoogleSignIn(response) {
+      if (!response || !response.credential) {
+        statusBox.textContent = "Google sign-in did not return a token.";
+        return;
+      }
+
+      statusBox.textContent = "Checking your authorisation...";
+
+      document.getElementById("idToken").value = response.credential;
+      document.getElementById("backendForm").submit();
+    }
+
+    window.onload = function() {
+      google.accounts.id.initialize({
+        client_id: GOOGLE_CLIENT_ID,
+        callback: handleGoogleSignIn
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById("googleButton"),
+        {
+          theme: "outline",
+          size: "large",
+          text: "signin_with"
+        }
+      );
+    };
+  </script>
+
+</body>
+</html>
+
