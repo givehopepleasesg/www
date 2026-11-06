@@ -464,8 +464,21 @@
       font-size: .92rem;
       font-weight: 600;
     }
-    .online-check { display: flex; align-items: flex-start; gap: 10px; color: var(--text-light); font-size: .88rem; }
-    .online-check input { width: 17px; height: 17px; margin-top: 3px; accent-color: var(--brand-terracotta); }
+.online-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-light);
+  font-size: .88rem;
+}
+
+.online-check input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--brand-terracotta);
+}
     .online-submit {
       display: inline-flex;
       align-items: center;
@@ -539,27 +552,7 @@
       .online-form-section { padding: 40px 16px; }
     }
   </style>
-  <stype>
-    .online-check {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  cursor: pointer;
-  width: fit-content;
-}
 
-.online-check input[type="checkbox"] {
-  width: 19px;
-  height: 19px;
-  margin: 0;
-  flex-shrink: 0;
-}
-
-.online-check span {
-  display: inline-block;
-  line-height: 1.4;
-}
-  </stype>
 </head>
 <body>
 
