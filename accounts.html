@@ -1,184 +1,50 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GIVE HOPE PLEASE | Accounts Portal</title>
-
   <script src="https://accounts.google.com/gsi/client" async defer></script>
-
   <style>
     * { box-sizing: border-box; }
-
-    body {
-      font-family: Arial, sans-serif;
-      background: #fff;
-      color: #333;
-      margin: 0;
-      padding: 25px 16px;
-    }
-
-    .container { max-width: 1200px; margin: auto; }
+    body { font-family: Arial, sans-serif; background: #fff; color: #333; margin: 0; padding: 25px 16px; }
+    .container { max-width: 1300px; margin: auto; }
     h1, h2 { color: #d97732; }
-
-    .panel {
-      max-width: 440px;
-      margin: 45px auto;
-      padding: 30px;
-      border: 1px solid #ddd;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    #status {
-      margin-top: 20px;
-      line-height: 1.6;
-      overflow-wrap: anywhere;
-    }
-
+    .panel { max-width: 440px; margin: 45px auto; padding: 30px; border: 1px solid #ddd; border-radius: 10px; text-align: center; }
+    #status { margin-top: 20px; line-height: 1.6; overflow-wrap: anywhere; }
     #dashboard { display: none; }
-
-    .topbar {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 15px;
-      margin-bottom: 25px;
-    }
-
+    .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
     .topbar h1 { margin: 0; font-size: 25px; }
     .user-info { color: #666; font-size: 14px; }
-
-    .filters {
-      display: flex;
-      flex-wrap: wrap;
-      align-items: end;
-      gap: 15px;
-      padding: 20px;
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      background: #fafafa;
-      margin: 20px 0;
-    }
-
-    .filter-field {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-      min-width: 155px;
-    }
-
-    .filter-field label {
-      font-size: 13px;
-      color: #555;
-      font-weight: bold;
-    }
-
-    .filter-field input,
-    .filter-field select {
-      padding: 10px;
-      border: 1px solid #ccc;
-      border-radius: 5px;
-      background: white;
-      font-size: 14px;
-      min-height: 39px;
-    }
-
-    .summary {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
-      gap: 15px;
-      margin: 25px 0;
-    }
-
-    .card {
-      border: 1px solid #ddd;
-      border-radius: 9px;
-      padding: 20px;
-      background: #fff;
-    }
-
-    .card-label {
-      color: #666;
-      font-size: 13px;
-      margin-bottom: 10px;
-    }
-
-    .card-value {
-      font-size: 23px;
-      font-weight: bold;
-      color: #d97732;
-      overflow-wrap: anywhere;
-    }
-
+    .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 15px; padding: 20px; border: 1px solid #ddd; border-radius: 9px; background: #fafafa; margin: 20px 0; }
+    .filter-field { display: flex; flex-direction: column; gap: 7px; min-width: 155px; }
+    .filter-field label { font-size: 13px; color: #555; font-weight: bold; }
+    .filter-field input, .filter-field select { padding: 10px; border: 1px solid #ccc; border-radius: 5px; background: white; font-size: 14px; min-height: 39px; }
+    .summary { display: grid; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); gap: 15px; margin: 25px 0; }
+    .card { border: 1px solid #ddd; border-radius: 9px; padding: 20px; background: #fff; }
+    .card-label { color: #666; font-size: 13px; margin-bottom: 10px; }
+    .card-value { font-size: 23px; font-weight: bold; color: #d97732; overflow-wrap: anywhere; }
     .section { margin-top: 30px; }
     .section h2 { font-size: 20px; }
-
-    .table-wrap {
-      overflow-x: auto;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-    }
-
-    table {
-      border-collapse: collapse;
-      width: 100%;
-      min-width: 1050px;
-      font-size: 13px;
-    }
-
-    th, td {
-      padding: 12px;
-      border-bottom: 1px solid #eee;
-      text-align: left;
-      white-space: nowrap;
-    }
-
+    .table-wrap { overflow-x: auto; border: 1px solid #ddd; border-radius: 8px; }
+    table { border-collapse: collapse; width: 100%; min-width: 1250px; font-size: 13px; }
+    th, td { padding: 12px; border-bottom: 1px solid #eee; text-align: left; white-space: nowrap; }
     th { background: #f8f3ef; color: #444; }
-
-    button {
-      background: #d97732;
-      color: white;
-      border: none;
-      border-radius: 5px;
-      padding: 10px 18px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-
+    button { background: #d97732; color: white; border: none; border-radius: 5px; padding: 10px 14px; cursor: pointer; font-size: 13px; }
     button:hover { background: #bd6428; }
     button:disabled { background: #aaa; cursor: wait; }
-
     .secondary-button { background: #666; }
     .secondary-button:hover { background: #444; }
-
-    .message {
-      margin: 15px 0;
-      color: #555;
-      line-height: 1.5;
-    }
-
-    .empty {
-      padding: 20px;
-      text-align: center;
-      color: #777;
-    }
-
-    @media (max-width: 600px) {
-      body { padding: 15px 10px; }
-      .topbar h1 { font-size: 21px; }
-      .filter-field { width: 100%; }
-    }
+    .small-button { padding: 7px 10px; margin: 2px; }
+    .message { margin: 15px 0; color: #555; line-height: 1.5; }
+    .empty { padding: 20px; text-align: center; color: #777; }
+    .action-cell { min-width: 190px; }
+    @media (max-width: 600px) { body { padding: 15px 10px; } .topbar h1 { font-size: 21px; } .filter-field { width: 100%; } }
   </style>
 </head>
-
 <body>
-
 <div class="container">
 
-  <!-- SIGN-IN -->
   <div class="panel" id="loginPanel">
     <h2>GIVE HOPE PLEASE</h2>
     <h3>Private Accounts Portal</h3>
@@ -187,33 +53,24 @@
     <div id="status">Please sign in to continue.</div>
   </div>
 
-  <!-- DASHBOARD -->
   <div id="dashboard">
-
     <div class="topbar">
       <div>
         <h1>GIVE HOPE PLEASE</h1>
         <div class="user-info" id="userInfo"></div>
       </div>
-
-      <button id="refreshButton" type="button" onclick="loadDashboard()">
-        Refresh Dashboard
-      </button>
+      <button id="refreshButton" type="button" onclick="loadDashboard()">Refresh Dashboard</button>
     </div>
 
-    <!-- FILTERS -->
     <div class="filters">
-
       <div class="filter-field">
         <label for="fromDate">From date</label>
         <input type="date" id="fromDate">
       </div>
-
       <div class="filter-field">
         <label for="toDate">To date</label>
         <input type="date" id="toDate">
       </div>
-
       <div class="filter-field">
         <label for="paymentStatus">Payment status</label>
         <select id="paymentStatus">
@@ -223,7 +80,6 @@
           <option value="Rejected">Rejected</option>
         </select>
       </div>
-
       <div class="filter-field">
         <label for="receiptStatus">Receipt status</label>
         <select id="receiptStatus">
@@ -234,390 +90,211 @@
           <option value="Failed">Failed</option>
         </select>
       </div>
-
-      <button type="button" id="applyButton" onclick="applyFilters()">
-        Apply Filters
-      </button>
-
-      <button type="button" class="secondary-button"
-        id="clearButton" onclick="clearFilters()">
-        Clear Filters
-      </button>
-
+      <button type="button" id="applyButton" onclick="applyFilters()">Apply Filters</button>
+      <button type="button" class="secondary-button" id="clearButton" onclick="clearFilters()">Clear Filters</button>
     </div>
 
-    <div id="dashboardStatus" class="message">
-      Loading donation records...
-    </div>
+    <div id="dashboardStatus" class="message">Loading donation records...</div>
 
-    <!-- SUMMARY -->
     <div class="summary">
-
-      <div class="card">
-        <div class="card-label">Total Donations</div>
-        <div class="card-value" id="donationCount">0</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Declared Amount</div>
-        <div class="card-value" id="declaredAmount">S$0.00</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Verified Amount</div>
-        <div class="card-value" id="verifiedAmount">S$0.00</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Pending Verification</div>
-        <div class="card-value" id="pendingVerification">0</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Receipts Sent</div>
-        <div class="card-value" id="receiptsSent">0</div>
-      </div>
-
-      <div class="card">
-        <div class="card-label">Receipts Pending</div>
-        <div class="card-value" id="receiptsPending">0</div>
-      </div>
-
+      <div class="card"><div class="card-label">Total Donations</div><div class="card-value" id="donationCount">0</div></div>
+      <div class="card"><div class="card-label">Declared Amount</div><div class="card-value" id="declaredAmount">S$0.00</div></div>
+      <div class="card"><div class="card-label">Verified Amount</div><div class="card-value" id="verifiedAmount">S$0.00</div></div>
+      <div class="card"><div class="card-label">Pending Verification</div><div class="card-value" id="pendingVerification">0</div></div>
+      <div class="card"><div class="card-label">Receipts Sent</div><div class="card-value" id="receiptsSent">0</div></div>
+      <div class="card"><div class="card-label">Receipts Pending</div><div class="card-value" id="receiptsPending">0</div></div>
     </div>
 
-    <!-- DONATION RECORDS -->
     <div class="section">
       <h2>Donation Records</h2>
-
-<div class="filter-field" style="margin: 15px 0; max-width: 380px;">
-  <label for="recordSearch">
-    Search by Donor Name or Donation ID
-  </label>
-  <input
-    type="search"
-    id="recordSearch"
-    placeholder="Enter donor name or donation ID"
-    oninput="searchDonationRecords()"
-    onkeydown="if(event.key === 'Enter') searchDonationRecords()"
-  >
-</div>
+      <div class="filter-field" style="margin: 15px 0; max-width: 380px;">
+        <label for="recordSearch">Search by Donor Name or Donation ID</label>
+        <input type="search" id="recordSearch" placeholder="Enter donor name or donation ID"
+          oninput="searchDonationRecords()"
+          onkeydown="if(event.key === 'Enter') searchDonationRecords()">
+      </div>
 
       <div class="table-wrap">
         <table>
           <thead>
             <tr>
-              <th>Date</th>
-              <th>Donation ID</th>
-              <th>Donor Name</th>
-              <th>Email</th>
-              <th>Mobile</th>
-              <th>Amount (SGD)</th>
-              <th>Payment Status</th>
-              <th>Verified Amount</th>
-              <th>Receipt Status</th>
-              <th>Receipt Number</th>
+              <th>Date</th><th>Donation ID</th><th>Donor Name</th><th>Email</th>
+              <th>Mobile</th><th>Amount (SGD)</th><th>Payment Status</th>
+              <th>Verified Amount</th><th>Receipt Status</th><th>Receipt Number</th>
+              <th>Actions</th>
             </tr>
           </thead>
-
           <tbody id="donationTable">
-            <tr>
-              <td colspan="10" class="empty">Loading records...</td>
-            </tr>
+            <tr><td colspan="11" class="empty">Loading records...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
-
   </div>
-
 </div>
 
-<!-- HIDDEN BACKEND FRAME -->
-<iframe
-  name="backendFrame"
-  id="backendFrame"
-  style="display:none">
-</iframe>
+<iframe name="backendFrame" id="backendFrame" style="display:none"></iframe>
 
-<!-- BACKEND REQUEST FORM -->
-<form
-  id="backendForm"
-  method="POST"
-  target="backendFrame"
+<form id="backendForm" method="POST" target="backendFrame"
   action="https://script.google.com/macros/s/AKfycbz7_hTiOzMQ6bVr-1KNIYW_ncr_AeFvhbaKgGhue1zLlG8aFN-eC5TbqT0pWUuSQnhI/exec">
-
   <input type="hidden" name="action" id="requestAction">
   <input type="hidden" name="idToken" id="idToken">
   <input type="hidden" name="filters" id="filters">
-
+  <input type="hidden" name="payload" id="payload">
 </form>
 
 <script>
-
-  const GOOGLE_CLIENT_ID =
-    "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
-
+  const GOOGLE_CLIENT_ID = "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
   let currentIdToken = null;
   let currentDonationRows = [];
 
   const statusBox = document.getElementById("status");
-  const dashboardStatus =
-    document.getElementById("dashboardStatus");
+  const dashboardStatus = document.getElementById("dashboardStatus");
+  const backendForm = document.getElementById("backendForm");
 
-  const backendForm =
-    document.getElementById("backendForm");
-
-  const requestAction =
-    document.getElementById("requestAction");
-
-  const idTokenInput =
-    document.getElementById("idToken");
-
-  const filtersInput =
-    document.getElementById("filters");
-
-
-  // Receive responses from Apps Script.
   window.addEventListener("message", function(event) {
-
     if (!event.origin.endsWith(".googleusercontent.com")) return;
     if (!event.data || !event.data.type) return;
-
     const result = event.data.result;
 
     if (event.data.type === "GHP_AUTH_TEST_RESULT") {
-
       if (result && result.success) {
-
         document.getElementById("loginPanel").style.display = "none";
         document.getElementById("dashboard").style.display = "block";
-
         document.getElementById("userInfo").textContent =
-          "Signed in: " + result.email +
-          " | Role: " + result.role;
-
+          "Signed in: " + result.email + " | Role: " + result.role;
         loadDashboard();
-
       } else {
-
-        statusBox.textContent =
-          result && result.message
-            ? result.message
-            : "Authentication failed.";
-
+        statusBox.textContent = result && result.message ? result.message : "Authentication failed.";
       }
     }
 
     if (event.data.type === "GHP_DASHBOARD_RESULT") {
-
       setButtonsEnabled(true);
-
-      if (result && result.success) {
-        displayDashboard(result.dashboard);
-      } else {
-        dashboardStatus.textContent =
-          result && result.message
-            ? result.message
-            : "Unable to load donation records.";
-      }
+      if (result && result.success) displayDashboard(result.dashboard);
+      else dashboardStatus.textContent = result && result.message ? result.message : "Unable to load donation records.";
     }
 
+    if (event.data.type === "GHP_ACTION_RESULT") {
+      setButtonsEnabled(true);
+      dashboardStatus.textContent = result && result.message
+        ? result.message
+        : (result && result.success ? "Action completed." : "The action failed.");
+      if (result && result.success) loadDashboard();
+    }
   });
 
-
   function handleGoogleSignIn(response) {
-
     if (!response || !response.credential) {
-      statusBox.textContent =
-        "Google sign-in did not return a token.";
+      statusBox.textContent = "Google sign-in did not return a token.";
       return;
     }
-
     currentIdToken = response.credential;
-
     statusBox.textContent = "Checking your authorisation...";
-
-    submitBackendRequest("authTest", {});
+    submitBackendRequest("authTest", {}, {});
   }
 
-
-  function submitBackendRequest(action, filters) {
-
+  function submitBackendRequest(action, filters, payload) {
     if (!currentIdToken) {
       statusBox.textContent = "Please sign in again.";
       return;
     }
-
-    requestAction.value = action;
-    idTokenInput.value = currentIdToken;
-    filtersInput.value = JSON.stringify(filters || {});
-
+    document.getElementById("requestAction").value = action;
+    document.getElementById("idToken").value = currentIdToken;
+    document.getElementById("filters").value = JSON.stringify(filters || {});
+    document.getElementById("payload").value = JSON.stringify(payload || {});
     backendForm.submit();
   }
 
-
-  // Load dashboard using selected filters.
   function loadDashboard() {
-
     if (!currentIdToken) return;
-
     const filters = {
       fromDate: document.getElementById("fromDate").value,
       toDate: document.getElementById("toDate").value,
       paymentStatus: document.getElementById("paymentStatus").value,
       receiptStatus: document.getElementById("receiptStatus").value
     };
-
-    if (filters.fromDate && filters.toDate &&
-        filters.fromDate > filters.toDate) {
-
-      dashboardStatus.textContent =
-        "From date cannot be later than To date.";
-
+    if (filters.fromDate && filters.toDate && filters.fromDate > filters.toDate) {
+      dashboardStatus.textContent = "From date cannot be later than To date.";
       return;
     }
-
     setButtonsEnabled(false);
-
     dashboardStatus.textContent = "Loading donation records...";
-
-    submitBackendRequest("dashboard", filters);
+    submitBackendRequest("dashboard", filters, {});
   }
 
-
-  function applyFilters() {
-    loadDashboard();
-  }
-
+  function applyFilters() { loadDashboard(); }
 
   function clearFilters() {
-
     document.getElementById("fromDate").value = "";
     document.getElementById("toDate").value = "";
     document.getElementById("paymentStatus").value = "";
     document.getElementById("receiptStatus").value = "";
-
     loadDashboard();
   }
 
-
   function setButtonsEnabled(enabled) {
-
-    document.getElementById("refreshButton").disabled = !enabled;
-    document.getElementById("applyButton").disabled = !enabled;
-    document.getElementById("clearButton").disabled = !enabled;
+    ["refreshButton", "applyButton", "clearButton"].forEach(id => {
+      const button = document.getElementById(id);
+      if (button) button.disabled = !enabled;
+    });
+    document.querySelectorAll(".row-action").forEach(button => button.disabled = !enabled);
   }
-
 
   function formatCurrency(value) {
-
-    return "S$" + Number(value || 0).toLocaleString(
-      "en-SG",
-      {
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-      }
-    );
+    return "S$" + Number(value || 0).toLocaleString("en-SG", {
+      minimumFractionDigits: 2, maximumFractionDigits: 2
+    });
   }
-
 
   function addCell(row, value) {
-
     const cell = document.createElement("td");
-
-    cell.textContent =
-      value === null || value === undefined
-        ? ""
-        : String(value);
-
+    cell.textContent = value === null || value === undefined ? "" : String(value);
     row.appendChild(cell);
+    return cell;
   }
 
-
-  // Display dashboard summary and store filtered records.
   function displayDashboard(data) {
-
     if (!data || !data.summary || !Array.isArray(data.rows)) {
-      dashboardStatus.textContent =
-        "The dashboard returned an unexpected response.";
+      dashboardStatus.textContent = "The dashboard returned an unexpected response.";
       return;
     }
-
     const summary = data.summary;
-
-    document.getElementById("donationCount").textContent =
-      summary.donationCount || 0;
-
-    document.getElementById("declaredAmount").textContent =
-      formatCurrency(summary.declaredAmount);
-
-    document.getElementById("verifiedAmount").textContent =
-      formatCurrency(summary.verifiedAmount);
-
-    document.getElementById("pendingVerification").textContent =
-      summary.pendingVerification || 0;
-
-    document.getElementById("receiptsSent").textContent =
-      summary.receiptsSent || 0;
-
-    document.getElementById("receiptsPending").textContent =
-      summary.receiptsPending || 0;
-
+    document.getElementById("donationCount").textContent = summary.donationCount || 0;
+    document.getElementById("declaredAmount").textContent = formatCurrency(summary.declaredAmount);
+    document.getElementById("verifiedAmount").textContent = formatCurrency(summary.verifiedAmount);
+    document.getElementById("pendingVerification").textContent = summary.pendingVerification || 0;
+    document.getElementById("receiptsSent").textContent = summary.receiptsSent || 0;
+    document.getElementById("receiptsPending").textContent = summary.receiptsPending || 0;
     currentDonationRows = data.rows;
-
     renderDonationRows();
   }
 
+  function searchDonationRecords() { renderDonationRows(); }
 
-  // Called whenever the user types in the search box.
-  function searchDonationRecords() {
-    renderDonationRows();
-  }
-
-
-  // Render records after applying the donor name / ID search.
   function renderDonationRows() {
-
     const table = document.getElementById("donationTable");
-    const searchInput = document.getElementById("recordSearch");
+    const searchText = document.getElementById("recordSearch").value.trim().toLowerCase();
 
-    const searchText = searchInput.value.trim().toLowerCase();
-
-    const filteredRows = currentDonationRows.filter(function(donation) {
-
-      const donorName =
-        String(donation.fullName || "").toLowerCase();
-
-      const donationId =
-        String(donation.donationId || "").toLowerCase();
-
-      return donorName.includes(searchText) ||
-             donationId.includes(searchText);
-
+    const filteredRows = currentDonationRows.filter(donation => {
+      const name = String(donation.fullName || "").toLowerCase();
+      const id = String(donation.donationId || "").toLowerCase();
+      return name.includes(searchText) || id.includes(searchText);
     });
 
     table.replaceChildren();
 
-    if (filteredRows.length === 0) {
-
+    if (!filteredRows.length) {
       const tr = document.createElement("tr");
       const td = document.createElement("td");
-
-      td.colSpan = 10;
+      td.colSpan = 11;
       td.className = "empty";
-      td.textContent = searchText
-        ? "No matching donation records found."
-        : "No donation records found.";
-
+      td.textContent = searchText ? "No matching donation records found." : "No donation records found.";
       tr.appendChild(td);
       table.appendChild(tr);
-
     } else {
-
-      filteredRows.forEach(function(donation) {
-
+      filteredRows.forEach(donation => {
         const tr = document.createElement("tr");
-
         addCell(tr, donation.timestamp);
         addCell(tr, donation.donationId);
         addCell(tr, donation.fullName);
@@ -629,40 +306,123 @@
         addCell(tr, donation.receiptStatus);
         addCell(tr, donation.receiptNumber);
 
+        const actionCell = addCell(tr, "");
+        actionCell.className = "action-cell";
+
+        const paymentStatus = String(donation.paymentStatus || "").toLowerCase();
+        const receiptStatus = String(donation.receiptStatus || "").toLowerCase();
+
+        if (paymentStatus !== "verified" && paymentStatus !== "rejected") {
+          const verifyButton = document.createElement("button");
+          verifyButton.type = "button";
+          verifyButton.className = "small-button row-action";
+          verifyButton.textContent = "Verify Payment";
+          verifyButton.onclick = () => verifyPayment(donation);
+          actionCell.appendChild(verifyButton);
+        }
+
+        if (paymentStatus === "verified" && receiptStatus !== "sent") {
+          const receiptButton = document.createElement("button");
+          receiptButton.type = "button";
+          receiptButton.className = "small-button row-action";
+          receiptButton.textContent = receiptStatus === "failed"
+            ? "Retry Receipt Email" : "Generate & Email Receipt";
+          receiptButton.onclick = () => sendReceipt(donation);
+          actionCell.appendChild(receiptButton);
+        }
+
+        if (donation.receiptPdfLink) {
+          const link = document.createElement("a");
+          link.href = donation.receiptPdfLink;
+          link.target = "_blank";
+          link.rel = "noopener";
+          link.textContent = "View PDF";
+          link.style.display = "block";
+          link.style.marginTop = "5px";
+          actionCell.appendChild(link);
+        }
+
         table.appendChild(tr);
-
       });
-
     }
 
-    dashboardStatus.textContent =
-      "Showing " + filteredRows.length + " of " +
-      currentDonationRows.length +
-      " donation record(s) matching your search.";
-
+    dashboardStatus.textContent = "Showing " + filteredRows.length + " of " +
+      currentDonationRows.length + " donation record(s) matching your search.";
   }
 
+  function verifyPayment(donation) {
+    const suggestedAmount = Number(donation.amount || 0).toFixed(2);
+    const amountText = prompt(
+      "Enter the actual amount received in SGD for " + donation.donationId + ":",
+      suggestedAmount
+    );
+    if (amountText === null) return;
 
-  // Initialise Google Sign-In.
+    const amount = Number(amountText);
+    if (!Number.isFinite(amount) || amount <= 0) {
+      alert("Please enter a valid amount greater than zero.");
+      return;
+    }
+
+    const localToday = new Intl.DateTimeFormat("en-CA", {
+      timeZone: "Asia/Singapore",
+      year: "numeric",
+      month: "2-digit",
+      day: "2-digit"
+    }).format(new Date());
+
+    const dateText = prompt(
+      "Enter the payment received date (YYYY-MM-DD):",
+      donation.paymentReceivedDate ? donation.paymentReceivedDate.substring(0, 10) : localToday
+    );
+    if (dateText === null) return;
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(dateText)) {
+      alert("Please enter the date in YYYY-MM-DD format.");
+      return;
+    }
+
+    const remarks = prompt("Optional remarks (leave blank if none):", "") || "";
+    if (!confirm(
+      "Confirm payment verification?\n\nDonation: " + donation.donationId +
+      "\nAmount received: S$" + amount.toFixed(2) +
+      "\nPayment date: " + dateText
+    )) return;
+
+    setButtonsEnabled(false);
+    dashboardStatus.textContent = "Verifying payment...";
+    submitBackendRequest("verifyDonation", {}, {
+      donationId: donation.donationId,
+      verifiedAmount: amount,
+      paymentReceivedDate: dateText,
+      remarks: remarks
+    });
+  }
+
+  function sendReceipt(donation) {
+    const actionText = String(donation.receiptStatus || "").toLowerCase() === "failed"
+      ? "Retry emailing the existing receipt for "
+      : "Generate the PDF receipt and email it to ";
+    if (!confirm(
+      actionText + donation.fullName + " (" + donation.email + ")?\n\n" +
+      "Donation ID: " + donation.donationId +
+      "\nVerified amount: " + formatCurrency(donation.verifiedAmount)
+    )) return;
+
+    setButtonsEnabled(false);
+    dashboardStatus.textContent = "Generating and emailing receipt...";
+    submitBackendRequest("receipt", {}, { donationId: donation.donationId });
+  }
+
   window.onload = function() {
-
     google.accounts.id.initialize({
       client_id: GOOGLE_CLIENT_ID,
       callback: handleGoogleSignIn
     });
-
     google.accounts.id.renderButton(
       document.getElementById("googleButton"),
-      {
-        theme: "outline",
-        size: "large",
-        text: "signin_with"
-      }
+      { theme: "outline", size: "large", text: "signin_with" }
     );
-
   };
-
 </script>
-
 </body>
 </html>
