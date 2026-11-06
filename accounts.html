@@ -19,11 +19,7 @@
       padding: 25px 16px;
     }
 
-    .container {
-      max-width: 1200px;
-      margin: auto;
-    }
-
+    .container { max-width: 1200px; margin: auto; }
     h1, h2 { color: #d97732; }
 
     .panel {
@@ -41,9 +37,7 @@
       overflow-wrap: anywhere;
     }
 
-    #dashboard {
-      display: none;
-    }
+    #dashboard { display: none; }
 
     .topbar {
       display: flex;
@@ -54,14 +48,43 @@
       margin-bottom: 25px;
     }
 
-    .topbar h1 {
-      margin: 0;
-      font-size: 25px;
+    .topbar h1 { margin: 0; font-size: 25px; }
+
+    .user-info { color: #666; font-size: 14px; }
+
+    .filters {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: end;
+      gap: 15px;
+      padding: 20px;
+      border: 1px solid #ddd;
+      border-radius: 9px;
+      background: #fafafa;
+      margin: 20px 0;
     }
 
-    .user-info {
-      color: #666;
+    .filter-field {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      min-width: 155px;
+    }
+
+    .filter-field label {
+      font-size: 13px;
+      color: #555;
+      font-weight: bold;
+    }
+
+    .filter-field input,
+    .filter-field select {
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      background: white;
       font-size: 14px;
+      min-height: 39px;
     }
 
     .summary {
@@ -91,13 +114,8 @@
       overflow-wrap: anywhere;
     }
 
-    .section {
-      margin-top: 30px;
-    }
-
-    .section h2 {
-      font-size: 20px;
-    }
+    .section { margin-top: 30px; }
+    .section h2 { font-size: 20px; }
 
     .table-wrap {
       overflow-x: auto;
@@ -119,10 +137,7 @@
       white-space: nowrap;
     }
 
-    th {
-      background: #f8f3ef;
-      color: #444;
-    }
+    th { background: #f8f3ef; color: #444; }
 
     button {
       background: #d97732;
@@ -141,6 +156,14 @@
       cursor: wait;
     }
 
+    .secondary-button {
+      background: #666;
+    }
+
+    .secondary-button:hover {
+      background: #444;
+    }
+
     .message {
       margin: 15px 0;
       color: #555;
@@ -156,6 +179,7 @@
     @media (max-width: 600px) {
       body { padding: 15px 10px; }
       .topbar h1 { font-size: 21px; }
+      .filter-field { width: 100%; }
     }
   </style>
 </head>
@@ -168,11 +192,8 @@
   <div class="panel" id="loginPanel">
     <h2>GIVE HOPE PLEASE</h2>
     <h3>Private Accounts Portal</h3>
-
     <p>Sign in with your authorised Google account.</p>
-
     <div id="googleButton"></div>
-
     <div id="status">Please sign in to continue.</div>
   </div>
 
@@ -190,10 +211,56 @@
       </button>
     </div>
 
+    <!-- FILTERS -->
+    <div class="filters">
+
+      <div class="filter-field">
+        <label for="fromDate">From date</label>
+        <input type="date" id="fromDate">
+      </div>
+
+      <div class="filter-field">
+        <label for="toDate">To date</label>
+        <input type="date" id="toDate">
+      </div>
+
+      <div class="filter-field">
+        <label for="paymentStatus">Payment status</label>
+        <select id="paymentStatus">
+          <option value="">All</option>
+          <option value="Pending Verification">Pending Verification</option>
+          <option value="Verified">Verified</option>
+          <option value="Rejected">Rejected</option>
+        </select>
+      </div>
+
+      <div class="filter-field">
+        <label for="receiptStatus">Receipt status</label>
+        <select id="receiptStatus">
+          <option value="">All</option>
+          <option value="Pending">Pending</option>
+          <option value="Processing">Processing</option>
+          <option value="Sent">Sent</option>
+          <option value="Failed">Failed</option>
+        </select>
+      </div>
+
+      <button type="button" id="applyButton" onclick="applyFilters()">
+        Apply Filters
+      </button>
+
+      <button type="button" class="secondary-button"
+        id="clearButton" onclick="clearFilters()">
+        Clear Filters
+      </button>
+
+    </div>
+
     <div id="dashboardStatus" class="message">
       Loading donation records...
     </div>
 
+    <!-- SUMMARY -->
     <div class="summary">
 
       <div class="card">
@@ -228,6 +295,7 @@
 
     </div>
 
+    <!-- DONATION RECORDS -->
     <div class="section">
       <h2>Donation Records</h2>
 
@@ -250,9 +318,7 @@
 
           <tbody id="donationTable">
             <tr>
-              <td colspan="10" class="empty">
-                Loading records...
-              </td>
+              <td colspan="10" class="empty">Loading records...</td>
             </tr>
           </tbody>
         </table>
@@ -289,7 +355,6 @@
     "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
 
   let currentIdToken = null;
-  let currentUser = null;
 
   const statusBox = document.getElementById("status");
   const dashboardStatus =
@@ -312,7 +377,6 @@
   window.addEventListener("message", function(event) {
 
     if (!event.origin.endsWith(".googleusercontent.com")) return;
-
     if (!event.data || !event.data.type) return;
 
     const result = event.data.result;
@@ -320,8 +384,6 @@
     if (event.data.type === "GHP_AUTH_TEST_RESULT") {
 
       if (result && result.success) {
-
-        currentUser = result;
 
         document.getElementById("loginPanel").style.display = "none";
         document.getElementById("dashboard").style.display = "block";
@@ -344,7 +406,7 @@
 
     if (event.data.type === "GHP_DASHBOARD_RESULT") {
 
-      document.getElementById("refreshButton").disabled = false;
+      setButtonsEnabled(true);
 
       if (result && result.success) {
         displayDashboard(result.dashboard);
@@ -359,7 +421,6 @@
   });
 
 
-  // Google Sign-In callback.
   function handleGoogleSignIn(response) {
 
     if (!response || !response.credential) {
@@ -376,7 +437,6 @@
   }
 
 
-  // Submit a request to Apps Script.
   function submitBackendRequest(action, filters) {
 
     if (!currentIdToken) {
@@ -392,21 +452,59 @@
   }
 
 
-  // Load donation dashboard.
+  // Load dashboard using selected filters.
   function loadDashboard() {
 
     if (!currentIdToken) return;
 
-    document.getElementById("refreshButton").disabled = true;
+    const filters = {
+      fromDate: document.getElementById("fromDate").value,
+      toDate: document.getElementById("toDate").value,
+      paymentStatus: document.getElementById("paymentStatus").value,
+      receiptStatus: document.getElementById("receiptStatus").value
+    };
 
-    dashboardStatus.textContent =
-      "Loading donation records...";
+    if (filters.fromDate && filters.toDate &&
+        filters.fromDate > filters.toDate) {
 
-    submitBackendRequest("dashboard", {});
+      dashboardStatus.textContent =
+        "From date cannot be later than To date.";
+
+      return;
+    }
+
+    setButtonsEnabled(false);
+
+    dashboardStatus.textContent = "Loading donation records...";
+
+    submitBackendRequest("dashboard", filters);
   }
 
 
-  // Format currency.
+  function applyFilters() {
+    loadDashboard();
+  }
+
+
+  function clearFilters() {
+
+    document.getElementById("fromDate").value = "";
+    document.getElementById("toDate").value = "";
+    document.getElementById("paymentStatus").value = "";
+    document.getElementById("receiptStatus").value = "";
+
+    loadDashboard();
+  }
+
+
+  function setButtonsEnabled(enabled) {
+
+    document.getElementById("refreshButton").disabled = !enabled;
+    document.getElementById("applyButton").disabled = !enabled;
+    document.getElementById("clearButton").disabled = !enabled;
+  }
+
+
   function formatCurrency(value) {
 
     return "S$" + Number(value || 0).toLocaleString(
@@ -419,7 +517,6 @@
   }
 
 
-  // Add table cell safely using textContent.
   function addCell(row, value) {
 
     const cell = document.createElement("td");
@@ -433,7 +530,6 @@
   }
 
 
-  // Display dashboard data.
   function displayDashboard(data) {
 
     if (!data || !data.summary || !Array.isArray(data.rows)) {
