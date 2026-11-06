@@ -49,7 +49,6 @@
     }
 
     .topbar h1 { margin: 0; font-size: 25px; }
-
     .user-info { color: #666; font-size: 14px; }
 
     .filters {
@@ -150,19 +149,10 @@
     }
 
     button:hover { background: #bd6428; }
+    button:disabled { background: #aaa; cursor: wait; }
 
-    button:disabled {
-      background: #aaa;
-      cursor: wait;
-    }
-
-    .secondary-button {
-      background: #666;
-    }
-
-    .secondary-button:hover {
-      background: #444;
-    }
+    .secondary-button { background: #666; }
+    .secondary-button:hover { background: #444; }
 
     .message {
       margin: 15px 0;
@@ -296,19 +286,20 @@
     </div>
 
     <!-- DONATION RECORDS -->
-<!-- DONATION RECORDS -->
-<div class="section">
-  <h2>Donation Records</h2>
+    <div class="section">
+      <h2>Donation Records</h2>
 
-  <div class="filter-field" style="margin: 15px 0; max-width: 380px;">
-    <label for="recordSearch">Search by Donor Name or Donation ID</label>
-    <input
-      type="search"
-      id="recordSearch"
-      placeholder="Enter donor name or donation ID"
-      oninput="searchDonationRecords()"
-    >
-  </div>
+      <div class="filter-field" style="margin: 15px 0; max-width: 380px;">
+        <label for="recordSearch">
+          Search by Donor Name or Donation ID
+        </label>
+        <input
+          type="search"
+          id="recordSearch"
+          placeholder="Enter donor name or donation ID"
+          oninput="searchDonationRecords()"
+        >
+      </div>
 
       <div class="table-wrap">
         <table>
@@ -366,6 +357,7 @@
     "143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com";
 
   let currentIdToken = null;
+  let currentDonationRows = [];
 
   const statusBox = document.getElementById("status");
   const dashboardStatus =
@@ -541,6 +533,7 @@
   }
 
 
+  // Display dashboard summary and store filtered records.
   function displayDashboard(data) {
 
     if (!data || !data.summary || !Array.isArray(data.rows)) {
@@ -569,26 +562,58 @@
     document.getElementById("receiptsPending").textContent =
       summary.receiptsPending || 0;
 
+    currentDonationRows = data.rows;
+
+    renderDonationRows();
+  }
+
+
+  // Called whenever the user types in the search box.
+  function searchDonationRecords() {
+    renderDonationRows();
+  }
+
+
+  // Render records after applying the donor name / ID search.
+  function renderDonationRows() {
 
     const table = document.getElementById("donationTable");
+    const searchInput = document.getElementById("recordSearch");
+
+    const searchText = searchInput.value.trim().toLowerCase();
+
+    const filteredRows = currentDonationRows.filter(function(donation) {
+
+      const donorName =
+        String(donation.fullName || "").toLowerCase();
+
+      const donationId =
+        String(donation.donationId || "").toLowerCase();
+
+      return donorName.includes(searchText) ||
+             donationId.includes(searchText);
+
+    });
 
     table.replaceChildren();
 
-    if (data.rows.length === 0) {
+    if (filteredRows.length === 0) {
 
       const tr = document.createElement("tr");
       const td = document.createElement("td");
 
       td.colSpan = 10;
       td.className = "empty";
-      td.textContent = "No donation records found.";
+      td.textContent = searchText
+        ? "No matching donation records found."
+        : "No donation records found.";
 
       tr.appendChild(td);
       table.appendChild(tr);
 
     } else {
 
-      data.rows.forEach(function(donation) {
+      filteredRows.forEach(function(donation) {
 
         const tr = document.createElement("tr");
 
@@ -610,8 +635,10 @@
     }
 
     dashboardStatus.textContent =
-      "Dashboard loaded successfully. " +
-      data.rows.length + " donation record(s) displayed.";
+      "Showing " + filteredRows.length + " of " +
+      currentDonationRows.length +
+      " donation record(s) matching your search.";
+
   }
 
 
