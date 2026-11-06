@@ -1,0 +1,1030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="GIVE HOPE PLEASE — compassionate healthcare, rehabilitation, disability and community support.">
+  <title>GIVE HOPE PLEASE — Giving Hope. Restoring Lives. Creating Possibilities.</title>
+  <link rel="icon" type="image/png" href="images/branding/give-hope-please-logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      /* GIVE HOPE PLEASE brand palette */
+      --brand-terracotta: #B85A2B;
+      --brand-gold: #E5A21A;
+      --brand-navy: #172B45;
+
+      /* Backgrounds */
+      --bg-dark-green: #F5F0E8;
+      --card-bg-dark: #FFFCF7;
+      --card-bg-alt: #F0E8DC;
+
+      /* Existing variable names retained */
+      --accent-gold: #B85A2B;
+      --button-gold: #E5A21A;
+      --gold-hover: #CC8C12;
+
+      /* Text */
+      --text-white: #172B45;
+      --text-light: #37465A;
+      --text-muted: #697586;
+
+      /* Borders */
+      --border-color: #E5DACA;
+      --font-main: 'Inter', sans-serif;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font-main);
+      color: var(--text-light);
+      background-color: var(--bg-dark-green);
+      line-height: 1.5;
+    }
+
+    a { color: inherit; text-decoration: none; }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      background-color: #FBF8F2;
+      backdrop-filter: blur(10px);
+      border-bottom: 1px solid var(--border-color);
+      padding: 10px 24px;
+    }
+
+    .nav-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: relative;
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-weight: 800;
+      font-size: 1.1rem;
+      letter-spacing: -0.5px;
+      color: var(--brand-navy);
+    }
+
+    .nav-logo img { height: 36px; width: auto; object-fit: contain; }
+    .brand-give { color: var(--brand-terracotta); }
+    .nav-logo .highlight { color: var(--brand-gold); }
+    .brand-please { color: var(--brand-navy); }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      list-style: none;
+    }
+
+    .nav-links a {
+      font-size: 0.88rem;
+      font-weight: 500;
+      color: var(--text-light);
+      transition: color 0.2s ease;
+    }
+
+    .nav-links a:hover { color: var(--brand-terracotta); }
+
+    .nav-cta {
+      background-color: var(--button-gold);
+      color: var(--brand-navy) !important;
+      padding: 7px 16px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.85rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .nav-cta:hover { background-color: var(--gold-hover); }
+
+    .menu-toggle {
+      display: none;
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: var(--brand-navy);
+      cursor: pointer;
+      padding: 4px;
+    }
+
+    .hero-section {
+      max-width: 850px;
+      margin: 20px auto 12px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-title {
+      font-size: 2.1rem;
+      font-weight: 800;
+      letter-spacing: -0.8px;
+      color: var(--brand-navy);
+      margin-bottom: 10px;
+      line-height: 1.15;
+    }
+
+    .hero-pills {
+      display: inline-flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+      margin-bottom: 14px;
+    }
+
+    .pill-btn {
+      padding: 4px 14px;
+      border-radius: 9999px;
+      border: 1px solid var(--border-color);
+      background-color: #FFFCF7;
+      color: var(--text-light);
+      font-size: 0.8rem;
+      font-weight: 500;
+      transition: all 0.2s ease;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--brand-terracotta);
+      color: var(--brand-terracotta);
+      background-color: #FFFFFF;
+    }
+
+    .pill-btn-orange {
+      background-color: var(--button-gold);
+      border-color: var(--button-gold);
+      color: var(--brand-navy);
+      font-weight: 700;
+    }
+
+    .pill-btn-orange:hover {
+      background-color: var(--gold-hover);
+      border-color: var(--gold-hover);
+      color: var(--brand-navy);
+    }
+
+    .hero-description {
+      font-size: 0.98rem;
+      color: var(--text-light);
+      max-width: 740px;
+      margin: 0 auto;
+      font-weight: 400;
+      line-height: 1.45;
+    }
+
+    .hero-image-container {
+      max-width: 850px;
+      margin: 12px auto 28px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .hero-image-wrapper {
+      background: transparent;
+      padding: 0;
+      box-shadow: none;
+      border: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .hero-image {
+      max-width: 100%;
+      max-height: 260px;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+    }
+
+    .action-section {
+      max-width: 800px;
+      margin: 0 auto 48px;
+      padding: 0 24px;
+      text-align: center;
+    }
+
+    .motto-text {
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: var(--brand-terracotta);
+      margin-bottom: 12px;
+      line-height: 1.35;
+    }
+
+    .action-body {
+      font-size: 0.95rem;
+      color: var(--text-light);
+      margin-bottom: 20px;
+    }
+
+    .action-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+
+    .btn-gold {
+      background-color: var(--button-gold);
+      color: var(--brand-navy);
+      padding: 10px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      transition: background-color 0.2s ease;
+    }
+
+    .btn-gold:hover { background-color: var(--gold-hover); }
+
+    .btn-outline {
+      border: 1.5px solid var(--brand-terracotta);
+      color: var(--brand-navy);
+      padding: 10px 24px;
+      border-radius: 9999px;
+      font-weight: 700;
+      font-size: 0.88rem;
+      background-color: #FFFCF7;
+      transition: all 0.2s ease;
+    }
+
+    .btn-outline:hover {
+      border-color: var(--brand-terracotta);
+      color: var(--brand-terracotta);
+      background-color: #F0E8DC;
+    }
+
+    .content-section {
+      padding: 48px 24px;
+      border-top: 1px solid var(--border-color);
+      background-color: #F8F4EC;
+    }
+
+    .bg-alt { background-color: #F0E8DC; }
+    .section-container { max-width: 1050px; margin: 0 auto; }
+
+    .section-tag {
+      display: inline-block;
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 1px;
+      color: var(--brand-terracotta);
+      margin-bottom: 6px;
+    }
+
+    .section-title {
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--brand-navy);
+      margin-bottom: 16px;
+      letter-spacing: -0.5px;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 20px;
+      margin-top: 24px;
+    }
+
+    .card {
+      background-color: #FFFCF7;
+      border: 1px solid var(--border-color);
+      border-radius: 12px;
+      padding: 20px;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      border-color: #D9A04A;
+      box-shadow: 0 8px 22px rgba(23, 43, 69, 0.08);
+    }
+
+    .card-title {
+      font-size: 1.05rem;
+      font-weight: 700;
+      color: var(--brand-terracotta);
+      margin-bottom: 8px;
+    }
+
+    .card-text { font-size: 0.88rem; color: var(--text-light); }
+
+    input, select, textarea {
+      background-color: #FFFCF7 !important;
+      color: var(--brand-navy) !important;
+      border: 1px solid #D8CCBA !important;
+    }
+
+    input:focus, select:focus, textarea:focus {
+      outline: none;
+      border-color: var(--brand-terracotta) !important;
+    }
+
+    .team-intro { max-width: 760px; margin-bottom: 22px; }
+    .team-group-title {
+      margin: 28px 0 14px;
+      color: var(--brand-navy);
+      font-size: 1.12rem;
+      font-weight: 750;
+    }
+    .team-card { display: flex; flex-direction: column; gap: 12px; }
+    .team-avatar {
+      width: 104px;
+      height: 104px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #F0E8DC;
+      color: var(--brand-navy);
+      border: 2px solid var(--brand-gold);
+      font-size: 1.7rem;
+      font-weight: 800;
+      letter-spacing: 1px;
+    }
+    .team-avatar img { width: 100%; height: 100%; object-fit: cover; border-radius: 50%; }
+    .team-role { color: var(--brand-terracotta); font-size: .82rem; font-weight: 700; margin-bottom: 2px; }
+    .team-name { color: var(--brand-navy); font-size: 1.05rem; font-weight: 750; margin-bottom: 7px; }
+    .team-card .card-text a { color: var(--brand-terracotta); text-decoration: underline; text-underline-offset: 2px; }
+    section[id] { scroll-margin-top: 88px; }
+
+    footer {
+      background-color: #F0E8DC;
+      color: var(--text-muted);
+      padding: 40px 24px 24px;
+      border-top: 1px solid var(--border-color);
+    }
+
+    .footer-container {
+      max-width: 1050px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 32px;
+      margin-bottom: 24px;
+    }
+
+    .footer-brand { max-width: 320px; }
+    .footer-brand .nav-logo { color: var(--brand-navy); margin-bottom: 12px; }
+    .footer-links h4 { color: var(--brand-navy); margin-bottom: 12px; font-size: 0.95rem; }
+    .footer-links ul { list-style: none; }
+    .footer-links li { margin-bottom: 6px; }
+    .footer-links a { font-size: 0.85rem; }
+    .footer-links a:hover { color: var(--brand-terracotta); }
+
+    .footer-bottom {
+      max-width: 1050px;
+      margin: 0 auto;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-color);
+      text-align: center;
+      font-size: 0.8rem;
+    }
+
+    @media (max-width: 768px) {
+      .menu-toggle { display: block; }
+      .nav-links {
+        display: none;
+        flex-direction: column;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background-color: #FBF8F2;
+        padding: 16px 20px;
+        border-bottom: 1px solid var(--border-color);
+        box-shadow: 0 10px 20px rgba(23, 43, 69, 0.10);
+        gap: 12px;
+        align-items: flex-start;
+      }
+      .nav-links.active { display: flex; }
+      .nav-cta { width: 100%; text-align: center; }
+      .hero-title { font-size: 1.6rem; }
+      .hero-image { max-height: 200px; }
+      .action-buttons { flex-direction: column; }
+      .action-buttons a { text-align: center; }
+    }
+
+    .online-form-section { padding: 54px 24px; }
+    .online-form-wrap { max-width: 760px; margin: 0 auto; }
+    .online-form-card {
+      background: #FFFCF7;
+      border: 1px solid var(--border-color);
+      border-radius: 18px;
+      padding: 28px;
+      box-shadow: 0 12px 32px rgba(23,43,69,.06);
+    }
+    .online-form-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 16px; }
+    .online-field { display: flex; flex-direction: column; gap: 6px; min-width: 0; }
+    .online-field.full { grid-column: 1 / -1; }
+    .online-field label { font-size: .86rem; font-weight: 650; color: var(--brand-navy); }
+    .online-field input, .online-field select, .online-field textarea {
+      width: 100%;
+      min-height: 46px;
+      border: 1px solid #D8CCBA;
+      border-radius: 9px;
+      padding: 11px 12px;
+      color: var(--brand-navy);
+      background: #FFFCF7;
+      font: inherit;
+      font-size: .92rem;
+      outline: none;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .online-field textarea { min-height: 130px; resize: vertical; }
+    .online-field input:focus, .online-field select:focus, .online-field textarea:focus {
+      border-color: var(--brand-terracotta);
+      box-shadow: 0 0 0 3px rgba(184,90,43,.12);
+    }
+    .online-help { color: var(--text-muted); font-size: .78rem; line-height: 1.5; }
+    .online-fixed-choice {
+      display: flex;
+      align-items: center;
+      min-height: 46px;
+      padding: 10px 12px;
+      border: 1px solid var(--border-color);
+      border-radius: 9px;
+      background: #F5F0E8;
+      color: var(--text-light);
+      font-size: .92rem;
+      font-weight: 600;
+    }
+    .online-check { display: flex; align-items: flex-start; gap: 10px; color: var(--text-light); font-size: .88rem; }
+    .online-check input { width: 17px; height: 17px; margin-top: 3px; accent-color: var(--brand-terracotta); }
+    .online-submit {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      width: 100%;
+      border: 0;
+      border-radius: 999px;
+      padding: 13px 22px;
+      background: var(--brand-gold);
+      color: var(--brand-navy);
+      font: inherit;
+      font-weight: 750;
+      cursor: pointer;
+      transition: background .2s, transform .2s;
+    }
+    .online-submit:hover { background: var(--gold-hover); transform: translateY(-1px); }
+    .online-submit:disabled { opacity: .6; cursor: wait; transform: none; }
+    .online-secondary {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      border: 1px solid var(--border-color);
+      border-radius: 999px;
+      padding: 11px 18px;
+      background: #FFFCF7;
+      color: var(--text-light);
+      font: inherit;
+      font-weight: 650;
+      cursor: pointer;
+    }
+    .paynow-panel {
+      margin-top: 22px;
+      padding: 22px;
+      border: 1px solid var(--border-color);
+      border-radius: 14px;
+      background: #F5F0E8;
+      text-align: center;
+    }
+    .paynow-panel img {
+      display: block;
+      width: min(100%, 340px);
+      height: auto;
+      margin: 14px auto;
+      border-radius: 8px;
+      border: 1px solid var(--border-color);
+      background: white;
+    }
+    .paynow-uen {
+      display: inline-block;
+      padding: 7px 12px;
+      border-radius: 7px;
+      background: #FFFCF7;
+      border: 1px solid var(--border-color);
+      font-weight: 750;
+      letter-spacing: .4px;
+      color: var(--brand-navy);
+    }
+    .online-status { display: none; margin-top: 16px; padding: 13px 15px; border-radius: 10px; font-size: .88rem; line-height: 1.5; }
+    .online-status.success { display: block; background: #ECFDF5; border: 1px solid #A7F3D0; color: #065F46; }
+    .online-status.error { display: block; background: #FEF2F2; border: 1px solid #FECACA; color: #991B1B; }
+    .online-status.info { display: block; background: #EFF6FF; border: 1px solid #BFDBFE; color: #1E40AF; }
+    .online-form-intro { margin: 0 auto 22px; max-width: 680px; text-align: center; }
+    .online-form-intro p { color: var(--text-light); font-size: .94rem; }
+    .form-step-label { color: var(--brand-terracotta); font-size: .75rem; font-weight: 800; letter-spacing: .09em; text-transform: uppercase; }
+
+    @media (max-width: 640px) {
+      .online-form-card { padding: 20px 16px; }
+      .online-form-grid { grid-template-columns: 1fr; gap: 13px; }
+      .online-field.full { grid-column: auto; }
+      .online-form-section { padding: 40px 16px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- NAVIGATION HEADER -->
+  <header>
+    <div class="nav-container">
+      <a href="#" class="nav-logo">
+        <img src="images/branding/give-hope-please-logo.png" alt="Emblem">
+        <span><span class="brand-give">GIVE</span> <span class="highlight">HOPE</span> <span class="brand-please">PLEASE</span></span>
+      </a>
+
+      <button class="menu-toggle" id="menuToggle" aria-label="Toggle navigation">☰</button>
+
+      <ul class="nav-links" id="navLinks">
+        <li><a href="#what-we-do" class="nav-item">What We Do</a></li>
+        <li><a href="#team" class="nav-item">Our Team</a></li>
+        <li><a href="#impact" class="nav-item">Our Impact</a></li>
+        <li><a href="#get-help" class="nav-item">Get Help</a></li>
+        <li><a href="#get-involved" class="nav-item">Get Involved</a></li>
+        <li><a href="#faq" class="nav-item">FAQ</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <!-- HERO SECTION -->
+  <section class="hero-section">
+    <h1 class="hero-title">Hope Begins With Action</h1>
+    <div class="hero-pills">
+      <a href="#about" class="pill-btn">ABOUT US</a>
+      <a href="#get-help" class="pill-btn pill-btn-orange">GET HELP</a>
+      <a href="#events" class="pill-btn">EVENTS</a>
+    </div>
+    <p class="hero-description">
+      For someone facing illness, disability, injury, financial hardship or limited access to healthcare, the right support can change the direction of a life. <strong>GIVE HOPE PLEASE</strong> exists to help turn compassion into practical action.
+    </p>
+  </section>
+
+  <!-- HERO FEATURE IMAGE -->
+  <div class="hero-image-container">
+    <div class="hero-image-wrapper">
+      <img src="images/branding/give-hope-please-hero-banner.png" alt="Give Hope Please Emblem Banner" class="hero-image" onerror="this.src='images/branding/give-hope-please-logo.png'">
+    </div>
+  </div>
+
+  <!-- MOTTO & PRIMARY CALL TO ACTIONS -->
+  <section class="action-section">
+    <h2 class="motto-text">Everyone deserves the opportunity to receive care, recover with dignity and look forward to a better tomorrow.</h2>
+    <p class="action-body">
+      <strong>GIVE HOPE PLEASE</strong> is a nonprofit organisation dedicated to supporting individuals and communities facing healthcare, rehabilitation, disability, financial and educational challenges. Through compassionate assistance, professional partnerships and community support, we aim to bring meaningful help to people when they need it most.
+    </p>
+    <div class="action-buttons">
+      <a href="#volunteer" class="btn-outline">VOLUNTEER</a>
+      <a href="#donation-form" class="btn-gold">DONATE</a>
+      <a href="#partnerships" class="btn-outline">PARTNER WITH US</a>
+    </div>
+  </section>
+
+  <!-- ABOUT US SECTION -->
+  <section id="about" class="content-section bg-alt">
+    <div class="section-container">
+      <span class="section-tag">Who We Are</span>
+      <h2 class="section-title">About Us</h2>
+      <p style="margin-bottom:20px;font-size:.92rem;color:var(--text-light);">
+        GIVE HOPE PLEASE was founded on a simple belief: that no one should have to navigate life’s greatest challenges alone. Whether it is a family struggling to afford necessary medical treatments, a person living with a disability needing specialized care, or a student facing financial barriers, we step in to bridge the gap.
+      </p>
+      <div class="grid-3">
+        <div class="card">
+          <h3 class="card-title">Vision</h3>
+          <p class="card-text">A compassionate world where every individual facing adversity receives the care, support, and opportunities needed to live with dignity and hope.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Mission</h3>
+          <p class="card-text">To empower communities and individuals by providing accessible healthcare assistance, rehabilitation support, educational opportunities, and holistic care through collaborative partnerships.</p>
+        </div>
+        <div class="card">
+          <h3 class="card-title">Our Name</h3>
+          <p class="card-text"><strong style="color:var(--brand-terracotta);">GIVE:</strong> Active generosity.<br><strong style="color:var(--brand-gold);">HOPE:</strong> Restoring possibility.<br><strong style="color:var(--brand-navy);">PLEASE:</strong> Humility, respect, and heart behind our service.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- WHAT WE DO SECTION -->
+  <section id="what-we-do" class="content-section">
+    <div class="section-container">
+      <span class="section-tag">Pillars of Care</span>
+      <h2 class="section-title">What We Do</h2>
+      <div class="grid-3">
+        <div class="card"><h3 class="card-title">Healthcare &amp; Medical Assistance</h3><p class="card-text">Subsidies and support for essential medical treatments, therapy sessions, and medical equipment for vulnerable individuals.</p></div>
+        <div class="card"><h3 class="card-title">Rehabilitation &amp; Therapy</h3><p class="card-text">Long-term physical therapy and rehabilitation programs to help patients regain mobility and independence after severe injury or illness.</p></div>
+        <div class="card"><h3 class="card-title">Disability Support &amp; Inclusion</h3><p class="card-text">Promoting accessibility, community integration, and tailored physical support for persons with disabilities (PWDs).</p></div>
+        <div class="card"><h3 class="card-title">Elderly Care &amp; Wellbeing</h3><p class="card-text">Focused healthcare and mobility support ensuring senior citizens age gracefully with comfort, dignity, and companionship.</p></div>
+        <div class="card"><h3 class="card-title">Education &amp; Scholarships</h3><p class="card-text">Empowering underprivileged youth through educational grants, sponsorships, and skill development programs.</p></div>
+        <div class="card"><h3 class="card-title">Outreach &amp; Research</h3><p class="card-text">Community health screenings, preventive education, and collaborative initiatives to strengthen health equity.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- TEAM SECTION -->
+  <section id="team" class="content-section bg-alt">
+    <div class="section-container">
+      <span class="section-tag">Our People &amp; Partners</span>
+      <h2 class="section-title">The People Behind GIVE HOPE PLEASE</h2>
+      <p class="team-intro card-text">Leadership. Expertise. Partnerships. A Shared Commitment to Giving Hope.</p>
+
+      <h3 class="team-group-title">Leadership &amp; Governance</h3>
+      <div class="grid-3">
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true"><img src="images/team/vasudevan-subramanian.webp" alt=""></div>
+          <div><div class="team-role">Member &amp; Director</div><h4 class="team-name">Vasudevan Subramanian</h4>
+          <p class="card-text">Chartered Accountant contributing financial, governance and organisational expertise to support the organisation’s mission and responsible operations.</p></div>
+        </article>
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true"><img src="images/team/kondalsamy-anantharamakrishnan.webp" alt=""></div>
+          <div><div class="team-role">Secretary &amp; Compliance Officer</div><h4 class="team-name">Kondalsamy Anantharamakrishnan</h4>
+          <p class="card-text">CA (Singapore), bringing experience in corporate governance, regulatory compliance and administration.</p></div>
+        </article>
+      </div>
+
+      <h3 class="team-group-title">Professional &amp; Strategic Partners</h3>
+      <div class="grid-3">
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true"><img src="images/team/visvanathan-ravichandran.webp" alt=""></div>
+          <div><div class="team-role">Healthcare &amp; Physiotherapy Partner</div><h4 class="team-name">Visvanathan Ravichandran</h4>
+          <p class="card-text">Physiotherapist associated with Hallmark Physiotherapy Pte Ltd. This partnership supports access to physiotherapy and rehabilitation expertise. <a href="https://hallmarkphysio.com/" target="_blank" rel="noopener noreferrer">Hallmark Physiotherapy website</a>.</p></div>
+        </article>
+        <article class="card team-card">
+          <div class="team-avatar" aria-hidden="true"><img src="images/team/a-ramani.webp" alt=""></div>
+          <div><div class="team-role">Technical Support</div><h4 class="team-name"><a href="https://www.thinkingskill.in/ramani" target="_blank" rel="noopener noreferrer">A. Ramani ↗</a></h4>
+          <p class="card-text">Educator, technology professional and author. Ex-Singtel, now Director of RVSMANI Health Foundation and Founder of PIE Training Center &amp; Think Lab, contributing technology expertise and strategic guidance.</p></div>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- ENQUIRIES & SUPPORT REQUESTS -->
+  <section id="get-help" class="content-section bg-alt online-form-section">
+    <div class="section-container online-form-wrap">
+      <div class="online-form-intro">
+        <span class="section-tag">We Are Here to Help</span>
+        <h2 class="section-title">Enquiries &amp; Support Requests</h2>
+        <p>Contact GIVE HOPE PLEASE for general enquiries, donation questions, partnerships, volunteering, or to request assistance. Choose the enquiry type that best describes your request.</p>
+      </div>
+      <div class="online-form-card">
+        <form id="enquiryForm">
+          <div class="online-form-grid">
+            <div class="online-field"><label for="enqName">Full Name *</label><input id="enqName" name="fullName" type="text" autocomplete="name" maxlength="120" required></div>
+            <div class="online-field"><label for="enqEmail">Email Address *</label><input id="enqEmail" name="email" type="email" autocomplete="email" maxlength="160" required></div>
+            <div class="online-field"><label for="enqPhone">Contact Number *</label><input id="enqPhone" name="contactNumber" type="tel" autocomplete="tel" maxlength="40" required></div>
+            <div class="online-field"><label for="enqCountry">Country *</label><input id="enqCountry" name="country" type="text" autocomplete="country-name" maxlength="80" required></div>
+            <div class="online-field full">
+              <label for="enqType">Enquiry Type *</label>
+              <select id="enqType" name="enquiryType" required>
+                <option value="">Select an enquiry type</option>
+                <option>General Enquires</option><option>Donation Enquires</option><option>Partnership Enquires</option><option>Volunteering Enquires</option>
+                <option>Medical Assistance / Subsidies</option><option>Rehabilitation &amp; Physical Therapy</option><option>Disability Support</option><option>Elderly Care Support</option><option>Education / Scholarship</option><option>Other Support</option>
+              </select>
+            </div>
+            <div class="online-field full"><label for="enqSubject">Subject *</label><input id="enqSubject" name="subject" type="text" maxlength="180" required></div>
+            <div class="online-field full">
+              <label for="enqMessage">Message / Enquiry Details *</label>
+              <textarea id="enqMessage" name="message" maxlength="5000" required placeholder="Please tell us how we can help."></textarea>
+              <span class="online-help">Please avoid including highly sensitive medical or financial information in this initial enquiry.</span>
+            </div>
+          </div>
+          <div style="margin-top:20px;"><button class="online-submit" id="enquirySubmit" type="submit">Submit Enquiry</button></div>
+          <div id="enquiryStatus" class="online-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- GET INVOLVED SECTION -->
+  <section id="get-involved" class="content-section">
+    <div class="section-container">
+      <span class="section-tag">Take Action</span>
+      <h2 class="section-title">Get Involved</h2>
+      <div class="grid-3">
+        <div id="volunteer" class="card">
+          <h3 class="card-title">Volunteer</h3>
+          <p class="card-text" style="margin-bottom:14px;">Offer your time, skills, or professional expertise to support our outreach programs and beneficiary care.</p>
+          <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." class="btn-outline" target="_blank" rel="noopener noreferrer" style="display:inline-block;font-size:.82rem;padding:8px 18px;">Join as Volunteer</a>
+        </div>
+        <div id="donate" class="card">
+          <h3 class="card-title">Donate</h3>
+          <p class="card-text" style="margin-bottom:14px;">Your financial contribution directly funds medical care, equipment, and educational scholarships for those in need.</p>
+          <a href="#donation-form" class="btn-gold" style="display:inline-block;font-size:.82rem;padding:8px 18px;">Donate Now</a>
+        </div>
+        <div id="partnerships" class="card">
+          <h3 class="card-title">Partnerships</h3>
+          <p class="card-text" style="margin-bottom:14px;">We collaborate with healthcare providers, corporations, and community groups to multiply our impact.</p>
+          <a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20partnering%20with%20your%20organisation%20and%20would%20like%20to%20discuss%20possible%20collaboration." class="btn-outline" target="_blank" rel="noopener noreferrer" style="display:inline-block;font-size:.82rem;padding:8px 18px;">Partner With Us</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ONLINE DONATION FORM -->
+  <section id="donation-form" class="content-section online-form-section">
+    <div class="section-container online-form-wrap">
+      <div class="online-form-intro">
+        <span class="section-tag">Support Our Mission</span>
+        <h2 class="section-title">Make a Donation</h2>
+        <p>Your generosity helps provide healthcare, rehabilitation, disability support, elderly care and educational opportunities. Donations are made in Singapore dollars through PayNow.</p>
+      </div>
+      <div class="online-form-card">
+        <form id="donationForm">
+          <div class="form-step-label">Step 1 · Your details</div>
+          <div class="online-form-grid" style="margin-top:12px;">
+            <div class="online-field"><label for="donName">Full Name *</label><input id="donName" name="fullName" type="text" autocomplete="name" maxlength="120" required></div>
+            <div class="online-field"><label for="donEmail">Email Address *</label><input id="donEmail" name="email" type="email" autocomplete="email" maxlength="160" required></div>
+            <div class="online-field"><label for="donMobile">Mobile Number</label><input id="donMobile" name="mobile" type="tel" autocomplete="tel" maxlength="40"></div>
+            <div class="online-field"><label for="donCountry">Country of Residence *</label><input id="donCountry" name="country" type="text" autocomplete="country-name" maxlength="80" required></div>
+            <div class="online-field"><label>Donation Frequency</label><div class="online-fixed-choice">One-time donation</div><input type="hidden" name="frequency" value="One-time"></div>
+            <div class="online-field"><label for="donAmount">Donation Amount (SGD) *</label><input id="donAmount" name="amount" type="number" min="0.01" step="0.01" inputmode="decimal" placeholder="e.g. 50.00" required><span class="online-help">Enter an amount greater than SGD 0.</span></div>
+            <div class="online-field full">
+              <label class="online-check" for="donAnonymous"><input id="donAnonymous" name="anonymous" type="checkbox" value="Yes"><span>I wish to make this donation anonymously.</span></label>
+            </div>
+          </div>
+          <div style="margin-top:20px;"><button class="online-submit" type="button" id="showPayNow">Continue to PayNow</button></div>
+
+          <div id="paynowPanel" class="paynow-panel" hidden>
+            <div class="form-step-label">Step 2 · Make your payment</div>
+            <h3 style="margin-top:6px;color:var(--brand-navy);">PayNow Donation</h3>
+            <p class="online-help" style="margin-top:5px;">Open your bank's mobile app, scan this QR code and enter the donation amount you specified above.</p>
+            <img src="images/paynow-qr.jpeg" alt="GIVE HOPE PLEASE PayNow QR code">
+            <p style="margin-bottom:8px;">PayNow UEN</p>
+            <span class="paynow-uen">202623318ZGHP</span>
+            <p class="online-help" style="margin-top:12px;">Please check the recipient name and amount in your banking app before confirming payment.</p>
+            <div class="online-field" style="text-align:left;margin-top:18px;">
+              <label for="donReference">PayNow Transaction Reference (optional)</label>
+              <input id="donReference" name="transactionReference" type="text" maxlength="100" placeholder="Enter the transaction reference, if available">
+            </div>
+            <p class="online-help" style="text-align:left;margin-top:8px;">Your submission will be recorded as Pending Verification. The donation is confirmed only after our team verifies the payment received.</p>
+            <button class="online-submit" type="submit" id="donationSubmit" style="margin-top:18px;">Submit Donation Details</button>
+          </div>
+          <div id="donationStatus" class="online-status" role="status" aria-live="polite"></div>
+        </form>
+      </div>
+    </div>
+  </section>
+
+  <!-- OUR IMPACT SECTION -->
+  <section id="impact" class="content-section bg-alt">
+    <div class="section-container" style="text-align:center;">
+      <span class="section-tag">Creating Possibilities</span>
+      <h2 class="section-title">Our Impact</h2>
+      <p style="max-width:650px;margin:0 auto 32px;font-size:.92rem;" class="card-text">Through the collective generosity of our donors and corporate partners, we measure success in lives restored, independence regained, and dignity preserved.</p>
+      <div class="grid-3">
+        <div class="card" style="text-align:center;"><h3 style="font-size:2.2rem;color:var(--brand-terracotta);font-weight:800;">100%</h3><p class="card-text">Dedicated to direct beneficiary impact and care programs.</p></div>
+        <div class="card" style="text-align:center;"><h3 style="font-size:2.2rem;color:var(--brand-navy);font-weight:800;">Holistic</h3><p class="card-text">Medical, social, physical, and financial support ecosystems.</p></div>
+        <div class="card" style="text-align:center;"><h3 style="font-size:2.2rem;color:var(--brand-gold);font-weight:800;">Community</h3><p class="card-text">Strong referral network with certified healthcare professionals.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- EVENTS SECTION -->
+  <section id="events" class="content-section">
+    <div class="section-container" style="text-align:center;">
+      <span class="section-tag">Stay Connected</span>
+      <h2 class="section-title">Events</h2>
+      <div style="max-width:760px;margin:0 auto;">
+        <img src="images/e071126.jpeg" alt="A Webinar: Physiotherapy Guide to Neck &amp; Back Health" style="display:block;width:100%;height:auto;border-radius:12px;margin:0 auto 22px;">
+        <a href="https://www.eventbrite.com/e/a-physiotherapy-guide-to-neck-back-health-tickets-2003047920250?aff=oddtdtcreator" target="_blank" rel="noopener noreferrer" class="btn-gold" style="display:inline-block;">REGISTER NOW</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ SECTION -->
+  <section id="faq" class="content-section bg-alt">
+    <div class="section-container" style="max-width:750px;">
+      <span class="section-tag">Questions &amp; Answers</span>
+      <h2 class="section-title">Frequently Asked Questions</h2>
+      <div style="display:flex;flex-direction:column;gap:14px;margin-top:24px;">
+        <div class="card"><h3 class="card-title" style="font-size:1rem;">Who is eligible to apply for assistance?</h3><p class="card-text">Individuals facing illness, disability, injury, or financial hardship who require healthcare, therapy, or living support can apply.</p></div>
+        <div class="card"><h3 class="card-title" style="font-size:1rem;">How are donation funds utilized?</h3><p class="card-text">Donations go directly toward funding medical equipment, rehabilitation subsidies, elderly care, and educational grants for beneficiaries.</p></div>
+        <div class="card"><h3 class="card-title" style="font-size:1rem;">Can healthcare institutions refer patients?</h3><p class="card-text">Yes, we welcome clinical referrals from hospitals, clinics, and social service agencies via our partner pathway.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-container">
+      <div class="footer-brand">
+        <a href="#" class="nav-logo">
+          <img src="images/branding/give-hope-please-logo.png" alt="Emblem">
+          <span><span class="brand-give">GIVE</span> <span class="highlight">HOPE</span> <span class="brand-please">PLEASE</span></span>
+        </a>
+        <p style="font-size:.85rem;margin-top:10px;color:var(--text-muted);">Giving Hope. Restoring Lives. Creating Possibilities. A registered non-profit organization supporting healthcare, rehabilitation, and living dignity.</p>
+      </div>
+      <div class="footer-links">
+        <h4>Quick Links</h4>
+        <ul>
+          <li><a href="#about">About Us</a></li><li><a href="#what-we-do">What We Do</a></li><li><a href="#team">Our Team</a></li><li><a href="#get-help">Get Help</a></li><li><a href="#donation-form">Donate</a></li>
+          <li><a href="https://wa.me/6591803256?text=Hello%20GIVE%20HOPE%20PLEASE%2C%20I%20am%20interested%20in%20volunteering%20and%20would%20like%20to%20know%20how%20I%20can%20help." target="_blank" rel="noopener noreferrer">Volunteer</a></li>
+        </ul>
+      </div>
+      <div class="footer-links">
+        <h4>Contact</h4>
+        <ul><li>Email: <a href="mailto:givehopeplease.sg@gmail.com">givehopeplease.sg@gmail.com</a></li><li>Location: Singapore</li></ul>
+      </div>
+    </div>
+    <div class="footer-bottom"><p>&copy; 2026 GIVE HOPE PLEASE. All rights reserved.</p></div>
+  </footer>
+
+  <!-- MOBILE MENU JAVASCRIPT -->
+  <script>
+    const menuToggle = document.getElementById('menuToggle');
+    const navLinks = document.getElementById('navLinks');
+    const navItems = document.querySelectorAll('.nav-item');
+
+    menuToggle.addEventListener('click', () => {
+      navLinks.classList.toggle('active');
+      menuToggle.textContent = navLinks.classList.contains('active') ? '✕' : '☰';
+    });
+
+    navItems.forEach(item => {
+      item.addEventListener('click', () => {
+        navLinks.classList.remove('active');
+        menuToggle.textContent = '☰';
+      });
+    });
+  </script>
+
+  <!-- DONATION AND ENQUIRY SUBMISSION: EXISTING ENDPOINTS RETAINED -->
+  <script>
+    const GHP_DONATION_WEB_APP_URL = "https://script.google.com/macros/s/AKfycby27LF6AFNt3FJOzRVXd1-NbCQx2oIhkFxt5Hm0zo542Z5kOM8T-FKtWdSIT6WcDnoj/exec";
+    const GHP_ENQUIRY_WEB_APP_URL = "https://script.google.com/macros/s/AKfycbwnogmYFy2oAqVD7h3jrXcjcxqj5aK265hEhVNE_RdG_9ZBvVO_uAFpRMKIH7RxhT0c/exec";
+
+    function ghpSetStatus(element, message, type) {
+      element.textContent = message;
+      element.className = "online-status " + type;
+    }
+
+    function ghpSubmitToAppsScript(endpoint, payload, statusElement, button) {
+      if (!endpoint || endpoint.indexOf("PASTE_") === 0) {
+        ghpSetStatus(statusElement, "The online form is not connected yet. Please try again later.", "error");
+        return;
+      }
+
+      const nonce = (window.crypto && crypto.randomUUID)
+        ? crypto.randomUUID()
+        : String(Date.now()) + Math.random().toString(36).slice(2);
+
+      const iframeName = "ghp_submit_" + nonce.replace(/[^a-zA-Z0-9]/g, "");
+      const iframe = document.createElement("iframe");
+      iframe.name = iframeName;
+      iframe.style.display = "none";
+      iframe.setAttribute("title", "Form submission response");
+      document.body.appendChild(iframe);
+
+      const form = document.createElement("form");
+      form.method = "POST";
+      form.action = endpoint;
+      form.target = iframeName;
+      form.style.display = "none";
+
+      Object.keys(payload).forEach(function(key) {
+        const input = document.createElement("input");
+        input.type = "hidden";
+        input.name = key;
+        input.value = payload[key] == null ? "" : String(payload[key]);
+        form.appendChild(input);
+      });
+
+      const nonceInput = document.createElement("input");
+      nonceInput.type = "hidden";
+      nonceInput.name = "requestNonce";
+      nonceInput.value = nonce;
+      form.appendChild(nonceInput);
+
+      let finished = false;
+      const cleanup = function() {
+        window.removeEventListener("message", onMessage);
+        form.remove();
+        iframe.remove();
+      };
+
+      const onMessage = function(event) {
+        const result = event.data;
+        if (!result || result.type !== "GHP_FORM_RESULT" || result.nonce !== nonce || finished) return;
+        finished = true;
+        button.disabled = false;
+        button.textContent = button.dataset.originalText || "Submit";
+        if (result.success) {
+          ghpSetStatus(statusElement,
+            "Thank you. Your submission has been received. Reference: " + result.reference +
+            ". Acknowledgement emails have been sent. Please keep this reference for future communication.",
+            "success");
+          const parentForm = button.closest("form");
+          if (parentForm) parentForm.reset();
+          const payPanel = document.getElementById("paynowPanel");
+          if (payPanel) payPanel.hidden = true;
+        } else {
+          ghpSetStatus(statusElement, result.message || "We could not process your submission. Please try again.", "error");
+        }
+        cleanup();
+      };
+
+      window.addEventListener("message", onMessage);
+      document.body.appendChild(form);
+      button.disabled = true;
+      button.dataset.originalText = button.textContent;
+      button.textContent = "Submitting…";
+      ghpSetStatus(statusElement, "Submitting securely. Please keep this page open.", "info");
+      form.submit();
+
+      window.setTimeout(function() {
+        if (!finished) {
+          button.disabled = false;
+          button.textContent = button.dataset.originalText || "Submit";
+          ghpSetStatus(statusElement,
+            "We have not received a confirmation yet. Please check your email and avoid submitting again immediately. If no acknowledgement arrives, contact us with your details.",
+            "error");
+          cleanup();
+        }
+      }, 45000);
+    }
+
+    const donationForm = document.getElementById("donationForm");
+    const payNowPanel = document.getElementById("paynowPanel");
+    const showPayNow = document.getElementById("showPayNow");
+
+    showPayNow.addEventListener("click", function() {
+      const requiredFields = [
+        document.getElementById("donName"),
+        document.getElementById("donEmail"),
+        document.getElementById("donCountry"),
+        document.getElementById("donAmount")
+      ];
+      let valid = true;
+      requiredFields.forEach(function(field) {
+        if (!field.checkValidity()) {
+          field.reportValidity();
+          valid = false;
+        }
+      });
+      if (!valid) return;
+
+      const amount = Number(document.getElementById("donAmount").value);
+      if (!Number.isFinite(amount) || amount <= 0) {
+        document.getElementById("donAmount").setCustomValidity("Please enter an amount greater than zero.");
+        document.getElementById("donAmount").reportValidity();
+        document.getElementById("donAmount").setCustomValidity("");
+        return;
+      }
+      payNowPanel.hidden = false;
+      payNowPanel.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    });
+
+    donationForm.addEventListener("submit", function(event) {
+      event.preventDefault();
+      if (!donationForm.reportValidity()) return;
+      const payload = {
+        formType: "donation",
+        fullName: document.getElementById("donName").value.trim(),
+        email: document.getElementById("donEmail").value.trim(),
+        mobile: document.getElementById("donMobile").value.trim(),
+        country: document.getElementById("donCountry").value.trim(),
+        frequency: "One-time",
+        amount: document.getElementById("donAmount").value,
+        transactionReference: document.getElementById("donReference").value.trim(),
+        anonymous: document.getElementById("donAnonymous").checked ? "Yes" : "No"
+      };
+      ghpSubmitToAppsScript(GHP_DONATION_WEB_APP_URL, payload,
+        document.getElementById("donationStatus"), document.getElementById("donationSubmit"));
+    });
+
+    document.getElementById("enquiryForm").addEventListener("submit", function(event) {
+      event.preventDefault();
+      const form = event.currentTarget;
+      if (!form.reportValidity()) return;
+      const payload = {
+        formType: "enquiry",
+        fullName: document.getElementById("enqName").value.trim(),
+        email: document.getElementById("enqEmail").value.trim(),
+        contactNumber: document.getElementById("enqPhone").value.trim(),
+        country: document.getElementById("enqCountry").value.trim(),
+        enquiryType: document.getElementById("enqType").value,
+        subject: document.getElementById("enqSubject").value.trim(),
+        message: document.getElementById("enqMessage").value.trim()
+      };
+      ghpSubmitToAppsScript(GHP_ENQUIRY_WEB_APP_URL, payload,
+        document.getElementById("enquiryStatus"), document.getElementById("enquirySubmit"));
+    });
+  </script>
+</body>
+</html>
