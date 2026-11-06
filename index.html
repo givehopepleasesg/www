@@ -416,8 +416,21 @@
       border: 1px solid #E5E7EB; border-radius: 9px; background: #F9FAFB; color: #374151;
       font-size: .92rem; font-weight: 600;
     }
-    .online-check { display: flex; align-items: flex-start; gap: 10px; color: #374151; font-size: .88rem; }
-    .online-check input { width: 17px; height: 17px; margin-top: 3px; accent-color: var(--accent-gold); }
+.online-check {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: var(--text-light);
+  font-size: .88rem;
+}
+
+.online-check input {
+  width: 17px;
+  height: 17px;
+  margin: 0;
+  flex-shrink: 0;
+  accent-color: var(--brand-terracotta);
+}
     .online-submit {
       display: inline-flex; align-items: center; justify-content: center; gap: 8px;
       width: 100%; border: 0; border-radius: 999px; padding: 13px 22px;
