@@ -225,8 +225,10 @@
     }
 
     function handleBackendMessage(event) {
-      const frame = document.getElementById(BACKEND_IFRAME_ID);
-      if (!frame || event.source !== frame.contentWindow) return;
+      // Match the proven DR portal pattern: Apps Script responses are served
+      // from a Google-hosted origin. Keep requestId matching as an additional
+      // safeguard, rather than requiring an exact iframe WindowProxy match.
+      if (!event.origin || !event.origin.endsWith('.googleusercontent.com')) return;
 
       const message = event.data;
       if (!message || message.type !== 'GHP_ADMIN_PORTAL_RESULT' || !message.requestId) return;
