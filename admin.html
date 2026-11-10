@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <base target="_top">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>GIVE HOPE PLEASE | Admin Portal</title>
+  <script src="https://accounts.google.com/gsi/client" async defer></script>
+  <style>
+    :root {
+      --brand: #d97732;
+      --brand-dark: #b85f22;
+      --ink: #292929;
+      --muted: #6b7280;
+      --line: #e8e5e1;
+      --surface: #ffffff;
+      --page: #f7f7f6;
+      --soft: #fff5ed;
+      --success: #217a48;
+      --danger: #b42318;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      background: var(--page);
+      color: var(--ink);
+      font-family: Arial, Helvetica, sans-serif;
+      min-height: 100vh;
+    }
+    .topbar {
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+      padding: 15px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+    }
+    .brand { display: flex; align-items: center; gap: 12px; }
+    .brand-mark {
+      width: 42px; height: 42px; border-radius: 12px;
+      display: grid; place-items: center;
+      background: var(--soft); color: var(--brand);
+      font-weight: 800; font-size: 17px;
+    }
+    .brand-name { font-weight: 800; letter-spacing: .4px; font-size: 15px; }
+    .brand-sub { color: var(--muted); font-size: 12px; margin-top: 3px; }
+    .top-actions { display: flex; align-items: center; gap: 12px; }
+    .user-chip { color: var(--muted); font-size: 13px; text-align: right; }
+    button {
+      border: 0; border-radius: 8px; cursor: pointer;
+      font-weight: 700; font-size: 13px;
+      padding: 10px 15px;
+    }
+    button:disabled { opacity: .55; cursor: not-allowed; }
+    .btn-outline { background: #fff; border: 1px solid var(--line); color: var(--ink); }
+    .btn-primary { background: var(--brand); color: #fff; }
+    .btn-primary:hover { background: var(--brand-dark); }
+    main { width: min(1080px, calc(100% - 36px)); margin: 42px auto 60px; }
+    .welcome { margin-bottom: 25px; }
+    h1 { margin: 0 0 8px; font-size: clamp(25px, 4vw, 34px); }
+    .lead { color: var(--muted); margin: 0; line-height: 1.55; }
+    .panel {
+      background: var(--surface); border: 1px solid var(--line);
+      border-radius: 14px; padding: 28px;
+      box-shadow: 0 5px 22px rgba(0,0,0,.035);
+    }
+    .login-panel { max-width: 520px; margin: 54px auto; text-align: center; }
+    .login-panel h1 { font-size: 27px; }
+    .login-panel p { color: var(--muted); line-height: 1.55; }
+    #googleButton { display: flex; justify-content: center; margin: 24px 0 8px; }
+    .section-heading {
+      display: flex; justify-content: space-between; align-items: end;
+      gap: 12px; margin: 30px 0 14px;
+    }
+    .section-heading h2 { font-size: 19px; margin: 0; }
+    .section-heading p { margin: 5px 0 0; color: var(--muted); font-size: 13px; }
+    .module-grid {
+      display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px;
+    }
+    .module-card {
+      background: #fff; border: 1px solid var(--line); border-radius: 13px;
+      padding: 22px; display: flex; flex-direction: column; min-height: 190px;
+    }
+    .module-card h3 { margin: 0 0 8px; font-size: 18px; }
+    .module-card p { color: var(--muted); font-size: 13px; line-height: 1.55; margin: 0 0 18px; }
+    .module-card .module-code {
+      color: var(--brand); font-weight: 800; font-size: 11px;
+      letter-spacing: 1px; margin-bottom: 10px;
+    }
+    .module-card .card-action { margin-top: auto; display: flex; align-items: center; gap: 10px; }
+    .status { font-size: 12px; color: var(--muted); }
+    .notice {
+      display: none; padding: 12px 14px; border-radius: 8px;
+      margin: 18px 0; font-size: 13px; line-height: 1.5;
+    }
+    .notice.error { display: block; color: var(--danger); background: #fff1f0; border: 1px solid #ffd4d0; }
+    .notice.info { display: block; color: #5c4a20; background: #fff9e8; border: 1px solid #f2e2b5; }
+    .notice.success { display: block; color: var(--success); background: #eefaf2; border: 1px solid #ccebd6; }
+    .hidden { display: none !important; }
+    .footer { text-align: center; color: #8a8a8a; font-size: 11px; padding: 24px; }
+    .loading { color: var(--muted); font-size: 13px; padding: 16px 0; }
+    @media (max-width: 650px) {
+      .topbar { padding: 12px 15px; align-items: flex-start; }
+      .top-actions { align-items: flex-end; flex-direction: column; gap: 7px; }
+      .user-chip { max-width: 175px; overflow-wrap: anywhere; }
+      main { margin-top: 28px; }
+      .panel { padding: 20px; }
+      .module-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand">
+      <div class="brand-mark">GHP</div>
+      <div>
+        <div class="brand-name">GIVE HOPE PLEASE</div>
+        <div class="brand-sub">Central Administration Portal</div>
+      </div>
+    </div>
+    <div class="top-actions">
+      <div id="userChip" class="user-chip hidden"></div>
+      <button id="logoutButton" class="btn-outline hidden" onclick="logout()">Sign out</button>
+    </div>
+  </header>
+
+  <main>
+    <section id="loginPanel" class="panel login-panel">
+      <h1>Admin Portal</h1>
+      <p>Sign in with your authorised Google account to access the GIVE HOPE PLEASE administration systems.</p>
+      <div id="googleButton"></div>
+      <div id="loginMessage" class="notice"></div>
+    </section>
+
+    <section id="portalPanel" class="hidden">
+      <div class="welcome">
+        <h1 id="welcomeTitle">Welcome</h1>
+        <p class="lead">Select an authorised module to continue.</p>
+      </div>
+
+      <div id="portalMessage" class="notice"></div>
+
+      <div class="section-heading">
+        <div>
+          <h2>Available Modules</h2>
+          <p>Your access is determined by your assigned role and permissions.</p>
+        </div>
+      </div>
+
+      <div id="moduleGrid" class="module-grid"></div>
+      <div id="emptyModules" class="panel hidden">
+        No modules are currently enabled for your account. Please contact the administrator.
+      </div>
+    </section>
+  </main>
+
+  <div class="footer">GIVE HOPE PLEASE · Secure Administration</div>
+
+  <script>
+    let currentIdToken = '';
+    let currentUser = null;
+    let googleInitialised = false;
+
+    function showNotice(elementId, message, type) {
+      const el = document.getElementById(elementId);
+      el.textContent = message || '';
+      el.className = 'notice ' + (type || 'info');
+    }
+
+    function clearNotice(elementId) {
+      const el = document.getElementById(elementId);
+      el.textContent = '';
+      el.className = 'notice';
+    }
+
+    function initialiseGoogleSignIn() {
+      if (googleInitialised) return;
+      if (!window.google || !google.accounts || !google.accounts.id) {
+        setTimeout(initialiseGoogleSignIn, 250);
+        return;
+      }
+
+      google.accounts.id.initialize({
+        client_id: '143922334453-inujal8e47u39i6dqhokq2nhq7od1ee1.apps.googleusercontent.com',
+        callback: handleGoogleCredential,
+        auto_select: false
+      });
+
+      google.accounts.id.renderButton(
+        document.getElementById('googleButton'),
+        { theme: 'outline', size: 'large', shape: 'rect', text: 'signin_with', width: 260 }
+      );
+      googleInitialised = true;
+    }
+
+    function handleGoogleCredential(response) {
+      if (!response || !response.credential) {
+        showNotice('loginMessage', 'Google Sign-In did not return a credential. Please try again.', 'error');
+        return;
+      }
+
+      currentIdToken = response.credential;
+      clearNotice('loginMessage');
+      showNotice('loginMessage', 'Verifying your access…', 'info');
+
+      google.script.run
+        .withSuccessHandler(handleBootstrapResult)
+        .withFailureHandler(function (error) {
+          showNotice('loginMessage', error.message || 'Unable to contact the portal backend.', 'error');
+        })
+        .getPortalBootstrap(currentIdToken);
+    }
+
+    function handleBootstrapResult(result) {
+      if (!result || !result.success) {
+        currentIdToken = '';
+        showNotice('loginMessage', result && result.message ? result.message : 'Access could not be verified.', 'error');
+        return;
+      }
+
+      currentUser = result.user;
+      document.getElementById('loginPanel').classList.add('hidden');
+      document.getElementById('portalPanel').classList.remove('hidden');
+      document.getElementById('logoutButton').classList.remove('hidden');
+
+      const chip = document.getElementById('userChip');
+      chip.textContent = currentUser.name + ' · ' + currentUser.roleName;
+      chip.classList.remove('hidden');
+      document.getElementById('welcomeTitle').textContent = 'Welcome, ' + currentUser.name;
+
+      renderModules(result.modules || []);
+    }
+
+    function renderModules(modules) {
+      const grid = document.getElementById('moduleGrid');
+      grid.innerHTML = '';
+
+      document.getElementById('emptyModules').classList.toggle('hidden', modules.length > 0);
+
+      modules.forEach(function (module) {
+        const card = document.createElement('article');
+        card.className = 'module-card';
+
+        const code = document.createElement('div');
+        code.className = 'module-code';
+        code.textContent = module.code;
+
+        const title = document.createElement('h3');
+        title.textContent = module.name;
+
+        const description = document.createElement('p');
+        description.textContent = module.description;
+
+        const actionRow = document.createElement('div');
+        actionRow.className = 'card-action';
+
+        const button = document.createElement('button');
+        button.className = 'btn-primary';
+        button.textContent = module.code === 'ADMINISTRATION' ? 'Open' : 'Open Module';
+        button.onclick = function () { launchModule(module.code, button); };
+
+        const status = document.createElement('span');
+        status.className = 'status';
+        status.textContent = module.code === 'ADMINISTRATION'
+          ? 'Administration access'
+          : (module.urlAvailable ? 'Authorised' : 'URL pending configuration');
+
+        actionRow.appendChild(button);
+        actionRow.appendChild(status);
+        card.appendChild(code);
+        card.appendChild(title);
+        card.appendChild(description);
+        card.appendChild(actionRow);
+        grid.appendChild(card);
+      });
+    }
+
+    function launchModule(moduleCode, button) {
+      if (!currentIdToken) {
+        showNotice('portalMessage', 'Your session is no longer available. Please sign in again.', 'error');
+        return;
+      }
+
+      button.disabled = true;
+      const oldText = button.textContent;
+      button.textContent = 'Checking access…';
+      clearNotice('portalMessage');
+
+      google.script.run
+        .withSuccessHandler(function (result) {
+          button.disabled = false;
+          button.textContent = oldText;
+
+          if (!result || !result.success) {
+            showNotice('portalMessage', result && result.message ? result.message : 'Unable to open this module.', 'error');
+            return;
+          }
+
+          if (result.url) {
+            window.open(result.url, '_blank', 'noopener');
+          } else {
+            showNotice('portalMessage', result.message || 'This module is not yet available.', 'info');
+          }
+        })
+        .withFailureHandler(function (error) {
+          button.disabled = false;
+          button.textContent = oldText;
+          showNotice('portalMessage', error.message || 'Unable to contact the portal backend.', 'error');
+        })
+        .openAuthorisedModule(currentIdToken, moduleCode);
+    }
+
+    function logout() {
+      currentIdToken = '';
+      currentUser = null;
+      document.getElementById('portalPanel').classList.add('hidden');
+      document.getElementById('loginPanel').classList.remove('hidden');
+      document.getElementById('logoutButton').classList.add('hidden');
+      document.getElementById('userChip').classList.add('hidden');
+      document.getElementById('moduleGrid').innerHTML = '';
+      clearNotice('portalMessage');
+      clearNotice('loginMessage');
+      if (window.google && google.accounts && google.accounts.id) {
+        google.accounts.id.disableAutoSelect();
+      }
+    }
+
+    window.addEventListener('load', initialiseGoogleSignIn);
+  </script>
+</body>
+</html>
