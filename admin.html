@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <base target="_top">
+  <base target="_self">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>GIVE HOPE PLEASE | Admin Portal</title>
@@ -88,7 +88,7 @@
       color: var(--brand); font-weight: 800; font-size: 11px;
       letter-spacing: 1px; margin-bottom: 10px;
     }
-    .module-card .card-action { margin-top: auto; display: flex; align-items: center; gap: 10px; }
+    .module-card .card-action { margin-top: auto; display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
     .status { font-size: 12px; color: var(--muted); }
     .notice {
       display: none; padding: 12px 14px; border-radius: 8px;
@@ -99,7 +99,6 @@
     .notice.success { display: block; color: var(--success); background: #eefaf2; border: 1px solid #ccebd6; }
     .hidden { display: none !important; }
     .footer { text-align: center; color: #8a8a8a; font-size: 11px; padding: 24px; }
-    .loading { color: var(--muted); font-size: 13px; padding: 16px 0; }
     @media (max-width: 650px) {
       .topbar { padding: 12px 15px; align-items: flex-start; }
       .top-actions { align-items: flex-end; flex-direction: column; gap: 7px; }
@@ -121,7 +120,7 @@
     </div>
     <div class="top-actions">
       <div id="userChip" class="user-chip hidden"></div>
-      <button id="logoutButton" class="btn-outline hidden" onclick="logout()">Sign out</button>
+      <button id="logoutButton" class="btn-outline hidden" type="button" onclick="logout()">Sign out</button>
     </div>
   </header>
 
@@ -130,7 +129,7 @@
       <h1>Admin Portal</h1>
       <p>Sign in with your authorised Google account to access the GIVE HOPE PLEASE administration systems.</p>
       <div id="googleButton"></div>
-      <div id="loginMessage" class="notice"></div>
+      <div id="loginMessage" class="notice" role="status" aria-live="polite"></div>
     </section>
 
     <section id="portalPanel" class="hidden">
@@ -139,7 +138,7 @@
         <p class="lead">Select an authorised module to continue.</p>
       </div>
 
-      <div id="portalMessage" class="notice"></div>
+      <div id="portalMessage" class="notice" role="status" aria-live="polite"></div>
 
       <div class="section-heading">
         <div>
@@ -155,29 +154,100 @@
     </section>
   </main>
 
+  <iframe
+    id="ghpAdminBackendFrame"
+    name="ghpAdminBackendFrame"
+    title="Admin backend communication"
+    class="hidden"
+    aria-hidden="true"></iframe>
+
+  <form id="ghpAdminBackendForm" method="post" target="ghpAdminBackendFrame" class="hidden">
+    <input type="hidden" name="action" id="backendAction">
+    <input type="hidden" name="idToken" id="backendIdToken">
+    <input type="hidden" name="moduleCode" id="backendModuleCode">
+    <input type="hidden" name="requestId" id="backendRequestId">
+  </form>
+
   <div class="footer">GIVE HOPE PLEASE · Secure Administration</div>
 
   <script>
+    'use strict';
+
+    // Replace this with the CENTRAL ADMIN Apps Script Web App URL ending in /exec.
+    // Do not use the existing DR backend URL here.
+    const CENTRAL_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxpWLUIOBrZFJvyC-X_4LWy749IdPTlxqvDw-lxD2UpNx-sKLNUl1QP6Zj4-hOAg0qJ/exec';
+
+    const BACKEND_IFRAME_ID = 'ghpAdminBackendFrame';
+    const BACKEND_FORM_ID = 'ghpAdminBackendForm';
+    const pendingBackendRequests = Object.create(null);
+
     let currentIdToken = '';
     let currentUser = null;
     let googleInitialised = false;
+    let googleInitTimer = null;
 
     function showNotice(elementId, message, type) {
-      const el = document.getElementById(elementId);
-      el.textContent = message || '';
-      el.className = 'notice ' + (type || 'info');
+      const element = document.getElementById(elementId);
+      element.textContent = message || '';
+      element.className = 'notice ' + (type || 'info');
     }
 
     function clearNotice(elementId) {
-      const el = document.getElementById(elementId);
-      el.textContent = '';
-      el.className = 'notice';
+      const element = document.getElementById(elementId);
+      element.textContent = '';
+      element.className = 'notice';
+    }
+
+    function makeRequestId() {
+      if (window.crypto && typeof window.crypto.randomUUID === 'function') {
+        return window.crypto.randomUUID().replace(/-/g, '');
+      }
+      return 'r' + Date.now().toString(36) + Math.random().toString(36).slice(2, 18);
+    }
+
+    function sendBackendRequest(action, idToken, moduleCode, callback) {
+      if (!CENTRAL_BACKEND_URL || CENTRAL_BACKEND_URL.indexOf('https://') !== 0 ||
+          CENTRAL_BACKEND_URL.indexOf('PASTE_CENTRAL_ADMIN_WEB_APP_URL_HERE') !== -1) {
+        callback({ success: false, message: 'Central Admin backend URL has not been configured in admin.html.' });
+        return;
+      }
+
+      const requestId = makeRequestId();
+      pendingBackendRequests[requestId] = callback;
+
+      const form = document.getElementById(BACKEND_FORM_ID);
+      form.action = CENTRAL_BACKEND_URL;
+      document.getElementById('backendAction').value = action;
+      document.getElementById('backendIdToken').value = idToken || '';
+      document.getElementById('backendModuleCode').value = moduleCode || '';
+      document.getElementById('backendRequestId').value = requestId;
+      form.submit();
+    }
+
+    function handleBackendMessage(event) {
+      const frame = document.getElementById(BACKEND_IFRAME_ID);
+      if (!frame || event.source !== frame.contentWindow) return;
+
+      const message = event.data;
+      if (!message || message.type !== 'GHP_ADMIN_PORTAL_RESULT' || !message.requestId) return;
+
+      const callback = pendingBackendRequests[message.requestId];
+      if (typeof callback !== 'function') return;
+
+      delete pendingBackendRequests[message.requestId];
+      callback(message.result || { success: false, message: 'The backend returned an empty response.' });
     }
 
     function initialiseGoogleSignIn() {
       if (googleInitialised) return;
+
       if (!window.google || !google.accounts || !google.accounts.id) {
-        setTimeout(initialiseGoogleSignIn, 250);
+        if (!googleInitTimer) {
+          googleInitTimer = setTimeout(function () {
+            googleInitTimer = null;
+            initialiseGoogleSignIn();
+          }, 250);
+        }
         return;
       }
 
@@ -189,14 +259,25 @@
 
       google.accounts.id.renderButton(
         document.getElementById('googleButton'),
-        { theme: 'outline', size: 'large', shape: 'rect', text: 'signin_with', width: 260 }
+        {
+          theme: 'outline',
+          size: 'large',
+          shape: 'rect',
+          text: 'signin_with',
+          width: 260
+        }
       );
+
       googleInitialised = true;
     }
 
     function handleGoogleCredential(response) {
       if (!response || !response.credential) {
-        showNotice('loginMessage', 'Google Sign-In did not return a credential. Please try again.', 'error');
+        showNotice(
+          'loginMessage',
+          'Google Sign-In did not return a credential. Please try again.',
+          'error'
+        );
         return;
       }
 
@@ -204,18 +285,21 @@
       clearNotice('loginMessage');
       showNotice('loginMessage', 'Verifying your access…', 'info');
 
-      google.script.run
-        .withSuccessHandler(handleBootstrapResult)
-        .withFailureHandler(function (error) {
-          showNotice('loginMessage', error.message || 'Unable to contact the portal backend.', 'error');
-        })
-        .getPortalBootstrap(currentIdToken);
+      sendBackendRequest('portalBootstrap', currentIdToken, '', function (result) {
+        handleBootstrapResult(result);
+      });
     }
 
     function handleBootstrapResult(result) {
       if (!result || !result.success) {
         currentIdToken = '';
-        showNotice('loginMessage', result && result.message ? result.message : 'Access could not be verified.', 'error');
+        showNotice(
+          'loginMessage',
+          result && result.message
+            ? result.message
+            : 'Access could not be verified.',
+          'error'
+        );
         return;
       }
 
@@ -227,16 +311,21 @@
       const chip = document.getElementById('userChip');
       chip.textContent = currentUser.name + ' · ' + currentUser.roleName;
       chip.classList.remove('hidden');
-      document.getElementById('welcomeTitle').textContent = 'Welcome, ' + currentUser.name;
 
-      renderModules(result.modules || []);
+      document.getElementById('welcomeTitle').textContent =
+        'Welcome, ' + currentUser.name;
+
+      renderModules(Array.isArray(result.modules) ? result.modules : []);
     }
 
     function renderModules(modules) {
       const grid = document.getElementById('moduleGrid');
-      grid.innerHTML = '';
+      grid.replaceChildren();
 
-      document.getElementById('emptyModules').classList.toggle('hidden', modules.length > 0);
+      document.getElementById('emptyModules').classList.toggle(
+        'hidden',
+        modules.length > 0
+      );
 
       modules.forEach(function (module) {
         const card = document.createElement('article');
@@ -256,15 +345,21 @@
         actionRow.className = 'card-action';
 
         const button = document.createElement('button');
+        button.type = 'button';
         button.className = 'btn-primary';
-        button.textContent = module.code === 'ADMINISTRATION' ? 'Open' : 'Open Module';
-        button.onclick = function () { launchModule(module.code, button); };
+        button.textContent =
+          module.code === 'ADMINISTRATION' ? 'Open' : 'Open Module';
+        button.addEventListener('click', function () {
+          launchModule(module.code, button);
+        });
 
         const status = document.createElement('span');
         status.className = 'status';
         status.textContent = module.code === 'ADMINISTRATION'
           ? 'Administration access'
-          : (module.urlAvailable ? 'Authorised' : 'URL pending configuration');
+          : (module.urlAvailable
+              ? 'Authorised'
+              : 'URL pending configuration');
 
         actionRow.appendChild(button);
         actionRow.appendChild(status);
@@ -278,8 +373,26 @@
 
     function launchModule(moduleCode, button) {
       if (!currentIdToken) {
-        showNotice('portalMessage', 'Your session is no longer available. Please sign in again.', 'error');
+        showNotice(
+          'portalMessage',
+          'Your session is no longer available. Please sign in again.',
+          'error'
+        );
         return;
+      }
+
+      // Open a blank tab synchronously from the click to avoid popup blockers.
+      // It is navigated only after the server re-authenticates and authorises.
+      let moduleWindow = null;
+      if (moduleCode !== 'ADMINISTRATION') {
+        moduleWindow = window.open('about:blank', '_blank');
+        if (moduleWindow) {
+          try {
+            moduleWindow.opener = null;
+          } catch (e) {
+            // No action required.
+          }
+        }
       }
 
       button.disabled = true;
@@ -287,45 +400,60 @@
       button.textContent = 'Checking access…';
       clearNotice('portalMessage');
 
-      google.script.run
-        .withSuccessHandler(function (result) {
-          button.disabled = false;
-          button.textContent = oldText;
+      sendBackendRequest('openModule', currentIdToken, moduleCode, function (result) {
+        button.disabled = false;
+        button.textContent = oldText;
 
-          if (!result || !result.success) {
-            showNotice('portalMessage', result && result.message ? result.message : 'Unable to open this module.', 'error');
-            return;
-          }
+        if (!result || !result.success) {
+          if (moduleWindow) moduleWindow.close();
+          showNotice(
+            'portalMessage',
+            result && result.message ? result.message : 'Unable to open this module.',
+            'error'
+          );
+          return;
+        }
 
-          if (result.url) {
-            window.open(result.url, '_blank', 'noopener');
+        if (result.url) {
+          if (moduleWindow && !moduleWindow.closed) {
+            moduleWindow.location.replace(result.url);
           } else {
-            showNotice('portalMessage', result.message || 'This module is not yet available.', 'info');
+            showNotice(
+              'portalMessage',
+              'Your browser blocked the new tab. Please allow pop-ups for this portal and try again.',
+              'error'
+            );
           }
-        })
-        .withFailureHandler(function (error) {
-          button.disabled = false;
-          button.textContent = oldText;
-          showNotice('portalMessage', error.message || 'Unable to contact the portal backend.', 'error');
-        })
-        .openAuthorisedModule(currentIdToken, moduleCode);
+        } else {
+          if (moduleWindow) moduleWindow.close();
+          showNotice(
+            'portalMessage',
+            result.message || 'This module is not yet available.',
+            'info'
+          );
+        }
+      });
     }
 
     function logout() {
       currentIdToken = '';
       currentUser = null;
+
       document.getElementById('portalPanel').classList.add('hidden');
       document.getElementById('loginPanel').classList.remove('hidden');
       document.getElementById('logoutButton').classList.add('hidden');
       document.getElementById('userChip').classList.add('hidden');
-      document.getElementById('moduleGrid').innerHTML = '';
+      document.getElementById('moduleGrid').replaceChildren();
+
       clearNotice('portalMessage');
       clearNotice('loginMessage');
+
       if (window.google && google.accounts && google.accounts.id) {
         google.accounts.id.disableAutoSelect();
       }
     }
 
+    window.addEventListener('message', handleBackendMessage);
     window.addEventListener('load', initialiseGoogleSignIn);
   </script>
 </body>
