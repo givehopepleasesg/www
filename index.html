@@ -729,6 +729,11 @@
       </div>
       <div class="online-form-card">
         <form id="donationForm">
+          <!-- Spam trap: genuine visitors should leave this field blank. -->
+          <div aria-hidden="true" style="position:absolute;left:-10000px;top:auto;width:1px;height:1px;overflow:hidden;">
+            <label for="donWebsite">Leave this field empty</label>
+            <input id="donWebsite" name="website" type="text" tabindex="-1" autocomplete="off">
+          </div>
           <div class="form-step-label">Step 1 · Your details</div>
           <div class="online-form-grid" style="margin-top:12px;">
             <div class="online-field">
@@ -934,9 +939,29 @@
         return;
       }
 
-      const nonce = (window.crypto && crypto.randomUUID)
-        ? crypto.randomUUID()
-        : String(Date.now()) + Math.random().toString(36).slice(2);
+      const isDonation = payload.formType === "donation";
+      const parentForm = button.closest("form");
+
+      // Keep the same nonce if a donation submission timed out without a
+      // server response. Editing any field starts a genuinely new attempt.
+      if (isDonation && parentForm && !button.dataset.nonceChangeBound) {
+        const clearPendingNonce = function() {
+          delete button.dataset.pendingDonationNonce;
+        };
+        parentForm.addEventListener("input", clearPendingNonce);
+        parentForm.addEventListener("change", clearPendingNonce);
+        button.dataset.nonceChangeBound = "yes";
+      }
+
+      let nonce;
+      if (isDonation && button.dataset.pendingDonationNonce) {
+        nonce = button.dataset.pendingDonationNonce;
+      } else {
+        nonce = (window.crypto && crypto.randomUUID)
+          ? crypto.randomUUID()
+          : String(Date.now()) + Math.random().toString(36).slice(2);
+        if (isDonation) button.dataset.pendingDonationNonce = nonce;
+      }
 
       const iframeName = "ghp_submit_" + nonce.replace(/[^a-zA-Z0-9]/g, "");
       const iframe = document.createElement("iframe");
@@ -978,12 +1003,15 @@
         finished = true;
         button.disabled = false;
         button.textContent = button.dataset.originalText || "Submit";
+
+        if (isDonation) delete button.dataset.pendingDonationNonce;
+
         if (result.success) {
+          const referenceText = result.reference ? " Reference: " + result.reference + "." : "";
+          const successText = result.message || "Thank you. Your submission has been received.";
           ghpSetStatus(statusElement,
-            "Thank you. Your submission has been received. Reference: " + result.reference +
-            ". Acknowledgement emails have been sent. Please keep this reference for future communication.",
+            successText + referenceText + " Please keep this reference for future communication.",
             "success");
-          const parentForm = button.closest("form");
           if (parentForm) parentForm.reset();
           const payPanel = document.getElementById("paynowPanel");
           if (payPanel) payPanel.hidden = true;
@@ -1006,7 +1034,9 @@
           button.disabled = false;
           button.textContent = button.dataset.originalText || "Submit";
           ghpSetStatus(statusElement,
-            "We have not received a confirmation yet. Please check your email and avoid submitting again immediately. If no acknowledgement arrives, contact us with your details.",
+            isDonation
+              ? "We have not received confirmation yet. Your submission may already be recorded. You can retry using the same details; do not edit them unless you intend to make a new submission."
+              : "We have not received confirmation yet. Please check your email before submitting again.",
             "error");
           cleanup();
         }
@@ -1055,7 +1085,8 @@
         frequency: "One-time",
         amount: document.getElementById("donAmount").value,
         transactionReference: document.getElementById("donReference").value.trim(),
-        anonymous: document.getElementById("donAnonymous").checked ? "Yes" : "No"
+        anonymous: document.getElementById("donAnonymous").checked ? "Yes" : "No",
+        website: document.getElementById("donWebsite").value.trim()
       };
       ghpSubmitToAppsScript(GHP_DONATION_WEB_APP_URL, payload,
         document.getElementById("donationStatus"), document.getElementById("donationSubmit"));
