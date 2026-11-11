@@ -149,7 +149,7 @@
 
       <div id="moduleGrid" class="module-grid"></div>
       <div id="emptyModules" class="panel hidden">
-        No modules are currently enabled for your account. Please contact the administrator.
+        No DR or EM modules are currently enabled for your account. Please contact the administrator.
       </div>
     </section>
   </main>
@@ -173,9 +173,12 @@
   <script>
     'use strict';
 
-    // Replace this with the CENTRAL ADMIN Apps Script Web App URL ending in /exec.
-    // Do not use the existing DR backend URL here.
+    // Existing Central Admin Apps Script Web App URL — preserved.
     const CENTRAL_BACKEND_URL = 'https://script.google.com/macros/s/AKfycbxpWLUIOBrZFJvyC-X_4LWy749IdPTlxqvDw-lxD2UpNx-sKLNUl1QP6Zj4-hOAg0qJ/exec';
+
+    // Only these two modules are displayed in this portal.
+    // The central backend remains responsible for authentication and permissions.
+    const VISIBLE_MODULE_CODES = new Set(['DR', 'EM']);
 
     const BACKEND_IFRAME_ID = 'ghpAdminBackendFrame';
     const BACKEND_FORM_ID = 'ghpAdminBackendForm';
@@ -225,9 +228,6 @@
     }
 
     function handleBackendMessage(event) {
-      // Match the proven DR portal pattern: Apps Script responses are served
-      // from a Google-hosted origin. Keep requestId matching as an additional
-      // safeguard, rather than requiring an exact iframe WindowProxy match.
       if (!event.origin || !event.origin.endsWith('.googleusercontent.com')) return;
 
       const message = event.data;
@@ -324,12 +324,17 @@
       const grid = document.getElementById('moduleGrid');
       grid.replaceChildren();
 
+      // Filter the central backend's module list to DR and EM only.
+      const visibleModules = modules.filter(function (module) {
+        return module && VISIBLE_MODULE_CODES.has(String(module.code || '').toUpperCase());
+      });
+
       document.getElementById('emptyModules').classList.toggle(
         'hidden',
-        modules.length > 0
+        visibleModules.length > 0
       );
 
-      modules.forEach(function (module) {
+      visibleModules.forEach(function (module) {
         const card = document.createElement('article');
         card.className = 'module-card';
 
@@ -349,19 +354,16 @@
         const button = document.createElement('button');
         button.type = 'button';
         button.className = 'btn-primary';
-        button.textContent =
-          module.code === 'ADMINISTRATION' ? 'Open' : 'Open Module';
+        button.textContent = 'Open Module';
         button.addEventListener('click', function () {
           launchModule(module.code, button);
         });
 
         const status = document.createElement('span');
         status.className = 'status';
-        status.textContent = module.code === 'ADMINISTRATION'
-          ? 'Administration access'
-          : (module.urlAvailable
-              ? 'Authorised'
-              : 'URL pending configuration');
+        status.textContent = module.urlAvailable
+          ? 'Authorised'
+          : 'URL pending configuration';
 
         actionRow.appendChild(button);
         actionRow.appendChild(status);
@@ -374,6 +376,14 @@
     }
 
     function launchModule(moduleCode, button) {
+      const normalisedCode = String(moduleCode || '').toUpperCase();
+
+      // Frontend guard: this portal only launches DR and EM.
+      if (!VISIBLE_MODULE_CODES.has(normalisedCode)) {
+        showNotice('portalMessage', 'This module is not available in this portal.', 'error');
+        return;
+      }
+
       if (!currentIdToken) {
         showNotice(
           'portalMessage',
@@ -383,17 +393,12 @@
         return;
       }
 
-      // Open a blank tab synchronously from the click to avoid popup blockers.
-      // It is navigated only after the server re-authenticates and authorises.
-      let moduleWindow = null;
-      if (moduleCode !== 'ADMINISTRATION') {
-        moduleWindow = window.open('about:blank', '_blank');
-        if (moduleWindow) {
-          try {
-            moduleWindow.opener = null;
-          } catch (e) {
-            // No action required.
-          }
+      let moduleWindow = window.open('about:blank', '_blank');
+      if (moduleWindow) {
+        try {
+          moduleWindow.opener = null;
+        } catch (e) {
+          // No action required.
         }
       }
 
@@ -402,7 +407,7 @@
       button.textContent = 'Checking access…';
       clearNotice('portalMessage');
 
-      sendBackendRequest('openModule', currentIdToken, moduleCode, function (result) {
+      sendBackendRequest('openModule', currentIdToken, normalisedCode, function (result) {
         button.disabled = false;
         button.textContent = oldText;
 
