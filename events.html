@@ -39,12 +39,18 @@
       overflow: hidden;
     }
     .top {
-      flex: 0 0 auto;
+      flex: 0 0 30%;
+      height: 30%;
+      min-height: 0;
+      display: flex;
+      flex-direction: column;
       z-index: 5;
       background: #fff;
       border-bottom: 1px solid var(--line);
+      overflow: hidden;
     }
     .topbar {
+      flex: 0 0 var(--header-height);
       min-height: var(--header-height);
       padding: 12px 18px;
       display: flex;
@@ -76,20 +82,37 @@
       font-weight: 700; padding: 8px 4px; white-space: nowrap;
     }
     .share-btn { border: 1px solid var(--line); border-radius: 20px; padding: 8px 12px; }
-    .banner-wrap { padding: 0 0 14px; }
+    .banner-wrap {
+      flex: 1 1 auto;
+      min-height: 0;
+      width: 100%;
+      padding: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      background: #edf1f3;
+    }
     .banner {
-      width: 100%; height: auto; max-height: none;
-      border-radius: 0; background: #edf1f3;
-      object-fit: contain; display: none;
+      display: none;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
+      max-height: 100%;
+      border-radius: 0;
+      background: #edf1f3;
+      object-fit: contain;
+      object-position: center;
     }
     .banner-placeholder {
-      width:100%; aspect-ratio:16 / 9; height:auto; border-radius:0;
+      width:100%; height:100%; min-height:0; aspect-ratio:auto; border-radius:0;
       background:linear-gradient(135deg,#edf1f3,#f8f9fa);
       display:flex; align-items:center; justify-content:center;
       color:#82909a; font-size:14px;
     }
     .middle {
-      flex: 1 1 auto;
+      flex: 1 1 60%;
+      height: 60%;
       min-height: 0;
       overflow-y: auto;
       overscroll-behavior: contain;
@@ -128,16 +151,19 @@
     .event-card p { margin:4px 0; color:var(--muted); font-size:12px; }
     .card-link { color:var(--brand); font-size:13px; font-weight:700; margin-top:10px; display:inline-block; }
     .bottom {
-      flex: 0 0 auto;
+      flex: 0 0 10%;
+      height: 10%;
+      min-height: 0;
       z-index: 6;
+      display: flex;
+      align-items: center;
       background:#fff;
       border-top:1px solid var(--line);
       box-shadow:0 -5px 18px rgba(20,35,45,.06);
-      padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
-      max-height: 46dvh;
-      overflow-y:auto;
+      padding: 5px 12px;
+      overflow: hidden;
     }
-    .bottom-inner { max-width: 700px; margin:0 auto; }
+    .bottom-inner { width:100%; max-width: 700px; margin:0 auto; }
     .bottom-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
     .bottom-heading strong { font-size:15px; }
     .amount { color:var(--brand); font-size:14px; font-weight:800; }
@@ -200,7 +226,7 @@
       .brand-section { margin-left:5px; }
       .brand img { width:34px; height:34px; }
       .text-link,.share-btn { font-size:11px; }
-      .banner-wrap { padding:0 0 11px; }
+      .banner-wrap { padding:0; }
       .middle { padding:16px 14px 22px; }
       .meta-grid { gap:7px; }
       .meta-item { padding:9px; }
@@ -209,7 +235,7 @@
       .event-card { display:grid; grid-template-columns:112px 1fr; }
       .event-card img { height:100%; min-height:125px; }
       .event-card-body { padding:11px; }
-      .bottom { padding:10px 12px calc(10px + env(safe-area-inset-bottom)); max-height:52dvh; }
+      .bottom { padding:5px 10px; }
       .register-strip .register-btn { min-width:128px; padding:13px 14px; font-size:12px; }
       .modal-card { padding:18px; border-radius:15px; }
       .modal-fields { grid-template-columns:1fr; gap:10px; }
