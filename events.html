@@ -68,6 +68,7 @@
       font-weight: 800;
       letter-spacing: .035em;
     }
+    .brand-section { color: var(--brand); margin-left: 7px; font-weight: 700; letter-spacing: 0; }
     .top-actions { display:flex; align-items:center; gap: 8px; }
     .text-link, .share-btn {
       border: 0; background: transparent; color: var(--brand);
@@ -174,6 +175,7 @@
       :root { --header-height:58px; }
       .topbar { padding:9px 13px; }
       .brand-name { font-size:12px; }
+      .brand-section { margin-left:5px; }
       .brand img { width:34px; height:34px; }
       .text-link,.share-btn { font-size:11px; }
       .banner-wrap { padding:0 11px 11px; }
@@ -196,7 +198,7 @@
     <div class="topbar">
       <div class="brand">
         <img id="headerLogo" alt="GIVE HOPE PLEASE logo">
-        <div class="brand-name">GIVE HOPE PLEASE</div>
+        <div class="brand-name">GIVE HOPE PLEASE <span class="brand-section">| Events</span></div>
       </div>
       <div class="top-actions">
         <a class="text-link" id="homeLink" href="https://givehopeplease.org/">← Back to GIVE HOPE PLEASE Home</a>
@@ -204,7 +206,7 @@
       </div>
     </div>
     <div class="banner-wrap" id="bannerWrap">
-      <div class="banner-placeholder" id="bannerPlaceholder">GIVE HOPE PLEASE Events</div>
+      <div class="banner-placeholder" id="bannerPlaceholder">Upcoming event</div>
       <img class="banner" id="eventBanner" alt="Event banner">
     </div>
   </header>
@@ -215,7 +217,7 @@
       <h1 class="event-title">Upcoming Events</h1>
       <p class="muted">Explore our events and choose an opportunity to learn, participate and support our work.</p>
       <div class="event-list" id="eventList"></div>
-      <div class="empty hidden" id="noEvents">There are no published events at the moment. Please check again soon.</div>
+      <div class="empty hidden" id="noEvents">There is no upcoming event at the moment. Please check again soon.</div>
     </section>
 
     <section id="eventDetailSection" class="hidden">
@@ -303,7 +305,7 @@
   let selectedContribution = null;
   let flexiblePercent = 50;
   let events = [];
-  let currentEventId = new URLSearchParams(location.search).get('event') || '';
+  let currentEventId = '';
 
   function driveImage(fileId, width) {
     if (!fileId) return '';
@@ -384,11 +386,22 @@
       const result = await apiGet({action:'listEvents'});
       if (!result || !result.success) throw new Error(result && result.message || 'Could not load events.');
       events = result.events || [];
-      if (currentEventId) {
-        const found = events.find(e => String(e.Event_ID) === String(currentEventId));
-        if (found) { await loadEventDetail(currentEventId); return; }
+      // The API returns only the nearest upcoming published event.
+      if (!events.length) {
+        show('loading', false);
+        show('eventListSection', true);
+        show('eventDetailSection', false);
+        show('registrationControls', false);
+        show('listBottomHint', false);
+        show('noEvents', true);
+        $('eventList').innerHTML = '';
+        $('eventList').classList.add('hidden');
+        $('eventTitle').textContent = '';
+        setBanner('');
+        return;
       }
-      renderList();
+      currentEventId = String(events[0].Event_ID || '');
+      await loadEventDetail(currentEventId);
     } catch (err) {
       show('loading', true); $('loading').textContent = err.message;
       show('listBottomHint', true); $('listBottomHint').textContent='Please refresh the page or try again later.';
@@ -423,6 +436,7 @@
   }
   function renderEvent(ev, participants) {
     $('eventTitle').textContent=ev.Event_Title || 'Event';
+    $('backToEvents').classList.add('hidden');
     $('eventMeta').innerHTML='';
     $('eventMeta').append(
       metaItem('Date',formatDate(ev.Event_Date)),
