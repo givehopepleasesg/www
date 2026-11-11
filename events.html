@@ -165,6 +165,28 @@
     .status-msg { font-size:12px; line-height:1.4; margin:6px 0; }
     .status-msg.error { color:var(--danger); }
     .status-msg.success { color:var(--success); }
+
+    .register-strip { display:flex; align-items:center; gap:10px; }
+    .batch-field { flex:1; min-width:0; margin:0; border-color:#d8e0e4; }
+    .register-strip .register-btn { width:auto; min-width:155px; margin:0; padding:13px 20px; }
+    .modal-backdrop { position:fixed; inset:0; z-index:30; background:rgba(20,31,40,.58); display:flex; align-items:center; justify-content:center; padding:18px; }
+    .modal-card { width:min(100%,560px); max-height:min(88dvh,820px); overflow-y:auto; background:#fff; border-radius:18px; padding:22px; box-shadow:0 18px 60px rgba(0,0,0,.25); }
+    .modal-head { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; margin-bottom:18px; }
+    .modal-head h2 { margin:0 0 5px; font-size:21px; color:#172b3c; }
+    .modal-head p { margin:0; }
+    .modal-close { border:0; background:#f1f4f6; color:#263746; border-radius:50%; width:36px; height:36px; font-size:25px; line-height:1; cursor:pointer; flex:0 0 auto; }
+    .modal-label { font-weight:700; font-size:14px; margin-bottom:8px; }
+    .amount-line { display:flex; justify-content:space-between; align-items:flex-start; gap:12px; padding:12px 0; border-top:1px solid var(--line); border-bottom:1px solid var(--line); margin:10px 0; }
+    #feeExplanation { color:var(--muted); font-size:12px; line-height:1.5; }
+    #payableAmount { color:var(--brand); white-space:nowrap; }
+    .modal-fields { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-top:14px; }
+    .modal-fields label { display:flex; flex-direction:column; gap:6px; font-size:12px; color:#53616a; font-weight:700; }
+    .modal-fields .field { font-weight:400; font-size:14px; }
+    .modal-fields .privacy-choice { grid-column:1/-1; }
+    .modal-actions { display:flex; justify-content:flex-end; gap:9px; margin-top:15px; }
+    .cancel-btn { border:1px solid var(--line); background:#fff; border-radius:9px; padding:12px 17px; color:var(--ink); font-weight:700; cursor:pointer; }
+    .confirm-btn { width:auto; margin:0; }
+    body.modal-open { overflow:hidden; }
     .hidden { display:none !important; }
     .qr-row { display:flex; align-items:center; gap:12px; margin:8px 0; }
     .qr-row img { width:76px; height:76px; object-fit:contain; border:1px solid var(--line); border-radius:8px; padding:4px; }
@@ -188,7 +210,11 @@
       .event-card img { height:100%; min-height:125px; }
       .event-card-body { padding:11px; }
       .bottom { padding:10px 12px calc(10px + env(safe-area-inset-bottom)); max-height:52dvh; }
-      .field-row { grid-template-columns:1fr; gap:6px; }
+      .register-strip .register-btn { min-width:128px; padding:13px 14px; font-size:12px; }
+      .modal-card { padding:18px; border-radius:15px; }
+      .modal-fields { grid-template-columns:1fr; gap:10px; }
+      .modal-fields .privacy-choice { grid-column:auto; }
+      .modal-head h2 { font-size:19px; }
     }
   </style>
 </head>
@@ -247,52 +273,51 @@
 
   <footer class="bottom">
     <div class="bottom-inner" id="registrationPanel">
-      <div class="bottom-heading">
-        <strong id="bottomTitle">Registration</strong>
-        <span class="amount" id="payableAmount"></span>
+      <div id="registrationControls" class="register-strip hidden">
+        <input class="field batch-field hidden" id="batchCode" name="batchCode" placeholder="Batch code" maxlength="80" aria-label="Batch code">
+        <button class="register-btn" id="registerButton" type="button">REGISTER NOW</button>
       </div>
-      <div id="listBottomHint" class="muted">Select an event above to view details and register.</div>
-
-      <div id="registrationControls" class="hidden">
-        <div id="contributionArea" class="hidden">
-          <div class="muted">Choose your contribution option</div>
-          <div class="choice-row" id="contributionChoices"></div>
-          <div id="flexibleArea" class="hidden">
-            <div class="flex-row">
-              <input id="flexibleRange" type="range" min="1" max="100" step="1" value="50">
-              <strong id="flexibleValue">50%</strong>
-            </div>
-          </div>
-        </div>
-        <div class="muted" id="feeExplanation"></div>
-        <div class="qr-row hidden" id="qrBlock">
-          <img id="paynowQr" alt="PayNow QR code">
-          <div><strong>PayNow payment</strong><div class="muted" id="qrAmountText">Scan the QR code to pay the amount shown.</div></div>
-        </div>
-        <form id="registrationForm">
-          <div class="field-row">
-            <input class="field" name="participantName" placeholder="Full name" autocomplete="name" required maxlength="120">
-            <input class="field" name="email" type="email" placeholder="Email address" autocomplete="email" required maxlength="180">
-          </div>
-          <div class="field-row">
-            <input class="field" name="mobile" type="tel" placeholder="Mobile / WhatsApp number" autocomplete="tel" maxlength="40">
-            <input class="field hidden" id="batchCode" name="batchCode" placeholder="Batch code" maxlength="80">
-          </div>
-          <div class="field-row">
-            <input class="field" name="paymentReference" placeholder="PayNow reference (if available)" maxlength="100">
-            <select class="field" name="displayNamePublicly" aria-label="Show my name in participant list">
-              <option value="NO">Keep my name private</option>
-              <option value="YES">Show my name publicly</option>
-            </select>
-          </div>
-          <div class="consent">By registering, you agree that GIVE HOPE PLEASE may use your details to administer this event and send event-related information. Your email and mobile number will not be displayed publicly.</div>
-          <div class="status-msg" id="formMessage" role="status" aria-live="polite"></div>
-          <button class="register-btn" id="registerButton" type="submit">REGISTER NOW</button>
-        </form>
-        <div id="qrNote" class="muted hidden">Payment is subject to manual verification. Your registration will be confirmed after payment verification.</div>
-      </div>
+      <div id="listBottomHint" class="muted">Loading event details…</div>
     </div>
   </footer>
+
+  <div class="modal-backdrop hidden" id="registrationModal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-card">
+      <div class="modal-head">
+        <div><h2 id="modalTitle">Complete your registration</h2><p id="modalEventName" class="muted"></p></div>
+        <button type="button" class="modal-close" id="closeModal" aria-label="Close">×</button>
+      </div>
+      <div id="contributionArea" class="hidden">
+        <div class="modal-label">Choose your contribution</div>
+        <div class="choice-row" id="contributionChoices"></div>
+        <div id="flexibleArea" class="hidden">
+          <div class="flex-row"><input id="flexibleRange" type="range" min="1" max="100" step="1" value="50"><strong id="flexibleValue">50%</strong></div>
+        </div>
+      </div>
+      <div class="amount-line"><span id="feeExplanation"></span><strong id="payableAmount"></strong></div>
+      <div class="qr-row hidden" id="qrBlock">
+        <img id="paynowQr" alt="PayNow QR code">
+        <div><strong>PayNow payment</strong><div class="muted" id="qrAmountText">Scan the QR code to pay the amount shown.</div></div>
+      </div>
+      <div id="qrNote" class="muted hidden">Payment is subject to manual verification. Your registration will be confirmed after payment verification.</div>
+      <form id="registrationForm">
+        <div class="modal-fields">
+          <label>Full name<input class="field" name="participantName" placeholder="Your full name" autocomplete="name" required maxlength="120"></label>
+          <label>Email address<input class="field" name="email" type="email" placeholder="Your email address" autocomplete="email" required maxlength="180"></label>
+          <label>Mobile / WhatsApp number<input class="field" name="mobile" type="tel" placeholder="Mobile number" autocomplete="tel" maxlength="40"></label>
+          <label>PayNow reference (if available)<input class="field" name="paymentReference" placeholder="Payment reference" maxlength="100"></label>
+          <label class="privacy-choice">Participant list
+            <select class="field" name="displayNamePublicly" aria-label="Show my name in participant list">
+              <option value="NO">Keep my name private</option><option value="YES">Show my name publicly</option>
+            </select>
+          </label>
+        </div>
+        <div class="consent">By registering, you agree that GIVE HOPE PLEASE may use your details to administer this event and send event-related information. Your email and mobile number will not be displayed publicly.</div>
+        <div class="status-msg" id="formMessage" role="status" aria-live="polite"></div>
+        <div class="modal-actions"><button type="button" class="cancel-btn" id="cancelRegistration">Cancel</button><button class="register-btn confirm-btn" id="confirmButton" type="submit">CONFIRM REGISTRATION</button></div>
+      </form>
+    </div>
+  </div>
 </div>
 
 <!-- The public Apps Script web-app URL is inserted here after deployment. -->
@@ -381,12 +406,35 @@
     });
     $('middle').scrollTop = 0;
   }
+  function singaporeNowParts() {
+    const parts=new Intl.DateTimeFormat('en-GB',{timeZone:'Asia/Singapore',year:'numeric',month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit',hourCycle:'h23'}).formatToParts(new Date());
+    const o={}; parts.forEach(p=>{if(p.type!=='literal')o[p.type]=p.value;});
+    return {year:+o.year,month:+o.month,day:+o.day,hour:+o.hour,minute:+o.minute};
+  }
+  function eventSingaporeTimestamp(ev) {
+    let dateText=String(ev.Event_Date||'').trim();
+    let m=dateText.match(/^(\d{4})-(\d{1,2})-(\d{1,2})/);
+    if(!m) { const d=new Date(dateText); if(isNaN(d)) return NaN; m=[null,String(d.getUTCFullYear()),String(d.getUTCMonth()+1),String(d.getUTCDate())]; }
+    // If no recognizable time is supplied, treat the event as running through that Singapore day.
+    let hour=23,minute=59;
+    const t=String(ev.Event_Time||'').trim();
+    const tm=t.match(/(\d{1,2})(?::(\d{2}))?\s*(AM|PM)/i);
+    if(tm) { hour=+tm[1]%12+(tm[3].toUpperCase()==='PM'?12:0); minute=+(tm[2]||0); }
+    else { const iso=t.match(/T(\d{2}):(\d{2})/); if(iso){hour=+iso[1];minute=+iso[2];} }
+    return Date.UTC(+m[1],+m[2]-1,+m[3],hour-8,minute);
+  }
+  function isUpcomingEvent(ev) {
+    const ts=eventSingaporeTimestamp(ev); if(!Number.isFinite(ts)) return false;
+    const now=singaporeNowParts();
+    const nowTs=Date.UTC(now.year,now.month-1,now.day,now.hour-8,now.minute);
+    return ts>=nowTs;
+  }
   async function loadEvents() {
     try {
       const result = await apiGet({action:'listEvents'});
       if (!result || !result.success) throw new Error(result && result.message || 'Could not load events.');
-      events = result.events || [];
-      // The API returns only the nearest upcoming published event.
+      events = (result.events || []).filter(isUpcomingEvent).sort((a,b)=>eventSingaporeTimestamp(a)-eventSingaporeTimestamp(b)).slice(0,1);
+      // Select only the nearest future published event using Singapore time.
       if (!events.length) {
         show('loading', false);
         show('eventListSection', true);
@@ -477,9 +525,10 @@
     $('bottomTitle').textContent='Register for this event';
     $('registerButton').disabled=false;
     $('registerButton').textContent='REGISTER NOW';
-    $('registrationForm').reset(); message('');
+    $('registrationForm').reset(); $('batchCode').value=''; message('');
     $('batchCode').classList.toggle('hidden',!yes(ev.Batch_Code_Required));
     $('batchCode').required=yes(ev.Batch_Code_Required);
+    $('modalEventName').textContent=ev.Event_Title || 'GIVE HOPE PLEASE event';
     show('qrBlock',!!ev.PayNow_QR_Image_ID);
     const qr=driveImage(ev.PayNow_QR_Image_ID,500);
     if (qr) $('paynowQr').src=qr;
@@ -535,6 +584,20 @@
     $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Your selected contribution: '+pct+'% · Supported portion: '+money(fee-payable,currentEvent.Currency);
     $('qrAmountText').textContent='Please pay '+money(payable,currentEvent.Currency)+' using the QR code above.';
   }
+  function openRegistrationModal() {
+    if (!currentEvent) return;
+    if (yes(currentEvent.Batch_Code_Required) && !$('batchCode').value.trim()) {
+      $('batchCode').focus(); $('batchCode').setCustomValidity('Please enter the batch code to continue.'); $('batchCode').reportValidity(); $('batchCode').setCustomValidity(''); return;
+    }
+    show('registrationModal',true); document.body.classList.add('modal-open');
+    setTimeout(()=>$('registrationForm').querySelector('[name=participantName]').focus(),80);
+  }
+  function closeRegistrationModal() { show('registrationModal',false); document.body.classList.remove('modal-open'); }
+  $('registerButton').addEventListener('click',openRegistrationModal);
+  $('closeModal').addEventListener('click',closeRegistrationModal);
+  $('cancelRegistration').addEventListener('click',closeRegistrationModal);
+  $('registrationModal').addEventListener('click',e=>{ if(e.target===$('registrationModal')) closeRegistrationModal(); });
+  document.addEventListener('keydown',e=>{ if(e.key==='Escape' && !$('registrationModal').classList.contains('hidden')) closeRegistrationModal(); });
   $('registrationForm').addEventListener('submit', async e=>{
     e.preventDefault();
     if (!currentEvent) return;
@@ -547,7 +610,7 @@
       participantName:String(data.get('participantName')||'').trim(),
       email:String(data.get('email')||'').trim(),
       mobile:String(data.get('mobile')||'').trim(),
-      batchCode:String(data.get('batchCode')||'').trim(),
+      batchCode:String($('batchCode').value||'').trim(),
       paymentReference:String(data.get('paymentReference')||'').trim(),
       displayNamePublicly:String(data.get('displayNamePublicly')||'NO'),
       contributionPercentage:String(getPercent()),
@@ -570,23 +633,24 @@
         const input=document.createElement('input'); input.type='hidden'; input.name=key; input.value=value; form.appendChild(input);
       });
       document.body.appendChild(form);
-      const btn=$('registerButton'); btn.disabled=true; btn.textContent='SUBMITTING…'; message('Submitting your registration…');
+      const btn=$('confirmButton'); btn.disabled=true; btn.textContent='SUBMITTING…'; message('Submitting your registration…');
       const handler=event=>{
         if (!/^(https:\/\/)?([a-z0-9-]+\.)*googleusercontent\.com$/i.test(event.origin.replace(/^https:\/\//,'')) && event.origin !== 'https://script.google.com') return;
         if (!event.data || event.data.type!=='GHP_EVENT_REGISTRATION') return;
         window.removeEventListener('message',handler);
         form.remove(); frame.remove();
-        btn.disabled=false; btn.textContent='REGISTER NOW';
+        btn.disabled=false; btn.textContent='CONFIRM REGISTRATION';
         if (event.data.success) {
           message(event.data.message || 'Registration received.','success');
-          formResetAfterSuccess();
+          formResetAfterSuccess(); $('batchCode').value='';
+          setTimeout(closeRegistrationModal,1400);
         } else message(event.data.message || 'Registration could not be completed.','error');
         resolve();
       };
       window.addEventListener('message',handler);
       setTimeout(()=>{
         window.removeEventListener('message',handler);
-        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.disabled=false; btn.textContent='REGISTER NOW'; message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
+        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.disabled=false; btn.textContent='CONFIRM REGISTRATION'; message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
         resolve();
       },25000);
       document.body.appendChild(form); form.submit();
@@ -597,7 +661,6 @@
     f.querySelector('[name="participantName"]').value='';
     f.querySelector('[name="email"]').value='';
     f.querySelector('[name="mobile"]').value='';
-    f.querySelector('[name="batchCode"]').value='';
     f.querySelector('[name="paymentReference"]').value='';
   }
   $('backToEvents').addEventListener('click',()=>{
