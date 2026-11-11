@@ -81,6 +81,8 @@
       text-decoration: none; cursor: pointer; font-size: 13px;
       font-weight: 700; padding: 8px 4px; white-space: nowrap;
     }
+    .home-link { display:flex; align-items:center; gap:10px; color:#172b3c; font-size:15px; }
+    .home-arrow { font-size:29px; line-height:1; font-weight:400; }
     .share-btn { border: 1px solid var(--line); border-radius: 20px; padding: 8px 12px; }
     .banner-wrap {
       flex: 1 1 auto;
@@ -222,10 +224,9 @@
     @media (max-width:600px) {
       :root { --header-height:58px; }
       .topbar { padding:9px 13px; }
-      .brand-name { font-size:12px; }
-      .brand-section { margin-left:5px; }
-      .brand img { width:34px; height:34px; }
-      .text-link,.share-btn { font-size:11px; }
+      .home-link { font-size:14px; gap:8px; }
+      .home-arrow { font-size:27px; }
+      .share-btn { font-size:12px; }
       .banner-wrap { padding:0; }
       .middle { padding:16px 14px 22px; }
       .meta-grid { gap:7px; }
@@ -248,13 +249,11 @@
 <div class="app">
   <header class="top">
     <div class="topbar">
-      <div class="brand">
-        <img id="headerLogo" alt="GIVE HOPE PLEASE logo">
-        <div class="brand-name">GIVE HOPE PLEASE <span class="brand-section">| Events</span></div>
-      </div>
+      <a class="text-link home-link" id="homeLink" href="https://givehopeplease.org/" aria-label="Back to Give Hope Please home">
+        <span class="home-arrow" aria-hidden="true">←</span><span>Give Hope Please</span>
+      </a>
       <div class="top-actions">
-        <a class="text-link" id="homeLink" href="https://givehopeplease.org/">← Back to GIVE HOPE PLEASE Home</a>
-        <button class="share-btn" id="shareButton" type="button">Share ↗</button>
+        <button class="share-btn" id="shareButton" type="button" aria-label="Share this event">Share <span aria-hidden="true">↗</span></button>
       </div>
     </div>
     <div class="banner-wrap" id="bannerWrap">
