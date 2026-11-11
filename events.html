@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#ffffff">
+  <title>Events | GIVE HOPE PLEASE</title>
+  <style>
+    :root {
+      --brand: #a64b36;
+      --brand-dark: #873a2a;
+      --ink: #25313a;
+      --muted: #687780;
+      --line: #e4e9ec;
+      --soft: #f6f8f9;
+      --white: #fff;
+      --success: #28734d;
+      --danger: #a33131;
+      --header-height: 66px;
+      --footer-height: 174px;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; width: 100%; height: 100%; overflow: hidden; }
+    body {
+      color: var(--ink);
+      background: #eef1f3;
+      font-family: Arial, Helvetica, sans-serif;
+      -webkit-font-smoothing: antialiased;
+    }
+    button, input, select, textarea { font: inherit; }
+    .app {
+      height: 100dvh;
+      max-width: 920px;
+      margin: 0 auto;
+      background: var(--white);
+      display: flex;
+      flex-direction: column;
+      box-shadow: 0 0 28px rgba(20,35,45,.08);
+      overflow: hidden;
+    }
+    .top {
+      flex: 0 0 auto;
+      z-index: 5;
+      background: #fff;
+      border-bottom: 1px solid var(--line);
+    }
+    .topbar {
+      min-height: var(--header-height);
+      padding: 12px 18px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+    }
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+    .brand img {
+      width: 40px; height: 40px; object-fit: contain;
+      display: none;
+    }
+    .brand-name {
+      font-size: 14px;
+      line-height: 1.25;
+      font-weight: 800;
+      letter-spacing: .035em;
+    }
+    .top-actions { display:flex; align-items:center; gap: 8px; }
+    .text-link, .share-btn {
+      border: 0; background: transparent; color: var(--brand);
+      text-decoration: none; cursor: pointer; font-size: 13px;
+      font-weight: 700; padding: 8px 4px; white-space: nowrap;
+    }
+    .share-btn { border: 1px solid var(--line); border-radius: 20px; padding: 8px 12px; }
+    .banner-wrap { padding: 0 16px 14px; }
+    .banner {
+      width: 100%; height: clamp(130px, 25vw, 220px);
+      border-radius: 12px; background: #edf1f3;
+      object-fit: cover; display: none;
+    }
+    .banner-placeholder {
+      width:100%; height:clamp(130px,25vw,220px); border-radius:12px;
+      background:linear-gradient(135deg,#edf1f3,#f8f9fa);
+      display:flex; align-items:center; justify-content:center;
+      color:#82909a; font-size:14px;
+    }
+    .middle {
+      flex: 1 1 auto;
+      min-height: 0;
+      overflow-y: auto;
+      overscroll-behavior: contain;
+      -webkit-overflow-scrolling: touch;
+      padding: 20px 20px 26px;
+      scroll-behavior: smooth;
+    }
+    .middle::-webkit-scrollbar { width: 7px; }
+    .middle::-webkit-scrollbar-thumb { background: #d6dde1; border-radius: 8px; }
+    .event-title { font-size: clamp(23px,4vw,31px); line-height:1.2; margin:0 0 12px; }
+    .meta-grid {
+      display:grid; grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:10px; margin: 14px 0 22px;
+    }
+    .meta-item { background:var(--soft); border-radius:9px; padding:11px 12px; min-width:0; }
+    .meta-label { display:block; font-size:11px; color:var(--muted); margin-bottom:4px; text-transform:uppercase; letter-spacing:.05em; }
+    .meta-value { font-size:14px; font-weight:600; overflow-wrap:anywhere; }
+    .organizer { display:flex; align-items:center; gap:10px; margin: 12px 0 20px; }
+    .organizer img { width:42px; height:42px; object-fit:contain; border:1px solid var(--line); border-radius:50%; padding:4px; }
+    .section-title { font-size:17px; margin:22px 0 9px; }
+    .overview { line-height:1.65; color:#48565e; white-space:pre-line; font-size:15px; }
+    .participant-head { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+    .count { font-size:12px; color:var(--muted); background:var(--soft); padding:5px 9px; border-radius:20px; }
+    .names { display:flex; flex-wrap:wrap; gap:7px; margin:10px 0 6px; }
+    .name-chip { background:#f2f5f6; border:1px solid #e7ecee; border-radius:18px; padding:7px 11px; font-size:13px; }
+    .muted { color:var(--muted); font-size:13px; line-height:1.5; }
+    .event-list { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:14px; }
+    .event-card {
+      border:1px solid var(--line); border-radius:12px; overflow:hidden;
+      background:#fff; cursor:pointer; transition:box-shadow .15s, transform .15s;
+    }
+    .event-card:hover { box-shadow:0 7px 22px rgba(20,35,45,.09); transform:translateY(-1px); }
+    .event-card img { width:100%; height:145px; object-fit:cover; background:var(--soft); display:block; }
+    .event-card-body { padding:13px; }
+    .event-card h3 { margin:0 0 8px; font-size:16px; line-height:1.35; }
+    .event-card p { margin:4px 0; color:var(--muted); font-size:12px; }
+    .card-link { color:var(--brand); font-size:13px; font-weight:700; margin-top:10px; display:inline-block; }
+    .bottom {
+      flex: 0 0 auto;
+      z-index: 6;
+      background:#fff;
+      border-top:1px solid var(--line);
+      box-shadow:0 -5px 18px rgba(20,35,45,.06);
+      padding: 12px 18px calc(12px + env(safe-area-inset-bottom));
+      max-height: 46dvh;
+      overflow-y:auto;
+    }
+    .bottom-inner { max-width: 700px; margin:0 auto; }
+    .bottom-heading { display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:8px; }
+    .bottom-heading strong { font-size:15px; }
+    .amount { color:var(--brand); font-size:14px; font-weight:800; }
+    .choice-row { display:flex; flex-wrap:wrap; gap:7px; margin:8px 0; }
+    .choice {
+      border:1px solid #d8e0e4; border-radius:8px; background:#fff;
+      color:var(--ink); padding:8px 10px; font-size:12px; cursor:pointer;
+    }
+    .choice.active { border-color:var(--brand); background:#fff5f2; color:var(--brand-dark); font-weight:700; }
+    .flex-row { display:flex; align-items:center; gap:9px; }
+    .flex-row input[type=range] { flex:1; accent-color:var(--brand); }
+    .field-row { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; margin:8px 0; }
+    .field {
+      width:100%; min-width:0; border:1px solid #d9e0e4; border-radius:8px;
+      padding:10px 11px; color:var(--ink); background:#fff; font-size:13px;
+    }
+    .field:focus { outline:2px solid rgba(166,75,54,.18); border-color:var(--brand); }
+    .register-btn {
+      display:block; width:100%; border:0; border-radius:9px;
+      padding:13px 16px; margin-top:9px; color:#fff; background:var(--brand);
+      font-weight:800; letter-spacing:.02em; cursor:pointer;
+    }
+    .register-btn:hover { background:var(--brand-dark); }
+    .register-btn:disabled { opacity:.55; cursor:not-allowed; }
+    .status-msg { font-size:12px; line-height:1.4; margin:6px 0; }
+    .status-msg.error { color:var(--danger); }
+    .status-msg.success { color:var(--success); }
+    .hidden { display:none !important; }
+    .qr-row { display:flex; align-items:center; gap:12px; margin:8px 0; }
+    .qr-row img { width:76px; height:76px; object-fit:contain; border:1px solid var(--line); border-radius:8px; padding:4px; }
+    .loading, .empty { text-align:center; color:var(--muted); padding:35px 12px; line-height:1.5; }
+    .back-events { color:var(--brand); background:none; border:0; padding:0; cursor:pointer; font-weight:700; margin-bottom:12px; }
+    .consent { font-size:11px; color:var(--muted); line-height:1.4; margin-top:6px; }
+    @media (max-width:600px) {
+      :root { --header-height:58px; }
+      .topbar { padding:9px 13px; }
+      .brand-name { font-size:12px; }
+      .brand img { width:34px; height:34px; }
+      .text-link,.share-btn { font-size:11px; }
+      .banner-wrap { padding:0 11px 11px; }
+      .middle { padding:16px 14px 22px; }
+      .meta-grid { gap:7px; }
+      .meta-item { padding:9px; }
+      .meta-value { font-size:13px; }
+      .event-list { grid-template-columns:1fr; }
+      .event-card { display:grid; grid-template-columns:112px 1fr; }
+      .event-card img { height:100%; min-height:125px; }
+      .event-card-body { padding:11px; }
+      .bottom { padding:10px 12px calc(10px + env(safe-area-inset-bottom)); max-height:52dvh; }
+      .field-row { grid-template-columns:1fr; gap:6px; }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+  <header class="top">
+    <div class="topbar">
+      <div class="brand">
+        <img id="headerLogo" alt="GIVE HOPE PLEASE logo">
+        <div class="brand-name">GIVE HOPE PLEASE</div>
+      </div>
+      <div class="top-actions">
+        <a class="text-link" id="homeLink" href="https://givehopeplease.org/">← Back to GIVE HOPE PLEASE Home</a>
+        <button class="share-btn" id="shareButton" type="button">Share ↗</button>
+      </div>
+    </div>
+    <div class="banner-wrap" id="bannerWrap">
+      <div class="banner-placeholder" id="bannerPlaceholder">GIVE HOPE PLEASE Events</div>
+      <img class="banner" id="eventBanner" alt="Event banner">
+    </div>
+  </header>
+
+  <main class="middle" id="middle">
+    <div class="loading" id="loading">Loading events…</div>
+    <section id="eventListSection" class="hidden">
+      <h1 class="event-title">Upcoming Events</h1>
+      <p class="muted">Explore our events and choose an opportunity to learn, participate and support our work.</p>
+      <div class="event-list" id="eventList"></div>
+      <div class="empty hidden" id="noEvents">There are no published events at the moment. Please check again soon.</div>
+    </section>
+
+    <section id="eventDetailSection" class="hidden">
+      <button class="back-events" id="backToEvents" type="button">← All events</button>
+      <h1 class="event-title" id="eventTitle"></h1>
+      <div class="meta-grid" id="eventMeta"></div>
+      <div class="organizer hidden" id="organizerBlock">
+        <img id="organizerLogo" alt="Organizer logo">
+        <div><strong id="organizerName"></strong><div class="muted">Organiser</div></div>
+      </div>
+      <h2 class="section-title">About this event</h2>
+      <div class="overview" id="eventOverview"></div>
+      <div id="facilitatorBlock" class="hidden">
+        <h2 class="section-title">Facilitator</h2>
+        <div id="facilitatorName" class="overview"></div>
+      </div>
+      <div id="participantsBlock" class="hidden">
+        <div class="participant-head">
+          <h2 class="section-title">Registered Participants</h2>
+          <span class="count" id="participantCount"></span>
+        </div>
+        <div class="names" id="participantNames"></div>
+      </div>
+      <div id="enquiryBlock" class="muted hidden"></div>
+    </section>
+  </main>
+
+  <footer class="bottom">
+    <div class="bottom-inner" id="registrationPanel">
+      <div class="bottom-heading">
+        <strong id="bottomTitle">Registration</strong>
+        <span class="amount" id="payableAmount"></span>
+      </div>
+      <div id="listBottomHint" class="muted">Select an event above to view details and register.</div>
+
+      <div id="registrationControls" class="hidden">
+        <div id="contributionArea" class="hidden">
+          <div class="muted">Choose your contribution option</div>
+          <div class="choice-row" id="contributionChoices"></div>
+          <div id="flexibleArea" class="hidden">
+            <div class="flex-row">
+              <input id="flexibleRange" type="range" min="1" max="100" step="1" value="50">
+              <strong id="flexibleValue">50%</strong>
+            </div>
+          </div>
+        </div>
+        <div class="muted" id="feeExplanation"></div>
+        <div class="qr-row hidden" id="qrBlock">
+          <img id="paynowQr" alt="PayNow QR code">
+          <div><strong>PayNow payment</strong><div class="muted" id="qrAmountText">Scan the QR code to pay the amount shown.</div></div>
+        </div>
+        <form id="registrationForm">
+          <div class="field-row">
+            <input class="field" name="participantName" placeholder="Full name" autocomplete="name" required maxlength="120">
+            <input class="field" name="email" type="email" placeholder="Email address" autocomplete="email" required maxlength="180">
+          </div>
+          <div class="field-row">
+            <input class="field" name="mobile" type="tel" placeholder="Mobile / WhatsApp number" autocomplete="tel" maxlength="40">
+            <input class="field hidden" id="batchCode" name="batchCode" placeholder="Batch code" maxlength="80">
+          </div>
+          <div class="field-row">
+            <input class="field" name="paymentReference" placeholder="PayNow reference (if available)" maxlength="100">
+            <select class="field" name="displayNamePublicly" aria-label="Show my name in participant list">
+              <option value="NO">Keep my name private</option>
+              <option value="YES">Show my name publicly</option>
+            </select>
+          </div>
+          <div class="consent">By registering, you agree that GIVE HOPE PLEASE may use your details to administer this event and send event-related information. Your email and mobile number will not be displayed publicly.</div>
+          <div class="status-msg" id="formMessage" role="status" aria-live="polite"></div>
+          <button class="register-btn" id="registerButton" type="submit">REGISTER NOW</button>
+        </form>
+        <div id="qrNote" class="muted hidden">Payment is subject to manual verification. Your registration will be confirmed after payment verification.</div>
+      </div>
+    </div>
+  </footer>
+</div>
+
+<!-- The public Apps Script web-app URL is inserted here after deployment. -->
+<script>
+  const API_URL = 'PASTE_PUBLIC_APPS_SCRIPT_WEB_APP_URL_HERE';
+  const HOME_URL = 'https://givehopeplease.org/';
+  const $ = id => document.getElementById(id);
+
+  let currentEvent = null;
+  let selectedContribution = null;
+  let flexiblePercent = 50;
+  let events = [];
+  let currentEventId = new URLSearchParams(location.search).get('event') || '';
+
+  function driveImage(fileId, width) {
+    if (!fileId) return '';
+    const id = String(fileId).match(/[-\w]{20,}/);
+    return id ? 'https://drive.google.com/thumbnail?id=' + encodeURIComponent(id[0]) + '&sz=w' + (width || 1200) : '';
+  }
+  function formatDate(value) {
+    if (!value) return 'Date to be announced';
+    const d = new Date(value + (String(value).length === 10 ? 'T12:00:00' : ''));
+    return isNaN(d) ? String(value) : d.toLocaleDateString(undefined,{day:'numeric',month:'long',year:'numeric'});
+  }
+  function money(amount, currency) {
+    const n = Number(amount || 0);
+    return (currency || 'SGD') + ' ' + n.toFixed(2);
+  }
+  function yes(value) { return String(value || '').trim().toUpperCase() === 'YES'; }
+  function show(id, visible) { $(id).classList.toggle('hidden', !visible); }
+  function message(text, type) {
+    $('formMessage').textContent = text || '';
+    $('formMessage').className = 'status-msg' + (type ? ' ' + type : '');
+  }
+  function apiGet(params) {
+    return new Promise((resolve, reject) => {
+      if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
+        reject(new Error('The public registration service has not been configured yet.'));
+        return;
+      }
+      const callback = 'ghpCallback_' + Date.now() + '_' + Math.floor(Math.random()*100000);
+      const script = document.createElement('script');
+      const timeout = setTimeout(() => { cleanup(); reject(new Error('The event service did not respond. Please try again.')); }, 18000);
+      function cleanup() { clearTimeout(timeout); delete window[callback]; script.remove(); }
+      window[callback] = data => { cleanup(); resolve(data); };
+      const query = new URLSearchParams({...params, callback}).toString();
+      script.src = API_URL + (API_URL.includes('?') ? '&' : '?') + query;
+      script.onerror = () => { cleanup(); reject(new Error('Unable to connect to the event service.')); };
+      document.head.appendChild(script);
+    });
+  }
+  function setBanner(fileId) {
+    const url = driveImage(fileId, 1600);
+    if (!url) {
+      $('eventBanner').style.display = 'none';
+      $('bannerPlaceholder').style.display = 'flex';
+      return;
+    }
+    $('eventBanner').onload = () => { $('eventBanner').style.display='block'; $('bannerPlaceholder').style.display='none'; };
+    $('eventBanner').onerror = () => { $('eventBanner').style.display='none'; $('bannerPlaceholder').style.display='flex'; };
+    $('eventBanner').src = url;
+  }
+  function renderList() {
+    show('loading', false); show('eventListSection', true); show('eventDetailSection', false);
+    show('registrationControls', false); show('listBottomHint', true);
+    $('bottomTitle').textContent = 'Event Registration';
+    $('payableAmount').textContent = '';
+    setBanner('');
+    const list = $('eventList'); list.innerHTML = '';
+    show('noEvents', events.length === 0);
+    events.forEach(ev => {
+      const card = document.createElement('article');
+      card.className = 'event-card';
+      const img = document.createElement('img');
+      img.alt = ev.Event_Title || 'Event image';
+      const src = driveImage(ev.Event_Image_ID, 700);
+      if (src) img.src = src;
+      const body = document.createElement('div'); body.className='event-card-body';
+      const title = document.createElement('h3'); title.textContent = ev.Event_Title || 'Untitled event';
+      const date = document.createElement('p'); date.textContent = formatDate(ev.Event_Date) + (ev.Event_Time ? ' · ' + ev.Event_Time : '');
+      const location = document.createElement('p'); location.textContent = ev.Location || '';
+      const link = document.createElement('span'); link.className='card-link'; link.textContent='View details and register →';
+      body.append(title,date,location,link); card.append(img,body);
+      card.addEventListener('click', () => openEvent(ev.Event_ID));
+      list.appendChild(card);
+    });
+    $('middle').scrollTop = 0;
+  }
+  async function loadEvents() {
+    try {
+      const result = await apiGet({action:'listEvents'});
+      if (!result || !result.success) throw new Error(result && result.message || 'Could not load events.');
+      events = result.events || [];
+      if (currentEventId) {
+        const found = events.find(e => String(e.Event_ID) === String(currentEventId));
+        if (found) { await loadEventDetail(currentEventId); return; }
+      }
+      renderList();
+    } catch (err) {
+      show('loading', true); $('loading').textContent = err.message;
+      show('listBottomHint', true); $('listBottomHint').textContent='Please refresh the page or try again later.';
+    }
+  }
+  function openEvent(id) {
+    currentEventId = id;
+    history.pushState({eventId:id},'', '?event='+encodeURIComponent(id));
+    loadEventDetail(id);
+  }
+  async function loadEventDetail(id) {
+    show('loading', true); $('loading').textContent='Loading event details…';
+    show('eventListSection', false); show('eventDetailSection', false);
+    show('registrationControls', false); show('listBottomHint', false);
+    try {
+      const result = await apiGet({action:'getEvent',eventId:id});
+      if (!result || !result.success || !result.event) throw new Error(result && result.message || 'This event is not available.');
+      currentEvent = result.event;
+      show('loading', false); show('eventDetailSection', true);
+      renderEvent(currentEvent, result.participants || []);
+    } catch(err) {
+      show('loading', true); $('loading').textContent=err.message;
+      show('listBottomHint', true); $('listBottomHint').textContent='Return to the events list to choose another event.';
+      $('bottomTitle').textContent='Registration unavailable';
+    }
+  }
+  function metaItem(label,value) {
+    const box=document.createElement('div'); box.className='meta-item';
+    const l=document.createElement('span'); l.className='meta-label'; l.textContent=label;
+    const v=document.createElement('span'); v.className='meta-value'; v.textContent=value || 'To be announced';
+    box.append(l,v); return box;
+  }
+  function renderEvent(ev, participants) {
+    $('eventTitle').textContent=ev.Event_Title || 'Event';
+    $('eventMeta').innerHTML='';
+    $('eventMeta').append(
+      metaItem('Date',formatDate(ev.Event_Date)),
+      metaItem('Time',ev.Event_Time || ''),
+      metaItem('Location',ev.Location || ''),
+      metaItem('Medium',ev.Medium || '')
+    );
+    setBanner(ev.Event_Image_ID);
+    if (ev.Organizer_Name || ev.Organizer_Logo_ID) {
+      show('organizerBlock',true); $('organizerName').textContent=ev.Organizer_Name || 'GIVE HOPE PLEASE';
+      const logo=driveImage(ev.Organizer_Logo_ID,180);
+      if (logo) { $('organizerLogo').src=logo; $('organizerLogo').style.display='block'; }
+      else $('organizerLogo').style.display='none';
+    } else show('organizerBlock',false);
+    $('eventOverview').textContent=ev.Overview || 'Event details will be updated soon.';
+    show('facilitatorBlock',!!ev.Facilitator_Name);
+    $('facilitatorName').textContent=ev.Facilitator_Name || '';
+    if (yes(ev.Show_Participant_Names)) {
+      show('participantsBlock',true);
+      $('participantCount').textContent=participants.length + ' confirmed';
+      $('participantNames').innerHTML='';
+      participants.forEach(p => {
+        const chip=document.createElement('span'); chip.className='name-chip'; chip.textContent=p.Participant_Name;
+        $('participantNames').appendChild(chip);
+      });
+      if (!participants.length) $('participantNames').textContent='Be among the first to register.';
+    } else show('participantsBlock',false);
+    if (ev.Enquiry_WhatsApp) {
+      show('enquiryBlock',true);
+      const digits=String(ev.Enquiry_WhatsApp).replace(/\D/g,'');
+      $('enquiryBlock').innerHTML='Questions? <a href="https://wa.me/'+digits+'" target="_blank" rel="noopener">Enquire via WhatsApp</a>';
+    } else show('enquiryBlock',false);
+    setupRegistration(ev);
+    $('middle').scrollTop=0;
+  }
+  function setupRegistration(ev) {
+    show('registrationControls',true);
+    $('bottomTitle').textContent='Register for this event';
+    $('registerButton').disabled=false;
+    $('registerButton').textContent='REGISTER NOW';
+    $('registrationForm').reset(); message('');
+    $('batchCode').classList.toggle('hidden',!yes(ev.Batch_Code_Required));
+    $('batchCode').required=yes(ev.Batch_Code_Required);
+    show('qrBlock',!!ev.PayNow_QR_Image_ID);
+    const qr=driveImage(ev.PayNow_QR_Image_ID,500);
+    if (qr) $('paynowQr').src=qr;
+    show('qrNote',!!ev.PayNow_QR_Image_ID);
+    const enabled=yes(ev.Contribution_Options_Enabled);
+    show('contributionArea',enabled);
+    $('contributionChoices').innerHTML='';
+    selectedContribution=100; flexiblePercent=Number(ev.Flexible_Min_Percentage || 1);
+    if (enabled) {
+      if (yes(ev.Shared_Contribution_Enabled)) addChoice('Shared contribution',Number(ev.Shared_Contribution_Percentage || 50));
+      if (yes(ev.Full_Contribution_Enabled)) addChoice('Full contribution',100);
+      if (yes(ev.Flexible_Contribution_Enabled)) {
+        addChoice('Pay what you like',null);
+        $('flexibleRange').min=Number(ev.Flexible_Min_Percentage || 1);
+        $('flexibleRange').max=Number(ev.Flexible_Max_Percentage || 100);
+        $('flexibleRange').step=1;
+        $('flexibleRange').value=$('flexibleRange').min;
+        flexiblePercent=Number($('flexibleRange').value);
+        $('flexibleValue').textContent=flexiblePercent+'%';
+      }
+      if (!selectedContribution && !yes(ev.Flexible_Contribution_Enabled)) selectedContribution=100;
+    }
+    updateAmount();
+  }
+  function addChoice(label,percent) {
+    const btn=document.createElement('button'); btn.type='button'; btn.className='choice';
+    btn.textContent=percent===null ? label : label+' ('+percent+'%)';
+    btn.addEventListener('click',()=>{
+      document.querySelectorAll('.choice').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      if (percent===null) {
+        selectedContribution='flexible'; show('flexibleArea',true);
+        selectedContribution=flexiblePercent;
+      } else { selectedContribution=percent; show('flexibleArea',false); }
+      updateAmount();
+    });
+    $('contributionChoices').appendChild(btn);
+    if ($('contributionChoices').children.length===1) btn.click();
+  }
+  $('flexibleRange').addEventListener('input',e=>{
+    flexiblePercent=Number(e.target.value); selectedContribution=flexiblePercent;
+    $('flexibleValue').textContent=flexiblePercent+'%'; updateAmount();
+  });
+  function getPercent() {
+    if (!currentEvent || !yes(currentEvent.Contribution_Options_Enabled)) return 100;
+    return Number(selectedContribution || 100);
+  }
+  function updateAmount() {
+    if (!currentEvent) return;
+    const fee=Number(currentEvent.Fee || 0), pct=getPercent();
+    const payable=Math.round(fee*pct)/100;
+    $('payableAmount').textContent=money(payable,currentEvent.Currency);
+    $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Your selected contribution: '+pct+'% · Supported portion: '+money(fee-payable,currentEvent.Currency);
+    $('qrAmountText').textContent='Please pay '+money(payable,currentEvent.Currency)+' using the QR code above.';
+  }
+  $('registrationForm').addEventListener('submit', async e=>{
+    e.preventDefault();
+    if (!currentEvent) return;
+    const form=e.currentTarget;
+    if (!form.reportValidity()) return;
+    const data=new FormData(form);
+    const payload={
+      action:'register',
+      eventId:currentEvent.Event_ID,
+      participantName:String(data.get('participantName')||'').trim(),
+      email:String(data.get('email')||'').trim(),
+      mobile:String(data.get('mobile')||'').trim(),
+      batchCode:String(data.get('batchCode')||'').trim(),
+      paymentReference:String(data.get('paymentReference')||'').trim(),
+      displayNamePublicly:String(data.get('displayNamePublicly')||'NO'),
+      contributionPercentage:String(getPercent()),
+      contributionOption:yes(currentEvent.Contribution_Options_Enabled)?'Participant choice':'Standard fee',
+      origin:location.origin
+    };
+    await submitRegistration(payload);
+  });
+  function submitRegistration(payload) {
+    return new Promise((resolve)=>{
+      if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
+        message('The registration service has not been configured yet.','error'); resolve(); return;
+      }
+      const frame=document.createElement('iframe');
+      frame.name='ghpRegistrationFrame'; frame.style.display='none'; frame.title='Registration response';
+      document.body.appendChild(frame);
+      const form=document.createElement('form');
+      form.method='POST'; form.action=API_URL; form.target=frame.name; form.style.display='none';
+      Object.entries(payload).forEach(([key,value])=>{
+        const input=document.createElement('input'); input.type='hidden'; input.name=key; input.value=value; form.appendChild(input);
+      });
+      document.body.appendChild(form);
+      const btn=$('registerButton'); btn.disabled=true; btn.textContent='SUBMITTING…'; message('Submitting your registration…');
+      const handler=event=>{
+        if (!/^(https:\/\/)?([a-z0-9-]+\.)*googleusercontent\.com$/i.test(event.origin.replace(/^https:\/\//,'')) && event.origin !== 'https://script.google.com') return;
+        if (!event.data || event.data.type!=='GHP_EVENT_REGISTRATION') return;
+        window.removeEventListener('message',handler);
+        form.remove(); frame.remove();
+        btn.disabled=false; btn.textContent='REGISTER NOW';
+        if (event.data.success) {
+          message(event.data.message || 'Registration received.','success');
+          formResetAfterSuccess();
+        } else message(event.data.message || 'Registration could not be completed.','error');
+        resolve();
+      };
+      window.addEventListener('message',handler);
+      setTimeout(()=>{
+        window.removeEventListener('message',handler);
+        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.disabled=false; btn.textContent='REGISTER NOW'; message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
+        resolve();
+      },25000);
+      document.body.appendChild(form); form.submit();
+    });
+  }
+  function formResetAfterSuccess() {
+    const f=$('registrationForm');
+    f.querySelector('[name="participantName"]').value='';
+    f.querySelector('[name="email"]').value='';
+    f.querySelector('[name="mobile"]').value='';
+    f.querySelector('[name="batchCode"]').value='';
+    f.querySelector('[name="paymentReference"]').value='';
+  }
+  $('backToEvents').addEventListener('click',()=>{
+    currentEventId=''; currentEvent=null; history.pushState({},'','events.html'); renderList();
+  });
+  window.addEventListener('popstate',()=>{
+    currentEventId=new URLSearchParams(location.search).get('event')||'';
+    if (currentEventId) loadEventDetail(currentEventId); else renderList();
+  });
+  $('shareButton').addEventListener('click',async()=>{
+    const shareData={title:document.title,text:currentEvent?currentEvent.Event_Title:'GIVE HOPE PLEASE Events',url:location.href};
+    try {
+      if (navigator.share) await navigator.share(shareData);
+      else if (navigator.clipboard) { await navigator.clipboard.writeText(location.href); $('shareButton').textContent='Link copied'; setTimeout(()=>$('shareButton').textContent='Share ↗',1800); }
+      else prompt('Copy this event link:',location.href);
+    } catch(_) {}
+  });
+  $('homeLink').href=HOME_URL;
+  loadEvents();
+</script>
+</body>
+</html>
