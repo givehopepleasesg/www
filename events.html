@@ -316,9 +316,8 @@
         <div class="modal-label">Choose your contribution</div>
         <div class="choice-row" id="contributionChoices"></div>
         <div id="flexibleArea" class="hidden">
-          <label class="modal-label" for="flexibleAmount">Your contribution percentage</label>
-          <input class="field" id="flexibleAmount" type="number" inputmode="numeric" min="1" max="100" step="1" placeholder="Pay what you like" aria-label="Pay what you like, enter a percentage greater than zero">
-          <div class="muted" id="flexibleHint">Enter a percentage greater than 0.</div>
+          <label class="modal-label" for="flexibleAmount">Pay what you like (amount)</label>
+          <input class="field" id="flexibleAmount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="Enter any amount" aria-label="Enter a contribution amount greater than zero">
         </div>
       </div>
       <div class="amount-line"><span id="feeExplanation"></span><strong id="payableAmount"></strong></div>
@@ -355,9 +354,7 @@
 
   let currentEvent = null;
   let selectedContribution = null;
-  let flexiblePercent = null;
-  let flexibleMin = 1;
-  let flexibleMax = 100;
+  let customContributionAmount = null;
   let events = [];
   let currentEventId = '';
 
@@ -563,52 +560,56 @@
     const enabled=yes(ev.Contribution_Options_Enabled);
     show('contributionArea',enabled);
     $('contributionChoices').innerHTML='';
-    selectedContribution=100; flexibleMin=Number(ev.Flexible_Min_Percentage || 1); flexibleMax=Number(ev.Flexible_Max_Percentage || 100); flexiblePercent=null;
-    $('flexibleAmount').value=''; $('flexibleAmount').min=String(Math.max(1,flexibleMin)); $('flexibleAmount').max=String(Math.min(100,flexibleMax));
+    customContributionAmount=null;
+    $('flexibleAmount').value='';
+    show('flexibleArea',enabled && yes(ev.Flexible_Contribution_Enabled));
+    selectedContribution='standard';
     if (enabled) {
-      if (yes(ev.Shared_Contribution_Enabled)) addChoice('Shared contribution',Number(ev.Shared_Contribution_Percentage || 50));
-      if (yes(ev.Full_Contribution_Enabled)) addChoice('Full contribution',100);
+      if (yes(ev.Shared_Contribution_Enabled)) addChoice('50%',50);
+      if (yes(ev.Full_Contribution_Enabled)) addChoice('100%',100);
       if (yes(ev.Flexible_Contribution_Enabled)) {
-        addChoice('Pay what you like',null);
-        $('flexibleAmount').min=String(Math.max(1,flexibleMin));
-        $('flexibleAmount').max=String(Math.min(100,flexibleMax));
+        $('flexibleAmount').placeholder='Enter any amount';
       }
-      if (!selectedContribution && !yes(ev.Flexible_Contribution_Enabled)) selectedContribution=100;
+      if ($('contributionChoices').children.length) $('contributionChoices').children[0].click();
+      else if (yes(ev.Flexible_Contribution_Enabled)) selectedContribution='custom';
     }
     updateAmount();
   }
   function addChoice(label,percent) {
     const btn=document.createElement('button'); btn.type='button'; btn.className='choice';
-    btn.textContent=percent===null ? label : label+' ('+percent+'%)';
+    btn.textContent=label;
     btn.addEventListener('click',()=>{
-      document.querySelectorAll('.choice').forEach(b=>b.classList.remove('active'));
+      document.querySelectorAll('#contributionChoices .choice').forEach(b=>b.classList.remove('active'));
       btn.classList.add('active');
-      if (percent===null) {
-        selectedContribution='flexible'; flexiblePercent=null; $('flexibleAmount').value=''; show('flexibleArea',true);
-      } else { selectedContribution=percent; flexiblePercent=null; show('flexibleArea',false); }
+      selectedContribution=percent;
+      customContributionAmount=null;
+      $('flexibleAmount').value='';
       updateAmount();
     });
     $('contributionChoices').appendChild(btn);
-    if ($('contributionChoices').children.length===1) btn.click();
   }
   $('flexibleAmount').addEventListener('input',e=>{
     const raw=e.target.value.trim();
     const value=raw==='' ? NaN : Number(raw);
-    flexiblePercent=Number.isFinite(value) && value>0 && value>=flexibleMin && value<=flexibleMax ? value : null;
-    if (selectedContribution==='flexible') updateAmount();
+    customContributionAmount=Number.isFinite(value) && value>0 ? Math.round(value*100)/100 : null;
+    selectedContribution='custom';
+    document.querySelectorAll('#contributionChoices .choice').forEach(b=>b.classList.remove('active'));
+    updateAmount();
   });
-  function getPercent() {
-    if (!currentEvent || !yes(currentEvent.Contribution_Options_Enabled)) return 100;
-    if (selectedContribution==='flexible') return flexiblePercent===null ? 0 : flexiblePercent;
-    return Number(selectedContribution || 100);
+  function getContributionAmount() {
+    if (!currentEvent) return 0;
+    if (!yes(currentEvent.Contribution_Options_Enabled)) return Math.max(0,Number(currentEvent.Fee || 0));
+    if (selectedContribution==='custom') return customContributionAmount || 0;
+    const fee=Math.max(0,Number(currentEvent.Fee || 0));
+    return Math.round(fee*Number(selectedContribution || 0))/100;
   }
   function updateAmount() {
     if (!currentEvent) return;
-    const fee=Number(currentEvent.Fee || 0), pct=getPercent();
-    const validFlexible=selectedContribution!=='flexible' || (pct>0 && pct>=flexibleMin && pct<=flexibleMax);
-    const payable=validFlexible ? Math.round(fee*pct)/100 : 0;
-    $('payableAmount').textContent=validFlexible ? money(payable,currentEvent.Currency) : 'Enter a valid percentage';
-    $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Your selected contribution: '+(validFlexible ? pct+'%' : '—');
+    const fee=Number(currentEvent.Fee || 0), payable=getContributionAmount();
+    const valid=payable>0;
+    $('payableAmount').textContent=valid ? money(payable,currentEvent.Currency) : (selectedContribution==='custom' ? 'Enter an amount greater than 0' : money(payable,currentEvent.Currency));
+    const choiceLabel=selectedContribution==='custom' ? 'Pay what you like' : (selectedContribution==='standard' ? 'Standard fee' : String(selectedContribution)+'%');
+    $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Contribution: '+choiceLabel;
     $('qrAmountText').textContent='Please pay '+money(payable,currentEvent.Currency)+' using the QR code above.';
   }
   function openRegistrationModal() {
@@ -631,9 +632,12 @@
     const form=e.currentTarget;
     if (!form.reportValidity()) return;
     const data=new FormData(form);
-    if (selectedContribution==='flexible' && !(flexiblePercent>0 && flexiblePercent>=flexibleMin && flexiblePercent<=flexibleMax)) {
-      $('flexibleAmount').setCustomValidity('Please enter a percentage greater than 0 and within the allowed range.');
+    if (yes(currentEvent.Contribution_Options_Enabled) && yes(currentEvent.Flexible_Contribution_Enabled) && selectedContribution==='custom' && !(customContributionAmount>0)) {
+      $('flexibleAmount').setCustomValidity('Please enter an amount greater than 0.');
       $('flexibleAmount').reportValidity(); $('flexibleAmount').setCustomValidity(''); $('flexibleAmount').focus(); return;
+    }
+    if (!(getContributionAmount()>0)) {
+      message('Please choose a contribution or enter an amount greater than 0.','error'); return;
     }
     const payload={
       action:'register',
@@ -644,8 +648,8 @@
       batchCode:String($('batchCode').value||'').trim(),
       paymentReference:String(data.get('paymentReference')||'').trim(),
       displayNamePublicly:String(data.get('displayNamePublicly')||'NO'),
-      contributionPercentage:String(getPercent()),
-      contributionOption:yes(currentEvent.Contribution_Options_Enabled)?'Participant choice':'Standard fee',
+      contributionAmount:String(getContributionAmount()),
+      contributionOption:!yes(currentEvent.Contribution_Options_Enabled)?'Standard fee':(selectedContribution==='custom'?'Pay what you like':String(selectedContribution)+'%'),
       origin:location.origin
     };
     await submitRegistration(payload);
