@@ -76,14 +76,14 @@
       font-weight: 700; padding: 8px 4px; white-space: nowrap;
     }
     .share-btn { border: 1px solid var(--line); border-radius: 20px; padding: 8px 12px; }
-    .banner-wrap { padding: 0 16px 14px; }
+    .banner-wrap { padding: 0 0 14px; }
     .banner {
-      width: 100%; height: clamp(130px, 25vw, 220px);
-      border-radius: 12px; background: #edf1f3;
-      object-fit: cover; display: none;
+      width: 100%; height: auto; max-height: none;
+      border-radius: 0; background: #edf1f3;
+      object-fit: contain; display: none;
     }
     .banner-placeholder {
-      width:100%; height:clamp(130px,25vw,220px); border-radius:12px;
+      width:100%; aspect-ratio:16 / 9; height:auto; border-radius:0;
       background:linear-gradient(135deg,#edf1f3,#f8f9fa);
       display:flex; align-items:center; justify-content:center;
       color:#82909a; font-size:14px;
@@ -200,7 +200,7 @@
       .brand-section { margin-left:5px; }
       .brand img { width:34px; height:34px; }
       .text-link,.share-btn { font-size:11px; }
-      .banner-wrap { padding:0 11px 11px; }
+      .banner-wrap { padding:0 0 11px; }
       .middle { padding:16px 14px 22px; }
       .meta-grid { gap:7px; }
       .meta-item { padding:9px; }
@@ -274,7 +274,7 @@
   <footer class="bottom">
     <div class="bottom-inner" id="registrationPanel">
       <div id="registrationControls" class="register-strip hidden">
-        <input class="field batch-field hidden" id="batchCode" name="batchCode" placeholder="Batch code" maxlength="80" aria-label="Batch code">
+        <input class="field batch-field" id="batchCode" name="batchCode" placeholder="Batch code (if applicable)" maxlength="80" aria-label="Batch code">
         <button class="register-btn" id="registerButton" type="button">REGISTER NOW</button>
       </div>
       <div id="listBottomHint" class="muted">Loading event details…</div>
@@ -383,7 +383,6 @@
   function renderList() {
     show('loading', false); show('eventListSection', true); show('eventDetailSection', false);
     show('registrationControls', false); show('listBottomHint', true);
-    $('bottomTitle').textContent = 'Event Registration';
     $('payableAmount').textContent = '';
     setBanner('');
     const list = $('eventList'); list.innerHTML = '';
@@ -473,7 +472,6 @@
     } catch(err) {
       show('loading', true); $('loading').textContent=err.message;
       show('listBottomHint', true); $('listBottomHint').textContent='Return to the events list to choose another event.';
-      $('bottomTitle').textContent='Registration unavailable';
     }
   }
   function metaItem(label,value) {
@@ -522,12 +520,12 @@
   }
   function setupRegistration(ev) {
     show('registrationControls',true);
-    $('bottomTitle').textContent='Register for this event';
     $('registerButton').disabled=false;
     $('registerButton').textContent='REGISTER NOW';
     $('registrationForm').reset(); $('batchCode').value=''; message('');
-    $('batchCode').classList.toggle('hidden',!yes(ev.Batch_Code_Required));
+    $('batchCode').classList.remove('hidden');
     $('batchCode').required=yes(ev.Batch_Code_Required);
+    $('batchCode').placeholder=yes(ev.Batch_Code_Required) ? 'Enter batch code' : 'Batch code (optional)';
     $('modalEventName').textContent=ev.Event_Title || 'GIVE HOPE PLEASE event';
     show('qrBlock',!!ev.PayNow_QR_Image_ID);
     const qr=driveImage(ev.PayNow_QR_Image_ID,500);
