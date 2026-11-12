@@ -326,7 +326,7 @@
         <div class="choice-row" id="contributionChoices"></div>
         <div id="flexibleArea" class="hidden">
           <label class="modal-label" for="flexibleAmount">Pay what you like (amount)</label>
-          <input class="field" id="flexibleAmount" type="number" inputmode="decimal" min="0.01" step="0.01" placeholder="Enter any amount" aria-label="Enter a contribution amount greater than zero">
+          <input class="field" id="flexibleAmount" type="number" inputmode="decimal" min="0" step="0.01" placeholder="Enter any amount, including 0" aria-label="Enter a contribution amount of zero or more">
         </div>
       </div>
       <div class="amount-line"><span id="feeExplanation"></span><strong id="payableAmount"></strong></div>
@@ -597,7 +597,7 @@
       if (yes(ev.Shared_Contribution_Enabled)) addChoice('50%',50);
       if (yes(ev.Full_Contribution_Enabled)) addChoice('100%',100);
       if (yes(ev.Flexible_Contribution_Enabled)) {
-        $('flexibleAmount').placeholder='Enter any amount';
+        $('flexibleAmount').placeholder='Enter any amount, including 0';
       }
       if ($('contributionChoices').children.length) $('contributionChoices').children[0].click();
       else if (yes(ev.Flexible_Contribution_Enabled)) selectedContribution='custom';
@@ -620,7 +620,7 @@
   $('flexibleAmount').addEventListener('input',e=>{
     const raw=e.target.value.trim();
     const value=raw==='' ? NaN : Number(raw);
-    customContributionAmount=Number.isFinite(value) && value>0 ? Math.round(value*100)/100 : null;
+    customContributionAmount=Number.isFinite(value) && value>=0 ? Math.round(value*100)/100 : null;
     selectedContribution='custom';
     document.querySelectorAll('#contributionChoices .choice').forEach(b=>b.classList.remove('active'));
     updateAmount();
@@ -628,18 +628,18 @@
   function getContributionAmount() {
     if (!currentEvent) return 0;
     if (!yes(currentEvent.Contribution_Options_Enabled)) return Math.max(0,Number(currentEvent.Fee || 0));
-    if (selectedContribution==='custom') return customContributionAmount || 0;
+    if (selectedContribution==='custom') return customContributionAmount===null ? NaN : customContributionAmount;
     const fee=Math.max(0,Number(currentEvent.Fee || 0));
     return Math.round(fee*Number(selectedContribution || 0))/100;
   }
   function updateAmount() {
     if (!currentEvent) return;
     const fee=Number(currentEvent.Fee || 0), payable=getContributionAmount();
-    const valid=payable>=0;
-    $('payableAmount').textContent=valid ? money(payable,currentEvent.Currency) : (selectedContribution==='custom' ? 'Enter an amount greater than 0' : money(payable,currentEvent.Currency));
+    const valid=Number.isFinite(payable) && payable>=0;
+    $('payableAmount').textContent=valid ? money(payable,currentEvent.Currency) : 'Enter an amount of 0 or more';
     const choiceLabel=selectedContribution==='custom' ? 'Pay what you like' : (selectedContribution==='standard' ? 'Standard fee' : String(selectedContribution)+'%');
     $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Contribution: '+choiceLabel;
-    $('qrAmountText').textContent='Please pay '+money(payable,currentEvent.Currency)+' using the QR code above.';
+    $('qrAmountText').textContent='Please pay '+(valid ? money(payable,currentEvent.Currency) : 'the amount shown')+' using the QR code above.';
     updateConfirmButton();
   }
   function setBatchCodeStatus(text, state) {
@@ -689,7 +689,8 @@
   });
   function contributionIsValid() {
     if (!currentEvent) return false;
-    const amount=getContributionAmount(); return Number.isFinite(amount) && amount>=0;
+    const amount=getContributionAmount();
+    return Number.isFinite(amount) && amount>=0;
   }
   function updateConfirmButton() {
     const form=$('registrationForm');
@@ -729,12 +730,12 @@
       closeRegistrationModal(); $('batchCode').focus(); return;
     }
     const data=new FormData(form);
-    if (yes(currentEvent.Contribution_Options_Enabled) && yes(currentEvent.Flexible_Contribution_Enabled) && selectedContribution==='custom' && !(customContributionAmount>0)) {
-      $('flexibleAmount').setCustomValidity('Please enter an amount greater than 0.');
+    if (yes(currentEvent.Contribution_Options_Enabled) && yes(currentEvent.Flexible_Contribution_Enabled) && selectedContribution==='custom' && !(Number.isFinite(customContributionAmount) && customContributionAmount>=0)) {
+      $('flexibleAmount').setCustomValidity('Please enter an amount of 0 or more.');
       $('flexibleAmount').reportValidity(); $('flexibleAmount').setCustomValidity(''); $('flexibleAmount').focus(); return;
     }
-    if (!(getContributionAmount()>0)) {
-      message('Please choose a contribution or enter an amount greater than 0.','error'); return;
+    if (!contributionIsValid()) {
+      message('Please choose a contribution or enter an amount of 0 or more.','error'); return;
     }
     const payload={
       action:'register',
@@ -751,7 +752,7 @@
     };
     await submitRegistration(payload);
   });
-  
+
 function submitRegistration(payload) {
   return new Promise((resolve) => {
     if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
