@@ -806,9 +806,13 @@ function submitRegistration(payload) {
     }
 
     const handler = event => {
-      // Accept messages only from this submission's iframe.
-      if (event.source !== frame.contentWindow) return;
-      if (!event.data || event.data.type !== 'GHP_EVENT_REGISTRATION') return;
+     // Accept confirmation messages from the Apps Script response.
+const allowedOrigin =
+  event.origin === 'https://script.google.com' ||
+  event.origin.endsWith('.googleusercontent.com');
+
+if (!allowedOrigin) return;
+if (!event.data || event.data.type !== 'GHP_EVENT_REGISTRATION') return;
 
       finish();
 
