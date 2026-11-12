@@ -635,7 +635,7 @@
   function updateAmount() {
     if (!currentEvent) return;
     const fee=Number(currentEvent.Fee || 0), payable=getContributionAmount();
-    const valid=payable>0;
+    const valid=payable>=0;
     $('payableAmount').textContent=valid ? money(payable,currentEvent.Currency) : (selectedContribution==='custom' ? 'Enter an amount greater than 0' : money(payable,currentEvent.Currency));
     const choiceLabel=selectedContribution==='custom' ? 'Pay what you like' : (selectedContribution==='standard' ? 'Standard fee' : String(selectedContribution)+'%');
     $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Contribution: '+choiceLabel;
