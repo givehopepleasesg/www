@@ -14,6 +14,9 @@
     #status { margin-top: 20px; line-height: 1.6; overflow-wrap: anywhere; }
     #dashboard { display: none; }
     .topbar { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px; margin-bottom: 25px; }
+    .topbar-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 10px; }
+    .button-link { display: inline-block; background: #d97732; color: white; text-decoration: none; border-radius: 5px; padding: 10px 14px; font-size: 13px; }
+    .button-link:hover { background: #bd6428; }
     .topbar h1 { margin: 0; font-size: 25px; }
     .user-info { color: #666; font-size: 14px; }
     .filters { display: flex; flex-wrap: wrap; align-items: end; gap: 15px; padding: 20px; border: 1px solid #ddd; border-radius: 9px; background: #fafafa; margin: 20px 0; }
@@ -73,7 +76,11 @@
         <h1>GIVE HOPE PLEASE</h1>
         <div class="user-info" id="userInfo"></div>
       </div>
-      <button id="refreshButton" type="button" onclick="loadDashboard()">Refresh Dashboard</button>
+      <div class="topbar-actions">
+        <a class="button-link" href="https://script.google.com/macros/s/AKfycbwyEuDKZX8LATD6H3B6GjWwZOMfcUKOZSsANf-llyxvqmk_2BkN8eKToX_LcFzFzr6e/exec"
+           target="_blank" rel="noopener noreferrer">Event Management</a>
+        <button id="refreshButton" type="button" onclick="loadDashboard()">Refresh Dashboard</button>
+      </div>
     </div>
 
     <div class="filters">
