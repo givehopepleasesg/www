@@ -687,9 +687,6 @@
     setBatchCodeStatus('Enter the complete code to validate.','checking'); updateRegisterButton(); updateConfirmButton();
     batchValidationTimer=setTimeout(validateBatchCodeNow,450);
   });
-  $('batchCode').addEventListener('blur',()=>{
-    clearTimeout(batchValidationTimer); if ($('batchCode').value.trim()) validateBatchCodeNow();
-  });
   function contributionIsValid() {
     if (!currentEvent) return false;
     const amount=getContributionAmount(); return Number.isFinite(amount) && amount>0;
