@@ -195,7 +195,13 @@
     .status-msg.success { color:var(--success); }
 
     .register-strip { display:flex; align-items:center; gap:10px; }
-    .batch-field { flex:1; min-width:0; margin:0; border-color:#d8e0e4; }
+    .batch-entry { flex:1; min-width:0; }
+    .batch-field { width:100%; min-width:0; margin:0; border-color:#d8e0e4; }
+    .batch-code-status { min-height:16px; padding:3px 2px 0; font-size:11px; color:#687782; }
+    .batch-code-status.valid { color:#187443; }
+    .batch-code-status.invalid { color:#b42318; }
+    .batch-code-status.checking { color:#687782; }
+    .register-btn:disabled { opacity:.48; cursor:not-allowed; filter:grayscale(.15); }
     .register-strip .register-btn { width:auto; min-width:155px; margin:0; padding:13px 20px; }
     .modal-backdrop { position:fixed; inset:0; z-index:30; background:rgba(20,31,40,.58); display:flex; align-items:center; justify-content:center; padding:18px; }
     .modal-card { width:min(100%,560px); max-height:min(88dvh,820px); overflow-y:auto; background:#fff; border-radius:18px; padding:22px; box-shadow:0 18px 60px rgba(0,0,0,.25); }
@@ -299,8 +305,11 @@
   <footer class="bottom">
     <div class="bottom-inner" id="registrationPanel">
       <div id="registrationControls" class="register-strip hidden">
-        <input class="field batch-field" id="batchCode" name="batchCode" placeholder="Batch code (if applicable)" maxlength="80" aria-label="Batch code">
-        <button class="register-btn" id="registerButton" type="button">REGISTER NOW</button>
+        <div class="batch-entry">
+          <input class="field batch-field" id="batchCode" name="batchCode" placeholder="Batch code (if applicable)" maxlength="80" aria-label="Batch code" autocomplete="off" aria-describedby="batchCodeStatus">
+          <div class="batch-code-status" id="batchCodeStatus" role="status" aria-live="polite"></div>
+        </div>
+        <button class="register-btn" id="registerButton" type="button" disabled>REGISTER NOW</button>
       </div>
       <div id="listBottomHint" class="muted">Loading event details…</div>
     </div>
@@ -340,7 +349,7 @@
         </div>
         <div class="consent">By registering, you agree that GIVE HOPE PLEASE may use your details to administer this event and send event-related information. Your email and mobile number will not be displayed publicly.</div>
         <div class="status-msg" id="formMessage" role="status" aria-live="polite"></div>
-        <div class="modal-actions"><button type="button" class="cancel-btn" id="cancelRegistration">Cancel</button><button class="register-btn confirm-btn" id="confirmButton" type="submit">CONFIRM REGISTRATION</button></div>
+        <div class="modal-actions"><button type="button" class="cancel-btn" id="cancelRegistration">Cancel</button><button class="register-btn confirm-btn" id="confirmButton" type="submit" disabled>CONFIRM REGISTRATION</button></div>
       </form>
     </div>
   </div>
@@ -355,6 +364,10 @@
   let currentEvent = null;
   let selectedContribution = null;
   let customContributionAmount = null;
+  let batchCodeValid = false;
+  let batchCodeChecking = false;
+  let batchValidationTimer = null;
+  let batchValidationRequest = 0;
   let events = [];
   let currentEventId = '';
 
@@ -546,12 +559,20 @@
   }
   function setupRegistration(ev) {
     show('registrationControls',true);
-    $('registerButton').disabled=false;
+    $('registerButton').disabled=true;
     $('registerButton').textContent='REGISTER NOW';
+    $('confirmButton').disabled=true;
+    $('confirmButton').textContent='CONFIRM REGISTRATION';
     $('registrationForm').reset(); $('batchCode').value=''; message('');
     $('batchCode').classList.remove('hidden');
     $('batchCode').required=yes(ev.Batch_Code_Required);
     $('batchCode').placeholder=yes(ev.Batch_Code_Required) ? 'Enter batch code' : 'Batch code (optional)';
+    batchCodeValid=!yes(ev.Batch_Code_Required);
+    batchCodeChecking=false;
+    batchValidationRequest++;
+    setBatchCodeStatus(yes(ev.Batch_Code_Required) ? 'A valid batch code is required.' : 'Batch code is optional.', '');
+    updateRegisterButton();
+    updateConfirmButton();
     $('modalEventName').textContent=ev.Event_Title || 'GIVE HOPE PLEASE event';
     show('qrBlock',!!ev.PayNow_QR_Image_ID);
     const qr=driveImage(ev.PayNow_QR_Image_ID,500);
@@ -611,12 +632,79 @@
     const choiceLabel=selectedContribution==='custom' ? 'Pay what you like' : (selectedContribution==='standard' ? 'Standard fee' : String(selectedContribution)+'%');
     $('feeExplanation').textContent='Event fee: '+money(fee,currentEvent.Currency)+' · Contribution: '+choiceLabel;
     $('qrAmountText').textContent='Please pay '+money(payable,currentEvent.Currency)+' using the QR code above.';
+    updateConfirmButton();
   }
+  function setBatchCodeStatus(text, state) {
+    const el=$('batchCodeStatus');
+    el.textContent=text || '';
+    el.className='batch-code-status' + (state ? ' ' + state : '');
+  }
+  function updateRegisterButton() {
+    if (!currentEvent) { $('registerButton').disabled=true; return; }
+    const required=yes(currentEvent.Batch_Code_Required);
+    const raw=$('batchCode').value.trim();
+    const ready=(!required && !raw) || (raw && batchCodeValid && !batchCodeChecking);
+    $('registerButton').disabled=!ready;
+  }
+  function validateBatchCodeNow() {
+    if (!currentEvent) return;
+    const code=$('batchCode').value.trim();
+    const required=yes(currentEvent.Batch_Code_Required);
+    const request=++batchValidationRequest;
+    if (!code) {
+      batchCodeChecking=false; batchCodeValid=!required;
+      setBatchCodeStatus(required ? 'Please enter a valid batch code.' : 'Batch code is optional.', required ? 'invalid' : '');
+      updateRegisterButton(); return;
+    }
+    batchCodeChecking=true; batchCodeValid=false;
+    setBatchCodeStatus('Checking batch code…','checking'); updateRegisterButton();
+    apiGet({action:'validateBatchCode',eventId:currentEvent.Event_ID,batchCode:code})
+      .then(result=>{
+        if (request!==batchValidationRequest || code!==$('batchCode').value.trim()) return;
+        batchCodeChecking=false; batchCodeValid=!!(result && result.success);
+        setBatchCodeStatus(batchCodeValid ? 'Valid batch code.' : ((result && result.message) || 'Invalid batch code.'), batchCodeValid ? 'valid' : 'invalid');
+        updateRegisterButton(); updateConfirmButton();
+      })
+      .catch(err=>{
+        if (request!==batchValidationRequest) return;
+        batchCodeChecking=false; batchCodeValid=false;
+        setBatchCodeStatus(err.message || 'Could not validate the batch code. Please try again.','invalid');
+        updateRegisterButton(); updateConfirmButton();
+      });
+  }
+  $('batchCode').addEventListener('input',()=>{
+    clearTimeout(batchValidationTimer); batchCodeValid=false; batchCodeChecking=false; batchValidationRequest++;
+    const code=$('batchCode').value.trim();
+    if (!code) { validateBatchCodeNow(); updateConfirmButton(); return; }
+    setBatchCodeStatus('Enter the complete code to validate.','checking'); updateRegisterButton(); updateConfirmButton();
+    batchValidationTimer=setTimeout(validateBatchCodeNow,450);
+  });
+  $('batchCode').addEventListener('blur',()=>{
+    clearTimeout(batchValidationTimer); if ($('batchCode').value.trim()) validateBatchCodeNow();
+  });
+  function contributionIsValid() {
+    if (!currentEvent) return false;
+    const amount=getContributionAmount(); return Number.isFinite(amount) && amount>0;
+  }
+  function updateConfirmButton() {
+    const form=$('registrationForm');
+    if (!form || !currentEvent) { $('confirmButton').disabled=true; return; }
+    const name=form.querySelector('[name="participantName"]').value.trim();
+    const email=form.querySelector('[name="email"]');
+    const requiredFieldsValid=name.length>0 && email.value.trim().length>0 && email.checkValidity() && form.checkValidity();
+    const batchValid=(!yes(currentEvent.Batch_Code_Required) && !$('batchCode').value.trim()) || (batchCodeValid && !batchCodeChecking);
+    $('confirmButton').disabled=!(requiredFieldsValid && batchValid && contributionIsValid());
+  }
+  $('registrationForm').addEventListener('input',updateConfirmButton);
+  $('registrationForm').addEventListener('change',updateConfirmButton);
   function openRegistrationModal() {
     if (!currentEvent) return;
-    if (yes(currentEvent.Batch_Code_Required) && !$('batchCode').value.trim()) {
-      $('batchCode').focus(); $('batchCode').setCustomValidity('Please enter the batch code to continue.'); $('batchCode').reportValidity(); $('batchCode').setCustomValidity(''); return;
+    if ($('registerButton').disabled) {
+      $('batchCode').focus();
+      if (yes(currentEvent.Batch_Code_Required) && !$('batchCode').value.trim()) setBatchCodeStatus('Please enter a valid batch code.','invalid');
+      return;
     }
+    updateConfirmButton();
     show('registrationModal',true); document.body.classList.add('modal-open');
     setTimeout(()=>$('registrationForm').querySelector('[name=participantName]').focus(),80);
   }
@@ -631,6 +719,10 @@
     if (!currentEvent) return;
     const form=e.currentTarget;
     if (!form.reportValidity()) return;
+    if (yes(currentEvent.Batch_Code_Required) && (!batchCodeValid || batchCodeChecking)) {
+      message('Please enter and validate a correct batch code before confirming.','error');
+      closeRegistrationModal(); $('batchCode').focus(); return;
+    }
     const data=new FormData(form);
     if (yes(currentEvent.Contribution_Options_Enabled) && yes(currentEvent.Flexible_Contribution_Enabled) && selectedContribution==='custom' && !(customContributionAmount>0)) {
       $('flexibleAmount').setCustomValidity('Please enter an amount greater than 0.');
@@ -674,18 +766,18 @@
         if (!event.data || event.data.type!=='GHP_EVENT_REGISTRATION') return;
         window.removeEventListener('message',handler);
         form.remove(); frame.remove();
-        btn.disabled=false; btn.textContent='CONFIRM REGISTRATION';
+        btn.textContent='CONFIRM REGISTRATION';
         if (event.data.success) {
           message(event.data.message || 'Registration received.','success');
-          formResetAfterSuccess(); $('batchCode').value='';
+          formResetAfterSuccess(); $('batchCode').value=''; batchCodeValid=!yes(currentEvent.Batch_Code_Required); batchCodeChecking=false; batchValidationRequest++; setBatchCodeStatus(yes(currentEvent.Batch_Code_Required)?'A valid batch code is required.':'Batch code is optional.',''); updateRegisterButton(); updateConfirmButton();
           setTimeout(closeRegistrationModal,1400);
-        } else message(event.data.message || 'Registration could not be completed.','error');
+        } else { message(event.data.message || 'Registration could not be completed.','error'); updateConfirmButton(); }
         resolve();
       };
       window.addEventListener('message',handler);
       setTimeout(()=>{
         window.removeEventListener('message',handler);
-        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.disabled=false; btn.textContent='CONFIRM REGISTRATION'; message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
+        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.textContent='CONFIRM REGISTRATION'; updateConfirmButton(); message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
         resolve();
       },25000);
       document.body.appendChild(form); form.submit();
