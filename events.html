@@ -754,43 +754,112 @@
     };
     await submitRegistration(payload);
   });
-  function submitRegistration(payload) {
-    return new Promise((resolve)=>{
-      if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
-        message('The registration service has not been configured yet.','error'); resolve(); return;
-      }
-      const frame=document.createElement('iframe');
-      frame.name='ghpRegistrationFrame'; frame.style.display='none'; frame.title='Registration response';
-      document.body.appendChild(frame);
-      const form=document.createElement('form');
-      form.method='POST'; form.action=API_URL; form.target=frame.name; form.style.display='none';
-      Object.entries(payload).forEach(([key,value])=>{
-        const input=document.createElement('input'); input.type='hidden'; input.name=key; input.value=value; form.appendChild(input);
-      });
-      document.body.appendChild(form);
-      const btn=$('confirmButton'); btn.disabled=true; btn.textContent='SUBMITTING…'; message('Submitting your registration…');
-      const handler=event=>{
-        if (!/^(https:\/\/)?([a-z0-9-]+\.)*googleusercontent\.com$/i.test(event.origin.replace(/^https:\/\//,'')) && event.origin !== 'https://script.google.com') return;
-        if (!event.data || event.data.type!=='GHP_EVENT_REGISTRATION') return;
-        window.removeEventListener('message',handler);
-        form.remove(); frame.remove();
-        btn.textContent='CONFIRM REGISTRATION';
-        if (event.data.success) {
-          message(event.data.message || 'Registration received.','success');
-          formResetAfterSuccess(); $('batchCode').value=''; batchCodeValid=!yes(currentEvent.Batch_Code_Required); batchCodeChecking=false; batchValidationRequest++; setBatchCodeStatus(yes(currentEvent.Batch_Code_Required)?'A valid batch code is required.':'Batch code is optional.',''); updateRegisterButton(); updateConfirmButton();
-          setTimeout(closeRegistrationModal,1400);
-        } else { message(event.data.message || 'Registration could not be completed.','error'); updateConfirmButton(); }
-        resolve();
-      };
-      window.addEventListener('message',handler);
-      setTimeout(()=>{
-        window.removeEventListener('message',handler);
-        if (document.body.contains(form)) { form.remove(); frame.remove(); btn.textContent='CONFIRM REGISTRATION'; updateConfirmButton(); message('We could not confirm the submission. Please check with the organiser before submitting again.','error'); }
-        resolve();
-      },25000);
-      document.body.appendChild(form); form.submit();
+  
+function submitRegistration(payload) {
+  return new Promise((resolve) => {
+    if (!API_URL.startsWith('https://script.google.com/macros/s/')) {
+      message('The registration service has not been configured yet.', 'error');
+      resolve();
+      return;
+    }
+
+    const frame = document.createElement('iframe');
+    frame.name = 'ghpRegistrationFrame';
+    frame.style.display = 'none';
+    frame.title = 'Registration response';
+    document.body.appendChild(frame);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = API_URL;
+    form.target = frame.name;
+    form.style.display = 'none';
+
+    Object.entries(payload).forEach(([key, value]) => {
+      const input = document.createElement('input');
+      input.type = 'hidden';
+      input.name = key;
+      input.value = value;
+      form.appendChild(input);
     });
-  }
+
+    const btn = $('confirmButton');
+    btn.disabled = true;
+    btn.textContent = 'SUBMITTING…';
+    message('Submitting your registration…');
+
+    let completed = false;
+
+    function cleanup() {
+      window.removeEventListener('message', handler);
+      clearTimeout(timeout);
+      form.remove();
+      frame.remove();
+    }
+
+    function finish() {
+      if (completed) return;
+      completed = true;
+      cleanup();
+      btn.textContent = 'CONFIRM REGISTRATION';
+      resolve();
+    }
+
+    const handler = event => {
+      // Accept messages only from this submission's iframe.
+      if (event.source !== frame.contentWindow) return;
+      if (!event.data || event.data.type !== 'GHP_EVENT_REGISTRATION') return;
+
+      finish();
+
+      if (event.data.success) {
+        message(event.data.message || 'Registration received.', 'success');
+
+        formResetAfterSuccess();
+        $('batchCode').value = '';
+        batchCodeValid = !yes(currentEvent.Batch_Code_Required);
+        batchCodeChecking = false;
+        batchValidationRequest++;
+
+        setBatchCodeStatus(
+          yes(currentEvent.Batch_Code_Required)
+            ? 'A valid batch code is required.'
+            : 'Batch code is optional.',
+          ''
+        );
+
+        updateRegisterButton();
+        updateConfirmButton();
+        setTimeout(closeRegistrationModal, 1400);
+
+      } else {
+        message(
+          event.data.message || 'Registration could not be completed.',
+          'error'
+        );
+        updateConfirmButton();
+      }
+    };
+
+    window.addEventListener('message', handler);
+
+    const timeout = setTimeout(() => {
+      if (completed) return;
+
+      finish();
+      updateConfirmButton();
+
+      message(
+        'We could not confirm the submission. Please check with the organiser before submitting again.',
+        'error'
+      );
+    }, 30000);
+
+    document.body.appendChild(form);
+    form.submit();
+  });
+}
+
   function formResetAfterSuccess() {
     const f=$('registrationForm');
     f.querySelector('[name="participantName"]').value='';
