@@ -689,7 +689,7 @@
   });
   function contributionIsValid() {
     if (!currentEvent) return false;
-    const amount=getContributionAmount(); return Number.isFinite(amount) && amount>0;
+    const amount=getContributionAmount(); return Number.isFinite(amount) && amount>=0;
   }
   function updateConfirmButton() {
     const form=$('registrationForm');
