@@ -526,6 +526,8 @@
     box.append(l,v); return box;
   }
   function renderEvent(ev, participants) {
+    // Hide the footer loading hint once event data has loaded successfully.
+    show('listBottomHint', false);
     $('eventTitle').textContent=ev.Event_Title || 'Event';
     $('backToEvents').classList.add('hidden');
     $('eventMeta').innerHTML='';
