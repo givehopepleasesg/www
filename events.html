@@ -399,7 +399,7 @@
       }
       const callback = 'ghpCallback_' + Date.now() + '_' + Math.floor(Math.random()*100000);
       const script = document.createElement('script');
-      const timeout = setTimeout(() => { cleanup(); reject(new Error('The event service did not respond. Please try again.')); }, 18000);
+      const timeout = setTimeout(() => { cleanup(); reject(new Error('The event service is taking too long to respond. Please refresh and try again.')); }, 30000);
       function cleanup() { clearTimeout(timeout); delete window[callback]; script.remove(); }
       window[callback] = data => { cleanup(); resolve(data); };
       const query = new URLSearchParams({...params, callback}).toString();
@@ -469,10 +469,12 @@
   }
   async function loadEvents() {
     try {
-      const result = await apiGet({action:'listEvents'});
+      const result = await apiGet({action:'bootstrap'});
       if (!result || !result.success) throw new Error(result && result.message || 'Could not load events.');
-      events = (result.events || []).filter(isUpcomingEvent).sort((a,b)=>eventSingaporeTimestamp(a)-eventSingaporeTimestamp(b)).slice(0,1);
-      // Select only the nearest future published event using Singapore time.
+      events = (result.events || []).filter(isUpcomingEvent)
+        .sort((a,b)=>eventSingaporeTimestamp(a)-eventSingaporeTimestamp(b)).slice(0,1);
+
+      // Select the nearest future published event; its public names arrive in the same response.
       if (!events.length) {
         show('loading', false);
         show('eventListSection', true);
@@ -486,8 +488,12 @@
         setBanner('');
         return;
       }
-      currentEventId = String(events[0].Event_ID || '');
-      await loadEventDetail(currentEventId);
+      currentEvent = events[0];
+      currentEventId = String(currentEvent.Event_ID || '');
+      show('loading', false);
+      show('eventListSection', false);
+      show('eventDetailSection', true);
+      renderEvent(currentEvent, (result.participantsByEvent || {})[currentEventId] || []);
     } catch (err) {
       show('loading', true); $('loading').textContent = err.message;
       show('listBottomHint', true); $('listBottomHint').textContent='Please refresh the page or try again later.';
